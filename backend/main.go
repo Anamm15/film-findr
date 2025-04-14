@@ -14,30 +14,37 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	server := gin.Default()
 	server.Use(middleware.CORSMiddleware())
 
 	var (
 		db *gorm.DB = config.SetUpDatabaseConnection()
+
 		genreRepository repository.GenreRepository = repository.NewGenreRepository(db)
 		genreService service.GenreService = service.NewGenreService(genreRepository)
 		genreController controller.GenreController = controller.NewGenreController(genreService)
+
+		filmRepository repository.FilmRepository = repository.NewFilmRepository(db)
+		filmService service.FilmService = service.NewFilmService(filmRepository)
+		filmController controller.FilmController = controller.NewFilmController(filmService)
 	)
 
-	server.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 	routes.GenreRoute(server, genreController)
+	routes.FilmRoute(server, filmController)
 
 	if err := migrations.Seeder(db); err != nil {
 		log.Fatalf("error migration seeder: %v", err)
 	}
-
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5454"

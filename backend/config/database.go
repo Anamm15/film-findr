@@ -3,19 +3,26 @@ package config
 import (
 	"ReviewPiLem/entity"
 	"fmt"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"github.com/joho/godotenv"
 )
 
 func SetUpDatabaseConnection() *gorm.DB {
-	// dbUser := os.Getenv("DB_USERNAME")
-	// dbPass := os.Getenv("DB_PASSWORD")
-	// dbHost := os.Getenv("DB_HOST")
-	// dbName := os.Getenv("DB_DATABASE")
-	// dbPort := os.Getenv("DB_PORT")
+	err := godotenv.Load(".env")
+	if err != nil {
+		panic(err)
+	}
 
-	dsn := "host=localhost user=postgres password=postgres dbname=review-film port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	dbUser := os.Getenv("DB_USERNAME")
+	dbPass := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_DATABASE")
+	dbPort := os.Getenv("DB_PORT")
+
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v TimeZone=Asia/Jakarta", dbHost, dbUser, dbPass, dbName, dbPort)
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: dsn,
