@@ -1,1 +1,14 @@
 GET http://localhost:5454/ping
+
+###
+POST http://localhost:5454/genre/create
+Content-Type: application/json
+
+{
+    "nama": "Action"
+}
+
+###
+GET http://localhost:5454/genre/getAllGenre
+
+###

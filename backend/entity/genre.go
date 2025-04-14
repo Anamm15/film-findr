@@ -6,6 +6,6 @@ import (
 
 type Genre struct {
 	gorm.Model
-	Nama		int 		 `json:"nama"`
+	Nama		string 		 `json:"nama"`
 	FilmGenre  []FilmGenre  `json:"film_genre" gorm:"foreignKey:GenreID"`
 }
