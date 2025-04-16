@@ -41,11 +41,16 @@ func main() {
 		userRepository repository.UserRepository = repository.NewUserRepository(db)
 		userService service.UserService = service.NewUserService(userRepository)
 		userController controller.UserController = controller.NewUserController(userService, jwtService)
+
+		reviewRepository repository.ReviewRepository = repository.NewReviewRepository(db)
+		reviewService service.ReviewService = service.NewReviewService(reviewRepository)
+		reviewController controller.ReviewController = controller.NewReviewController(reviewService)
 	)
 
 	routes.GenreRoute(server, genreController)
 	routes.FilmRoute(server, filmController)
 	routes.UserRoute(server, userController, jwtService)
+	routes.ReviewRoute(server, reviewController)
 
 	if err := migrations.Seeder(db); err != nil {
 		log.Fatalf("error migration seeder: %v", err)
