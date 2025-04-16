@@ -11,8 +11,8 @@ type FilmService interface {
 	GetAllFilm(ctx context.Context) ([]entity.Film, error)
 	CreateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
 	UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
-	DeleteFilm(ctx context.Context, id uint64) error
-	GetFilmByID(ctx context.Context, id uint64) (entity.Film, error)
+	DeleteFilm(ctx context.Context, id uint) error
+	GetFilmByID(ctx context.Context, id uint) (entity.Film, error)
 }
 
 type filmService struct {
@@ -50,7 +50,7 @@ func (s *filmService) UpdateFilm(ctx context.Context, film entity.Film) (entity.
 	return updatedFilm, nil
 }
 
-func (s *filmService) DeleteFilm(ctx context.Context, id uint64) error {
+func (s *filmService) DeleteFilm(ctx context.Context, id uint) error {
 	err := s.filmRepository.DeleteFilm(ctx, id)
 	if err != nil {
 		return dto.ErrDeleteFilm
@@ -59,7 +59,7 @@ func (s *filmService) DeleteFilm(ctx context.Context, id uint64) error {
 	return nil
 }
 
-func (s *filmService) GetFilmByID(ctx context.Context, id uint64) (entity.Film, error) {
+func (s *filmService) GetFilmByID(ctx context.Context, id uint) (entity.Film, error) {
 	film, err := s.filmRepository.GetFilmByID(ctx, id)
 	if err != nil {
 		return entity.Film{}, dto.ErrGetFilmByID

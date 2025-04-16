@@ -1,6 +1,9 @@
 package dto
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 const (
 	// failed message
@@ -23,4 +26,17 @@ var (
 	ErrCreateFilm = errors.New("failed to create film")
 	ErrUpdateFilm = errors.New("failed to update film")
 	ErrDeleteFilm = errors.New("failed to delete film")
+)
+
+type (
+	FilmResponse struct {
+		ID       uint    `json:"id"`       
+		Judul    string `json:"judul"`    
+		Sinopsis string `json:"sinopsis"` 
+		Sutradara string `json:"sutradara"`
+		Status   string `json:"status"`
+		Durasi   int    `json:"durasi"`
+		TotalEpisode int `json:"total_episode"`
+		TanggalRilis time.Time `json:"tanggal_rilis"`
+	}
 )

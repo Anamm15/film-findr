@@ -28,6 +28,7 @@ func main() {
 
 	var (
 		db *gorm.DB = config.SetUpDatabaseConnection()
+		jwtService service.JWTService = service.NewJWTService()
 
 		genreRepository repository.GenreRepository = repository.NewGenreRepository(db)
 		genreService service.GenreService = service.NewGenreService(genreRepository)
@@ -36,18 +37,20 @@ func main() {
 		filmRepository repository.FilmRepository = repository.NewFilmRepository(db)
 		filmService service.FilmService = service.NewFilmService(filmRepository)
 		filmController controller.FilmController = controller.NewFilmController(filmService)
+
+		userRepository repository.UserRepository = repository.NewUserRepository(db)
+		userService service.UserService = service.NewUserService(userRepository)
+		userController controller.UserController = controller.NewUserController(userService, jwtService)
 	)
 
 	routes.GenreRoute(server, genreController)
 	routes.FilmRoute(server, filmController)
+	routes.UserRoute(server, userController, jwtService)
 
 	if err := migrations.Seeder(db); err != nil {
 		log.Fatalf("error migration seeder: %v", err)
 	}
 	
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5454"
-	}
 	server.Run(":" + port)
 }

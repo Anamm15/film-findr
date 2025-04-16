@@ -2,6 +2,7 @@ package entity
 
 import (
 	"gorm.io/gorm"
+	"time"
 )
 
 type Film struct {
@@ -9,10 +10,10 @@ type Film struct {
 	Judul      string    `json:"judul"`
 	Status     string    `json:"status"`
 	Sinopsis   string    `json:"sinopsis"`
-	Durasi     string    `json:"durasi"`
-	Total_Episode int       `json:"total_episode"`
+	Durasi     int    `json:"durasi"`
+	TotalEpisode int       `json:"total_episode"`
 	Sutradara  string    `json:"sutradara"`
-	TanggalRilis    string    `json:"tanggal"`
+	TanggalRilis time.Time `gorm:"type:date" json:"tanggal_rilis"`
 	FilmGambar []FilmGambar `json:"film_gambar" gorm:"foreignKey:FilmID"`
 	FilmGenre  []FilmGenre  `json:"film_genre" gorm:"foreignKey:FilmID"`
 }

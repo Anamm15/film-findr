@@ -11,8 +11,8 @@ type FilmRepository interface {
 	GetAllFilm(ctx context.Context) ([]entity.Film, error)
 	CreateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
 	UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
-	DeleteFilm(ctx context.Context, id uint64) error
-	GetFilmByID(ctx context.Context, id uint64) (entity.Film, error)
+	DeleteFilm(ctx context.Context, id uint) error
+	GetFilmByID(ctx context.Context, id uint) (entity.Film, error)
 }
 
 type filmRepository struct {
@@ -32,7 +32,7 @@ func (r *filmRepository) GetAllFilm(ctx context.Context) ([]entity.Film, error) 
 	return films, nil
 }
 
-func (r *filmRepository) GetFilmByID(ctx context.Context, id uint64) (entity.Film, error) {
+func (r *filmRepository) GetFilmByID(ctx context.Context, id uint) (entity.Film, error) {
 	var film entity.Film
 	if err := r.db.First((&film), id).Error; err != nil {
 		return entity.Film{}, err
@@ -51,7 +51,7 @@ func (r *filmRepository) UpdateFilm(ctx context.Context, film entity.Film) (enti
 	return film, err
 }
 
-func (r *filmRepository) DeleteFilm(ctx context.Context, id uint64) error {
+func (r *filmRepository) DeleteFilm(ctx context.Context, id uint) error {
 	err := r.db.Delete(&entity.Film{}, id).Error
 	return err
 }
