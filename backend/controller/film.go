@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"net/http"
+	"strconv"
+
 	"ReviewPiLem/service"
 
 	"ReviewPiLem/dto"
-	"ReviewPiLem/utils"
 	"ReviewPiLem/entity"
-	"net/http"
+	"ReviewPiLem/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,18 +19,32 @@ type FilmController interface {
 	CreateFilm(ctx *gin.Context)
 	UpdateFilm(ctx *gin.Context)
 	DeleteFilm(ctx *gin.Context)
+	AddFilmGenre(ctx *gin.Context)
+	DeleteFilmGenre(ctx *gin.Context)
+	UpdateStatus(ctx *gin.Context)
+	SearchFilm(ctx *gin.Context)
 }
 
 type filmController struct {
-	filmService service.FilmService
+	filmService      service.FilmService
+	filmGenreService service.FilmGenreService
 }
 
-func NewFilmController(filmService service.FilmService) FilmController {
-	return &filmController{filmService: filmService}
+func NewFilmController(filmService service.FilmService, filmGenreService service.FilmGenreService) FilmController {
+	return &filmController{
+		filmService:      filmService,
+		filmGenreService: filmGenreService,
+	}
 }
 
 func (s *filmController) GetAllFilm(ctx *gin.Context) {
-	films, err := s.filmService.GetAllFilm(ctx)
+	pageStr := ctx.Query("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	films, err := s.filmService.GetAllFilm(ctx, page)
 	if err != nil {
 		res := utils.BuildResponseFailed("Failed to get all film", err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
@@ -53,35 +69,49 @@ func (s *filmController) GetFilmById(ctx *gin.Context) {
 }
 
 func (s *filmController) CreateFilm(ctx *gin.Context) {
-	var film entity.Film
-	if err := ctx.ShouldBindJSON(&film); err != nil {
-		res := utils.BuildResponseFailed("Failed to create film", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}	
-
-	film, err := s.filmService.CreateFilm(ctx, film)
-	if err != nil {
-		res := utils.BuildResponseFailed("Failed to create film", err.Error(), nil)
+	var film dto.CreateFilmRequest
+	if err := ctx.ShouldBind(&film); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM, film)
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_FORM_DATA, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	files := form.File["images"]
+	if len(files) == 0 {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_IMAGE_NOT_FOUND, dto.ErrGetImageRequest.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	createdFilm, err := s.filmService.CreateFilm(ctx, film, files)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_FILM, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM, createdFilm)
 	ctx.JSON(http.StatusOK, res)
 }
 
 func (s *filmController) UpdateFilm(ctx *gin.Context) {
 	var film entity.Film
 	if err := ctx.ShouldBindJSON(&film); err != nil {
-		res := utils.BuildResponseFailed("Failed to update film", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
 	film, err := s.filmService.UpdateFilm(ctx, film)
 	if err != nil {
-		res := utils.BuildResponseFailed("Failed to update film", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_FILM, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
@@ -94,11 +124,107 @@ func (s *filmController) DeleteFilm(ctx *gin.Context) {
 	id := ctx.Param("id")
 	err := s.filmService.DeleteFilm(ctx, utils.StringToInt(id))
 	if err != nil {
-		res := utils.BuildResponseFailed("Failed to delete film", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_FILM, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM, nil)
 	ctx.JSON(http.StatusOK, res)
+}
+
+func (s *filmController) AddFilmGenre(ctx *gin.Context) {
+	var filmGenre dto.FilmGenreRequest
+	if err := ctx.ShouldBindJSON(&filmGenre); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	filmGenreRes, err := s.filmGenreService.CreateFilmGenre(ctx, filmGenre)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_FILM_GENRE, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM_GENRE, filmGenreRes)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (s *filmController) DeleteFilmGenre(ctx *gin.Context) {
+	var filmGenre dto.FilmGenreRequest
+	if err := ctx.ShouldBindJSON(&filmGenre); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	err := s.filmGenreService.DeleteFilmGenre(ctx, filmGenre)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_FILM_GENRE, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM_GENRE, nil)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (s *filmController) UpdateStatus(ctx *gin.Context) {
+	id := ctx.Param("id")
+	var req dto.UpdateStatusFilmRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	err := s.filmService.UpdateStatus(ctx, utils.StringToInt(id), req)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_STATUS_FIlM, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_STATUS_FILM, nil)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (s *filmController) SearchFilm(c *gin.Context) {
+	keyword := c.Query("keyword")
+	status := c.Query("status")
+	genreIDs := c.QueryArray("genre_ids")
+
+	var genresId []int
+	if len(genreIDs) > 0 {
+		genresId = make([]int, len(genreIDs))
+		for i, genreID := range genreIDs {
+			genresId[i] = utils.StringToInt(genreID)
+		}
+	}
+
+	var req dto.SearchFilmRequest
+	req = dto.SearchFilmRequest{
+		Keyword: keyword,
+		Status:  status,
+		Genres:  genresId,
+	}
+
+	films, err := s.filmService.SearchFilm(c, req)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SEARCH_FILM, err.Error(), nil)
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	if len(films) == 0 {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_FILM_NOT_FOUND, dto.MESSAGE_FAILED_FILM_NOT_FOUND, nil)
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_SEARCH_FILM, films)
+	c.JSON(http.StatusOK, res)
 }

@@ -1,15 +1,14 @@
 package controller
 
 import (
-	"ReviewPiLem/dto"
-	"ReviewPiLem/utils"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/service"
 	"net/http"
+
+	"ReviewPiLem/dto"
+	"ReviewPiLem/service"
+	"ReviewPiLem/utils"
 
 	"github.com/gin-gonic/gin"
 )
-
 
 type GenreController interface {
 	GetAllGenre(ctx *gin.Context)
@@ -30,7 +29,7 @@ func NewGenreController(genreService service.GenreService) GenreController {
 func (s *genreController) GetAllGenre(ctx *gin.Context) {
 	genres, err := s.genreService.GetAllGenre(ctx)
 	if err != nil {
-		res := utils.BuildResponseFailed("Failed to get all genres", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_GENRE, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
@@ -40,38 +39,41 @@ func (s *genreController) GetAllGenre(ctx *gin.Context) {
 }
 
 func (s *genreController) CreateGenre(ctx *gin.Context) {
-	var genre entity.Genre
+	var genre dto.GenreRequest
 	if err := ctx.ShouldBindJSON(&genre); err != nil {
-		res := utils.BuildResponseFailed("Failed to create genre", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	genre, err := s.genreService.CreateGenre(ctx, genre)
+	createdGenre, err := s.genreService.CreateGenre(ctx, genre)
 	if err != nil {
-		res := utils.BuildResponseFailed("Failed to create genre", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_GENRE, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, genre)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre)
 	ctx.JSON(http.StatusOK, res)
 }
 
 func (s *genreController) UpdateGenre(ctx *gin.Context) {
-	var genre entity.Genre
+	genreId := ctx.Param("id")
+	var genre dto.GenreRequest
+	genre.ID = utils.StringToInt(genreId)
 	if err := ctx.ShouldBindJSON(&genre); err != nil {
-		res := utils.BuildResponseFailed("Failed to update genre", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-	genre, err := s.genreService.UpdateGenre(ctx, genre)
-	if err != nil {
-		res := utils.BuildResponseFailed("Failed to update genre", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, genre)
+	updatedGenre, err := s.genreService.UpdateGenre(ctx, genre)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_GENRE, err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre)
 	ctx.JSON(http.StatusOK, res)
 }

@@ -9,9 +9,9 @@ import (
 )
 
 type GenreService interface {
-	GetAllGenre(ctx context.Context) ([]entity.Genre, error)
-	CreateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error)
-	UpdateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error)
+	GetAllGenre(ctx context.Context) ([]dto.GenreRequest, error)
+	CreateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error)
+	UpdateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error)
 }
 
 type genreService struct {
@@ -24,29 +24,50 @@ func NewGenreService(genreRepository repository.GenreRepository) GenreService {
 	}
 }
 
-func (s *genreService) GetAllGenre(ctx context.Context) ([]entity.Genre, error) {
+func (s *genreService) GetAllGenre(ctx context.Context) ([]dto.GenreRequest, error) {
 	genres, err := s.genreRepository.GetAllGenre(ctx)
 	if err != nil {
 		return nil, dto.ErrGetAllGenre
 	}
 
-	return genres, nil
-}
-
-func (s *genreService) CreateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error) {
-	createdGenre, err := s.genreRepository.CreateGenre(ctx, genre)
-	if err != nil {
-		return entity.Genre{}, dto.ErrGetAllGenre
+	var genreResponse []dto.GenreRequest
+	for _, genre := range genres {
+		genreResponse = append(genreResponse, dto.GenreRequest{
+			ID:   genre.ID,
+			Nama: genre.Nama,
+		})
 	}
 
-	return createdGenre, nil
+	return genreResponse, nil
 }
 
-func (s *genreService) UpdateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error) {
-	genre, err := s.genreRepository.UpdateGenre(ctx, genre)
-	if err != nil {
-		return entity.Genre{}, dto.ErrUpdateGenre
+func (s *genreService) CreateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error) {
+	GenreRequest := entity.Genre{
+		ID:   genre.ID,
+		Nama: genre.Nama,
 	}
 
-	return genre, nil
+	createdGenre, err := s.genreRepository.CreateGenre(ctx, GenreRequest)
+	if err != nil {
+		return dto.GenreResponse{}, dto.ErrGetAllGenre
+	}
+
+	return dto.GenreResponse{ID: createdGenre.ID, Nama: createdGenre.Nama}, nil
+}
+
+func (s *genreService) UpdateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error) {
+	genreEntity := entity.Genre{
+		ID:   genre.ID,
+		Nama: genre.Nama,
+	}
+
+	updatedGenre, err := s.genreRepository.UpdateGenre(ctx, genreEntity)
+	if err != nil {
+		return dto.GenreResponse{}, dto.ErrUpdateGenre
+	}
+
+	return dto.GenreResponse{
+		ID:   updatedGenre.ID,
+		Nama: updatedGenre.Nama,
+	}, nil
 }

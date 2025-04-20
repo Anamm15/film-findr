@@ -1,13 +1,14 @@
 package config
 
 import (
-	"ReviewPiLem/entity"
 	"fmt"
 	"os"
 
+	"ReviewPiLem/entity"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/joho/godotenv"
 )
 
 func SetUpDatabaseConnection() *gorm.DB {
@@ -26,9 +27,6 @@ func SetUpDatabaseConnection() *gorm.DB {
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: dsn,
-		// Menambahkan opsi berikut akan memungkinkan driver database
-		// untuk mendukung tipe data UUID secara bawaan.
-		PreferSimpleProtocol: true,
 	}), &gorm.Config{})
 	if err != nil {
 		fmt.Println(err)
@@ -43,6 +41,7 @@ func SetUpDatabaseConnection() *gorm.DB {
 		entity.FilmGambar{},
 		entity.UserFilm{},
 		entity.Review{},
+		entity.ReaksiReview{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

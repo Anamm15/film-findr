@@ -1,0 +1,62 @@
+GET http://localhost:5000/ping
+
+###
+POST http://localhost:5000/genre/create
+Content-Type: application/json
+
+{
+    "nama": "Action"
+}
+
+###
+GET http://localhost:5000/genre/getAllGenre
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MDk2NzMwLCJpYXQiOjE3NDUwODk1MzB9.tQFp32rKEpNf4K0MyS1W5PJ6XN6ecJKsg2MUbkbyV28
+
+###
+GET http://localhost:5000/user/getAllUser
+
+###
+GET http://localhost:5000/user/1
+
+###
+GET http://localhost:5000/film/getAllFilm 
+
+###
+GET http://localhost:5000/film/getFilmById/1
+
+###
+POST http://localhost:5000/user/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin123"
+}
+
+###
+POST http://localhost:5000/user/register
+Content-Type: application/json
+
+{
+	"nama": "Coba testing via postman",
+    "username": "P",
+    "password": "postman123",
+    "bio": "Halooo"
+}
+
+###
+POST http://localhost:5000/review/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MDU1ODI2LCJpYXQiOjE3NDUwNDg2MjZ9.YTl9Sc-wSkJ_OMqEGcpAi_ICw0lmw_pdXsaH2JYjeNU
+Content-Type: application/json
+
+{
+    "film_id": 1,
+    "komentar": "gabisa",
+    "rating": 7
+}
+
+###
+GET http://localhost:5000/review/getReviewByFilmId/1
+
+###
+GET http://localhost:5000/userFilm/getUserFilmByUserId/1

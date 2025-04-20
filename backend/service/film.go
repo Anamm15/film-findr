@@ -1,44 +1,236 @@
 package service
 
 import (
+	"context"
+	"math"
+	"mime/multipart"
+
 	"ReviewPiLem/dto"
 	"ReviewPiLem/entity"
 	"ReviewPiLem/repository"
-	"context"
+	"ReviewPiLem/utils"
+
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
+	"gorm.io/gorm"
 )
 
 type FilmService interface {
-	GetAllFilm(ctx context.Context) ([]entity.Film, error)
-	CreateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
+	GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error)
+	GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error)
+	CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error)
 	UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
-	DeleteFilm(ctx context.Context, id uint) error
-	GetFilmByID(ctx context.Context, id uint) (entity.Film, error)
+	DeleteFilm(ctx context.Context, id int) error
+	UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error
+	SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error)
 }
 
 type filmService struct {
-	filmRepository repository.FilmRepository
+	filmRepository       repository.FilmRepository
+	filmGambarRepository repository.FilmGambarRepository
+	filmGenreRepository  repository.FilmGenreRepository
+	reviewRepository     repository.ReviewRepository
+	cloudinary           *cloudinary.Cloudinary
+	db                   *gorm.DB
 }
 
-func NewFilmService(filmRepository repository.FilmRepository) FilmService {
-	return &filmService{filmRepository: filmRepository}
+func NewFilmService(
+	db *gorm.DB,
+	cloudinary *cloudinary.Cloudinary,
+	filmRepository repository.FilmRepository,
+	filmGambarRepository repository.FilmGambarRepository,
+	filmGenreRepository repository.FilmGenreRepository,
+	reviewRepository repository.ReviewRepository,
+) FilmService {
+	return &filmService{
+		db:                   db,
+		cloudinary:           cloudinary,
+		filmRepository:       filmRepository,
+		filmGambarRepository: filmGambarRepository,
+		filmGenreRepository:  filmGenreRepository,
+		reviewRepository:     reviewRepository,
+	}
 }
 
-func (s *filmService) GetAllFilm(ctx context.Context) ([]entity.Film, error) {
-	films, err := s.filmRepository.GetAllFilm(ctx)
+func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error) {
+	films, err := s.filmRepository.GetAllFilm(ctx, page)
 	if err != nil {
-		return nil, dto.ErrGetAllGenre
+		return []dto.FilmResponse{}, dto.ErrGetAllGenre
 	}
 
-	return films, nil
-}
+	var filmResponses []dto.FilmResponse
 
-func (s *filmService) CreateFilm(ctx context.Context, film entity.Film) (entity.Film, error) {
-	createdFilm, err := s.filmRepository.CreateFilm(ctx, film)
-	if err != nil {
-		return entity.Film{}, dto.ErrCreateFilm
+	for _, film := range films {
+		var fileResponses []dto.FilmGambarResponse
+		var genreResponses []dto.GenreResponse
+
+		rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+		rating = math.Round(rating*100) / 100
+
+		for _, file := range film.FilmGambar {
+			fileResponses = append(fileResponses, dto.FilmGambarResponse{
+				ID:  file.ID,
+				Url: file.Url,
+			})
+		}
+
+		for _, genre := range film.FilmGenre {
+			genreResponses = append(genreResponses, dto.GenreResponse{
+				ID:   genre.Genre.ID,
+				Nama: genre.Genre.Nama,
+			})
+		}
+
+		filmResponses = append(filmResponses, dto.FilmResponse{
+			ID:           film.ID,
+			Judul:        film.Judul,
+			TanggalRilis: film.TanggalRilis,
+			Durasi:       film.Durasi,
+			Status:       film.Status,
+			Rating:       rating,
+			Gambar:       fileResponses,
+			Genres:       genreResponses,
+		})
 	}
 
-	return createdFilm, nil
+	return filmResponses, nil
+}
+
+func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error) {
+	film, err := s.filmRepository.GetFilmByID(ctx, id)
+	if err != nil {
+		return dto.FilmResponse{}, dto.ErrGetFilmByID
+	}
+
+	rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+	rating = math.Round(rating*100) / 100
+
+	var fileResponses []dto.FilmGambarResponse
+	var genreResponses []dto.GenreResponse
+	for _, file := range film.FilmGambar {
+		fileResponses = append(fileResponses, dto.FilmGambarResponse{
+			ID:  file.ID,
+			Url: file.Url,
+		})
+	}
+
+	for _, genre := range film.FilmGenre {
+		genreResponses = append(genreResponses, dto.GenreResponse{
+			ID:   genre.Genre.ID,
+			Nama: genre.Genre.Nama,
+		})
+	}
+
+	filmResponse := dto.FilmResponse{
+		ID:           film.ID,
+		Judul:        film.Judul,
+		Sinopsis:     film.Sinopsis,
+		Sutradara:    film.Sutradara,
+		TanggalRilis: film.TanggalRilis,
+		TotalEpisode: film.TotalEpisode,
+		Durasi:       film.Durasi,
+		Status:       film.Status,
+		Rating:       rating,
+		Gambar:       fileResponses,
+		Genres:       genreResponses,
+	}
+
+	return filmResponse, nil
+}
+
+func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error) {
+	tx := s.db.Begin()
+	if tx.Error != nil {
+		return dto.FilmResponse{}, tx.Error
+	}
+
+	film := entity.Film{
+		Judul:        filmReq.Judul,
+		Sinopsis:     filmReq.Sinopsis,
+		Sutradara:    filmReq.Sutradara,
+		Status:       filmReq.Status,
+		Durasi:       filmReq.Durasi,
+		TotalEpisode: filmReq.TotalEpisode,
+		TanggalRilis: filmReq.TanggalRilis,
+	}
+
+	createdFilm, err := s.filmRepository.CreateFilm(ctx, tx, film)
+	var filmGambarResponse []dto.FilmGambarResponse
+	var genreResponse []dto.GenreResponse
+
+	if err != nil {
+		tx.Rollback()
+		return dto.FilmResponse{}, err
+	}
+
+	for _, genreID := range filmReq.Genre {
+		filmGenre := entity.FilmGenre{
+			FilmID:  createdFilm.ID,
+			GenreID: genreID,
+		}
+		genre, err := s.filmGenreRepository.CreateFilmGenre(ctx, tx, filmGenre)
+		genreResponse = append(genreResponse, dto.GenreResponse{
+			ID:   genre.Genre.ID,
+			Nama: genre.Genre.Nama,
+		})
+		if err != nil {
+			tx.Rollback()
+			return dto.FilmResponse{}, err
+		}
+	}
+
+	for _, file := range files {
+		src, err := file.Open()
+		if err != nil {
+			tx.Rollback()
+			return dto.FilmResponse{}, err
+		}
+		defer src.Close()
+
+		uniqueName := utils.GenerateUniqueImageName(createdFilm.Judul, file.Filename)
+		uploadResult, err := s.cloudinary.Upload.Upload(ctx, src, uploader.UploadParams{
+			Folder:   "ReviewFilem",
+			PublicID: uniqueName,
+		})
+		if err != nil {
+			tx.Rollback()
+			return dto.FilmResponse{}, err
+		}
+
+		filmGambar := entity.FilmGambar{
+			FilmID: createdFilm.ID,
+			Url:    uploadResult.SecureURL,
+		}
+
+		filmGambarResponse = append(filmGambarResponse, dto.FilmGambarResponse{
+			ID:  filmGambar.ID,
+			Url: filmGambar.Url,
+		})
+
+		if err := s.filmGambarRepository.Save(ctx, tx, filmGambar); err != nil {
+			tx.Rollback()
+			return dto.FilmResponse{}, err
+		}
+	}
+
+	// Commit transaction jika semua berhasil
+	if err := tx.Commit().Error; err != nil {
+		return dto.FilmResponse{}, err
+	}
+
+	return dto.FilmResponse{
+		ID:           createdFilm.ID,
+		Judul:        createdFilm.Judul,
+		Sinopsis:     createdFilm.Sinopsis,
+		Sutradara:    createdFilm.Sutradara,
+		Status:       createdFilm.Status,
+		Durasi:       createdFilm.Durasi,
+		TotalEpisode: createdFilm.TotalEpisode,
+		TanggalRilis: createdFilm.TanggalRilis,
+		Rating:       0,
+		Gambar:       filmGambarResponse,
+		Genres:       genreResponse,
+	}, nil
 }
 
 func (s *filmService) UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error) {
@@ -50,7 +242,7 @@ func (s *filmService) UpdateFilm(ctx context.Context, film entity.Film) (entity.
 	return updatedFilm, nil
 }
 
-func (s *filmService) DeleteFilm(ctx context.Context, id uint) error {
+func (s *filmService) DeleteFilm(ctx context.Context, id int) error {
 	err := s.filmRepository.DeleteFilm(ctx, id)
 	if err != nil {
 		return dto.ErrDeleteFilm
@@ -59,11 +251,55 @@ func (s *filmService) DeleteFilm(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (s *filmService) GetFilmByID(ctx context.Context, id uint) (entity.Film, error) {
-	film, err := s.filmRepository.GetFilmByID(ctx, id)
+func (s *filmService) UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error {
+	err := s.filmRepository.UpdateStatus(ctx, id, req.Status)
 	if err != nil {
-		return entity.Film{}, dto.ErrGetFilmByID
+		return dto.ErrUpdateStatusFilm
 	}
 
-	return film, nil
+	return nil
+}
+
+func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error) {
+	films, err := s.filmRepository.SearchFilm(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	var filmResponses []dto.FilmResponse
+
+	for _, film := range films {
+		var fileResponses []dto.FilmGambarResponse
+		var genreResponses []dto.GenreResponse
+
+		rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+		rating = math.Round(rating*100) / 100
+
+		for _, file := range film.FilmGambar {
+			fileResponses = append(fileResponses, dto.FilmGambarResponse{
+				ID:  file.ID,
+				Url: file.Url,
+			})
+		}
+
+		for _, genre := range film.FilmGenre {
+			genreResponses = append(genreResponses, dto.GenreResponse{
+				ID:   genre.Genre.ID,
+				Nama: genre.Genre.Nama,
+			})
+		}
+
+		filmResponses = append(filmResponses, dto.FilmResponse{
+			ID:           film.ID,
+			Judul:        film.Judul,
+			TanggalRilis: film.TanggalRilis,
+			Durasi:       film.Durasi,
+			Status:       film.Status,
+			Rating:       rating,
+			Gambar:       fileResponses,
+			Genres:       genreResponses,
+		})
+	}
+
+	return filmResponses, nil
 }

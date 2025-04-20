@@ -1,0 +1,2685 @@
+{
+	"info": {
+		"_postman_id": "c52c81fd-6f06-4941-a8a2-149d4aa05627",
+		"name": "Tugas RPL API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29327137"
+	},
+	"item": [
+		{
+			"name": "Get All User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/user/getAllUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"getAllUser"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All User",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/user/getAllUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"getAllUser"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:12:11 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "459"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get list of user\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"nama\": \"Admin1\",\n            \"username\": \"admin\",\n            \"bio\": \"\",\n            \"photo_profil\": \"\"\n        },\n        {\n            \"id\": 2,\n            \"nama\": \"Admin2\",\n            \"username\": \"admin2\",\n            \"bio\": \"\",\n            \"photo_profil\": \"\"\n        },\n        {\n            \"id\": 8,\n            \"nama\": \"User1\",\n            \"username\": \"user\",\n            \"bio\": \"User 1\",\n            \"photo_profil\": \"\"\n        },\n        {\n            \"id\": 10,\n            \"nama\": \"Coba testing via postman\",\n            \"username\": \"P\",\n            \"bio\": \"Halooo\",\n            \"photo_profil\": \"\"\n        },\n        {\n            \"id\": 7,\n            \"nama\": \"Update nama dari postman\",\n            \"username\": \"anam\",\n            \"bio\": \"\",\n            \"photo_profil\": \"\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get User By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/user/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get User By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/user/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:12:28 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "122"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get user\",\n    \"data\": {\n        \"id\": 1,\n        \"nama\": \"Admin1\",\n        \"username\": \"admin\",\n        \"bio\": \"\",\n        \"photo_profil\": \"\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nama\": \"Coba testing via postman\",\n    \"username\": \"P\",\n    \"password\": \"postman123\",\n    \"bio\": \"Halooo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Register User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"nama\": \"Coba testing via postman\",\n    \"username\": \"cobaa\",\n    \"password\": \"postman123\",\n    \"bio\": \"Halooo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:12:51 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "156"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"User created successfully\",\n    \"data\": {\n        \"id\": 12,\n        \"nama\": \"Coba testing via postman\",\n        \"username\": \"cobaa\",\n        \"bio\": \"Halooo\",\n        \"photo_profil\": \"\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"anam\",\n    \"password\": \"anam123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Login User",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"anam\",\n    \"password\": \"anam123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "token=MTc0NTE2MTk3N3xEWDhFQVFMX2dBQUJFQUVRQUFBZV80QUFBUVp6ZEhKcGJtY01DUUFIZFhObGNsOXBaQU5wYm5RRUFnQU98gz1fjGoBAEDJ893iVmLDeBxpd9VDAToKbNdESqsvcJU=; Path=/; Expires=Tue, 20 May 2025 15:12:57 GMT; Max-Age=2592000; Secure; SameSite=None"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:12:57 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "272"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Login successfully\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjkxNzcsImlhdCI6MTc0NTE2MTk3N30.241EmwVXJ_jbWk9-GwWAwGonkvXHwyVLMz2Rrw_Er-E\",\n        \"role\": \"user\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjc0NjcsImlhdCI6MTc0NTE2MDI2N30.HTGBicWJfCUhWZ910lqZQGgpeeietvhzaNKtVzE9X8w",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nama\": \"Update nama dari postman\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/user/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update User",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjc0NjcsImlhdCI6MTc0NTE2MDI2N30.HTGBicWJfCUhWZ910lqZQGgpeeietvhzaNKtVzE9X8w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nama\": \"Update nama dari postman\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"update"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:02 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"User updated successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/user/delete/9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"delete",
+						"9"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete data",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/delete/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"delete",
+								"10"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:13 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"User deleted successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Genre",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/genre/getAllGenre",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"genre",
+						"getAllGenre"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Genre",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/genre/getAllGenre",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"genre",
+								"getAllGenre"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:20 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "247"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get list genre\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"nama\": \"Action\"\n        },\n        {\n            \"id\": 2,\n            \"nama\": \"Romance\"\n        },\n        {\n            \"id\": 3,\n            \"nama\": \"Sci-Fi\"\n        },\n        {\n            \"id\": 4,\n            \"nama\": \"Drama\"\n        },\n        {\n            \"id\": 5,\n            \"nama\": \"Slice Life\"\n        },\n        {\n            \"id\": 6,\n            \"nama\": \"Thriller\"\n        },\n        {\n            \"id\": 7,\n            \"nama\": \"Slice of Life\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Genre",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nama\": \"Slice of Life\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/genre/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"genre",
+						"create"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Genre",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nama\": \"Slice of Life\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/genre/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"genre",
+								"create"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:25 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "93"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Genre created successfully\",\n    \"data\": {\n        \"id\": 8,\n        \"nama\": \"Slice of Life\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Genre",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nama\": \"Slice Life\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/genre/update/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"genre",
+						"update",
+						"5"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Genre",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nama\": \"Slice Life\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/genre/update/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"genre",
+								"update",
+								"5"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:30 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "90"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Genre updated successfully\",\n    \"data\": {\n        \"id\": 5,\n        \"nama\": \"Slice Life\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Film",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 5,\r\n    \"nama\": \"Horror\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/film/getAllFilm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"getAllFilm"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Film",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 5,\r\n    \"nama\": \"Horror\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/film/getAllFilm",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"getAllFilm"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:34 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "420"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get list film\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"judul\": \"Avengers\",\n            \"sinopsis\": \"\",\n            \"sutradara\": \"\",\n            \"status\": \"Airing\",\n            \"durasi\": 120,\n            \"total_episode\": 0,\n            \"tanggal_rilis\": \"2025-04-12T00:00:00Z\",\n            \"rating\": 7.58,\n            \"film_gambar\": [\n                {\n                    \"id\": 1,\n                    \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745040330/ReviewFilem/film_1_20250419_122528.521.jpg.jpg\"\n                }\n            ],\n            \"genres\": [\n                {\n                    \"id\": 1,\n                    \"nama\": \"Action\"\n                },\n                {\n                    \"id\": 3,\n                    \"nama\": \"Sci-Fi\"\n                }\n            ]\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Film By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/film/getFilmById/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"getFilmById",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Film By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/film/getFilmById/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"getFilmById",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:41 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "413"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get film\",\n    \"data\": {\n        \"id\": 1,\n        \"judul\": \"Avengers\",\n        \"sinopsis\": \"\",\n        \"sutradara\": \"\",\n        \"status\": \"Airing\",\n        \"durasi\": 120,\n        \"total_episode\": 0,\n        \"tanggal_rilis\": \"2025-04-12T00:00:00Z\",\n        \"rating\": 7.58,\n        \"film_gambar\": [\n            {\n                \"id\": 1,\n                \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745040330/ReviewFilem/film_1_20250419_122528.521.jpg.jpg\"\n            }\n        ],\n        \"genres\": [\n            {\n                \"id\": 1,\n                \"nama\": \"Action\"\n            },\n            {\n                \"id\": 3,\n                \"nama\": \"Sci-Fi\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Search Film",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/film/search?keyword=hero&status=airing&genres=1&genres=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "hero"
+						},
+						{
+							"key": "status",
+							"value": "airing"
+						},
+						{
+							"key": "genres",
+							"value": "1"
+						},
+						{
+							"key": "genres",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Search Film",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/film/search?keyword=hero&status=airing&genres=1&genres=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"search"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "hero"
+								},
+								{
+									"key": "status",
+									"value": "airing"
+								},
+								{
+									"key": "genres",
+									"value": "1"
+								},
+								{
+									"key": "genres",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:13:46 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "418"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success search film\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"judul\": \"Avengers\",\n            \"sinopsis\": \"\",\n            \"sutradara\": \"\",\n            \"status\": \"Airing\",\n            \"durasi\": 120,\n            \"total_episode\": 0,\n            \"tanggal_rilis\": \"2025-04-12T00:00:00Z\",\n            \"rating\": 7.58,\n            \"film_gambar\": [\n                {\n                    \"id\": 1,\n                    \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745040330/ReviewFilem/film_1_20250419_122528.521.jpg.jpg\"\n                }\n            ],\n            \"genres\": [\n                {\n                    \"id\": 1,\n                    \"nama\": \"Action\"\n                },\n                {\n                    \"id\": 3,\n                    \"nama\": \"Sci-Fi\"\n                }\n            ]\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Film",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "judul",
+							"value": "Avatar",
+							"type": "text"
+						},
+						{
+							"key": "sinopsis",
+							"value": "On the lush alien world of Pandora live the Na'vi, beings who appear primitive but are highly evolved. Because the planet's environment is poisonous, human/Na'vi hybrids, called Avatars, must link to human minds to allow for free movement on Pandora. Jake Sully (Sam Worthington), a paralyzed former Marine, becomes mobile again through one such Avatar and falls in love with a Na'vi woman (Zoe Saldana). As a bond with her grows, he is drawn into a battle for the survival of her world.",
+							"type": "text"
+						},
+						{
+							"key": "sutradara",
+							"value": "James Cameroon",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "finished airing",
+							"type": "text"
+						},
+						{
+							"key": "durasi",
+							"value": "120",
+							"type": "text"
+						},
+						{
+							"key": "total_episode",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "tanggal_rilis",
+							"value": "2009-10-01",
+							"type": "text"
+						},
+						{
+							"key": "genres",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "genres",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "images",
+							"type": "file",
+							"src": "/C:/Users/HP VICTUS/Downloads/avatar.width-800.format-webp_6KWsgDw.webp"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:5000/film/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"create"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Film",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "judul",
+									"value": "Avatar",
+									"type": "text"
+								},
+								{
+									"key": "sinopsis",
+									"value": "On the lush alien world of Pandora live the Na'vi, beings who appear primitive but are highly evolved. Because the planet's environment is poisonous, human/Na'vi hybrids, called Avatars, must link to human minds to allow for free movement on Pandora. Jake Sully (Sam Worthington), a paralyzed former Marine, becomes mobile again through one such Avatar and falls in love with a Na'vi woman (Zoe Saldana). As a bond with her grows, he is drawn into a battle for the survival of her world.",
+									"type": "text"
+								},
+								{
+									"key": "sutradara",
+									"value": "James Cameroon",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "finished airing",
+									"type": "text"
+								},
+								{
+									"key": "durasi",
+									"value": "120",
+									"type": "text"
+								},
+								{
+									"key": "total_episode",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "tanggal_rilis",
+									"value": "2009-10-01",
+									"type": "text"
+								},
+								{
+									"key": "genres",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "genres",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/HP VICTUS/Downloads/avatar.width-800.format-webp_6KWsgDw.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/film/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"create"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:14:36 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "927"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Film created successfully\",\n    \"data\": {\n        \"id\": 4,\n        \"judul\": \"Avatar\",\n        \"sinopsis\": \"On the lush alien world of Pandora live the Na'vi, beings who appear primitive but are highly evolved. Because the planet's environment is poisonous, human/Na'vi hybrids, called Avatars, must link to human minds to allow for free movement on Pandora. Jake Sully (Sam Worthington), a paralyzed former Marine, becomes mobile again through one such Avatar and falls in love with a Na'vi woman (Zoe Saldana). As a bond with her grows, he is drawn into a battle for the survival of her world.\",\n        \"sutradara\": \"James Cameroon\",\n        \"status\": \"finished airing\",\n        \"durasi\": 120,\n        \"total_episode\": 1,\n        \"tanggal_rilis\": \"2009-10-01T00:00:00+07:00\",\n        \"rating\": 0,\n        \"film_gambar\": [\n            {\n                \"id\": 0,\n                \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745162075/ReviewFilem/film_Avatar_20250420_221434.412.webp.webp\"\n            }\n        ],\n        \"genres\": [\n            {\n                \"id\": 0,\n                \"nama\": \"\"\n            },\n            {\n                \"id\": 0,\n                \"nama\": \"\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Status Film",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"airing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/film/updateStatus/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"updateStatus",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Status Film",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"airing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/film/updateStatus/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"updateStatus",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:14:43 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "60"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Status film updated successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Film",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/film/delete/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"delete",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Film",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/film/delete/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"delete",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:14:49 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Film deleted successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Genre Film",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY5NDQ0LCJpYXQiOjE3NDUxNjIyNDR9.ojaKRwZiW5ZHdLhqTM7DwPqTRx7P3k4CJZqycTAsQXQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"film_id\": 1,\r\n    \"genre_id\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/film/addFilmGenre",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"addFilmGenre"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add Genre Film",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY5NDQ0LCJpYXQiOjE3NDUxNjIyNDR9.ojaKRwZiW5ZHdLhqTM7DwPqTRx7P3k4CJZqycTAsQXQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"film_id\": 1,\r\n    \"genre_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/film/addFilmGenre",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"addFilmGenre"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:13 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "93"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Film genre created successfully\",\n    \"data\": {\n        \"film_id\": 1,\n        \"genre_id\": 2\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Film Genre",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"film_id\": 1,\r\n    \"genre_id\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/film/deleteFilmGenre",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"film",
+						"deleteFilmGenre"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Film Genre",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"film_id\": 1,\r\n    \"genre_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/film/deleteFilmGenre",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"film",
+								"deleteFilmGenre"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:28 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "59"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Film genre deleted successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get User Film By User Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/userFilm/getUserFilmByUserId/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"userFilm",
+						"getUserFilmByUserId",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get User Film By User Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/userFilm/getUserFilmByUserId/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"userFilm",
+								"getUserFilmByUserId",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:35 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "853"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get user film\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"status\": \"plan to watch\",\n            \"film\": {\n                \"id\": 1,\n                \"judul\": \"Avengers\",\n                \"sinopsis\": \"\",\n                \"sutradara\": \"\",\n                \"status\": \"Airing\",\n                \"durasi\": 120,\n                \"total_episode\": 0,\n                \"tanggal_rilis\": \"2025-04-12T00:00:00Z\",\n                \"rating\": 0,\n                \"film_gambar\": [\n                    {\n                        \"id\": 1,\n                        \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745040330/ReviewFilem/film_1_20250419_122528.521.jpg.jpg\"\n                    }\n                ],\n                \"genres\": [\n                    {\n                        \"id\": 1,\n                        \"nama\": \"Action\"\n                    },\n                    {\n                        \"id\": 3,\n                        \"nama\": \"Sci-Fi\"\n                    }\n                ]\n            }\n        },\n        {\n            \"id\": 3,\n            \"status\": \"watching\",\n            \"film\": {\n                \"id\": 1,\n                \"judul\": \"Avengers\",\n                \"sinopsis\": \"\",\n                \"sutradara\": \"\",\n                \"status\": \"Airing\",\n                \"durasi\": 120,\n                \"total_episode\": 0,\n                \"tanggal_rilis\": \"2025-04-12T00:00:00Z\",\n                \"rating\": 0,\n                \"film_gambar\": [\n                    {\n                        \"id\": 1,\n                        \"url\": \"https://res.cloudinary.com/duaphochk/image/upload/v1745040330/ReviewFilem/film_1_20250419_122528.521.jpg.jpg\"\n                    }\n                ],\n                \"genres\": [\n                    {\n                        \"id\": 1,\n                        \"nama\": \"Action\"\n                    },\n                    {\n                        \"id\": 3,\n                        \"nama\": \"Sci-Fi\"\n                    }\n                ]\n            }\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User Film",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"film_id\": 1,\r\n    \"status\": \"plan to watch\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/userFilm/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"userFilm",
+						"create"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create User Film",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJpc3MiOiJ0dWdhcy1ycGwtY3V5IiwiZXhwIjoxNzQ1MTY3NjMyLCJpYXQiOjE3NDUxNjA0MzJ9.7VcYvxKEsJci8LTGN1DTeMb6p-_zhGsbGu_I61KxFKQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"film_id\": 1,\r\n    \"status\": \"plan to watch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/userFilm/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"userFilm",
+								"create"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:42 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "712"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success add film\",\n    \"data\": {\n        \"ID\": 4,\n        \"CreatedAt\": \"2025-04-20T22:18:42.3008152+07:00\",\n        \"UpdatedAt\": \"2025-04-20T22:18:42.3008152+07:00\",\n        \"DeletedAt\": null,\n        \"status\": \"plan to watch\",\n        \"user_id\": 1,\n        \"film_id\": 1,\n        \"user\": {\n            \"ID\": 0,\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null,\n            \"id\": 0,\n            \"nama\": \"\",\n            \"username\": \"\",\n            \"password\": \"\",\n            \"role\": \"\",\n            \"bio\": \"\",\n            \"photo_profil\": \"\",\n            \"user_film\": null,\n            \"review\": null\n        },\n        \"film\": {\n            \"ID\": 0,\n            \"CreatedAt\": \"0001-01-01T00:00:00Z\",\n            \"UpdatedAt\": \"0001-01-01T00:00:00Z\",\n            \"DeletedAt\": null,\n            \"judul\": \"\",\n            \"status\": \"\",\n            \"sinopsis\": \"\",\n            \"durasi\": 0,\n            \"total_episode\": 0,\n            \"sutradara\": \"\",\n            \"tanggal_rilis\": \"0001-01-01T00:00:00Z\",\n            \"film_gambar\": null,\n            \"film_genre\": null,\n            \"review\": null\n        }\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update User Film Status",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 3,\r\n    \"film_id\": 1,\r\n    \"status\": \"watching\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/userFilm/updateStatus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"userFilm",
+						"updateStatus"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update User Film Status",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"film_id\": 1,\r\n    \"status\": \"watching\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/userFilm/updateStatus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"userFilm",
+								"updateStatus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:48 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "60"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Status film updated successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Review By User Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/review/getReviewUserById/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"getReviewUserById",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Review By User Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/review/getReviewUserById/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"getReviewUserById",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:18:55 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "688"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get review\",\n    \"data\": {\n        \"count_review\": 2,\n        \"reviews\": [\n            {\n                \"id\": 4,\n                \"komentar\": \"sdvs\",\n                \"rating\": 5,\n                \"user\": {\n                    \"id\": 0,\n                    \"username\": \"\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 6,\n                \"komentar\": \"vbdb\",\n                \"rating\": 8,\n                \"user\": {\n                    \"id\": 0,\n                    \"username\": \"\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 3,\n                \"komentar\": \"vsdv\",\n                \"rating\": 6,\n                \"user\": {\n                    \"id\": 0,\n                    \"username\": \"\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 10,\n                \"komentar\": \"updatefd komentar dari postman\",\n                \"rating\": 8,\n                \"user\": {\n                    \"id\": 0,\n                    \"username\": \"\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 9,\n                \"komentar\": \"gabisa\",\n                \"rating\": 7,\n                \"user\": {\n                    \"id\": 0,\n                    \"username\": \"\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Review By Film Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token=MTc0NTE1ODc5MXxEWDhFQVFMX2dBQUJFQUVRQUFBZV80QUFBUVp6ZEhKcGJtY01DUUFIZFhObGNsOXBaQU5wYm5RRUFnQU98GWyYDVmZnided_hGGWAagJRawp-mYHTBesv9yVCietg=; Path=/; Secure; Expires=Tue, 20 May 2025 14:19:51 GMT;",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/review/getReviewByFilmId/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"getReviewByFilmId",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Review By Film Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token=MTc0NTE1ODc5MXxEWDhFQVFMX2dBQUJFQUVRQUFBZV80QUFBUVp6ZEhKcGJtY01DUUFIZFhObGNsOXBaQU5wYm5RRUFnQU98GWyYDVmZnided_hGGWAagJRawp-mYHTBesv9yVCietg=; Path=/; Secure; Expires=Tue, 20 May 2025 14:19:51 GMT;",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/review/getReviewByFilmId/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"getReviewByFilmId",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:19:00 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "701"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Success get list review\",\n    \"data\": {\n        \"count_page\": 3,\n        \"reviews\": [\n            {\n                \"id\": 2,\n                \"komentar\": \"sedef\",\n                \"rating\": 7,\n                \"user\": {\n                    \"id\": 2,\n                    \"username\": \"admin2\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 5,\n                    \"reaksi\": \"dislike\",\n                    \"user_id\": 7\n                }\n            },\n            {\n                \"id\": 3,\n                \"komentar\": \"vsdv\",\n                \"rating\": 6,\n                \"user\": {\n                    \"id\": 1,\n                    \"username\": \"admin\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 4,\n                \"komentar\": \"sdvs\",\n                \"rating\": 5,\n                \"user\": {\n                    \"id\": 1,\n                    \"username\": \"admin\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 5,\n                \"komentar\": \"dfsgg\",\n                \"rating\": 5,\n                \"user\": {\n                    \"id\": 2,\n                    \"username\": \"admin2\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            },\n            {\n                \"id\": 1,\n                \"komentar\": \"mantap\",\n                \"rating\": 7,\n                \"user\": {\n                    \"id\": 2,\n                    \"username\": \"admin2\"\n                },\n                \"user_reaksi\": {\n                    \"id\": 0,\n                    \"reaksi\": \"\",\n                    \"user_id\": 0\n                }\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"film_id\": 1,\r\n    \"komentar\": \"komentar dari postman\",\r\n    \"rating\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/review/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"create"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Review",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"film_id\": 1,\r\n    \"komentar\": \"komentar dari postman\",\r\n    \"rating\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/review/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"create"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:19:08 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "119"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Review created successfully\",\n    \"data\": {\n        \"id\": 14,\n        \"komentar\": \"komentar dari postman\",\n        \"rating\": 10\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Review",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 13,\r\n    \"komentar\": \"updatefd komentar dari postman\",\r\n    \"rating\": 8\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/review/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Review",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 14,\r\n    \"komentar\": \"updatefd komentar dari postman\",\r\n    \"rating\": 8\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/review/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"update"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:19:35 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Review updated successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create or Update Reaksi Review",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"review_id\": 13,\r\n    \"user_id\": 1,\r\n    \"reaksi\": \"like\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/review/updateReaksiReview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"updateReaksiReview"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create or Update Reaksi Review",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjI1OTQsImlhdCI6MTc0NTE1NTM5NH0.UY2jO_rQHJat0Ib0GjGELrBOD7Z_V0ORpWYzYBO_dow",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review_id\": 14,\r\n    \"user_id\": 1,\r\n    \"reaksi\": \"like\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/review/updateReaksiReview",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"updateReaksiReview"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:19:44 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Review updated successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Review",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjg4OTcsImlhdCI6MTc0NTE2MTY5N30.NNLA5CUZuyHTQlSUkVkFWWyH1jYijbU4b51mxPNGbc4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/review/delete/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"review",
+						"delete",
+						"13"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Review",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3LCJyb2xlIjoidXNlciIsImlzcyI6InR1Z2FzLXJwbC1jdXkiLCJleHAiOjE3NDUxNjg4OTcsImlhdCI6MTc0NTE2MTY5N30.NNLA5CUZuyHTQlSUkVkFWWyH1jYijbU4b51mxPNGbc4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/review/delete/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"review",
+								"delete",
+								"14"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Credentials",
+							"value": "true"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 20 Apr 2025 15:19:54 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": true,\n    \"message\": \"Review deleted successfully\"\n}"
+				}
+			]
+		}
+	]
+}
