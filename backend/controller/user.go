@@ -113,6 +113,27 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+func (c *userController) LogoutUser(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	userID := session.Get("user_id")
+
+	if userID == nil {
+		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_USER_NOT_LOGIN, dto.ErrUserNotLogin.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	session.Clear()
+	if err := session.Save(); err != nil {
+		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGOUT, dto.ErrFailedSaveSession.Error(), err.Error())
+		ctx.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil)
+	ctx.JSON(http.StatusOK, response)
+}
+
 func (c *userController) UpdateUser(ctx *gin.Context) {
 	userId := ctx.MustGet("user_id").(int)
 

@@ -31,7 +31,7 @@ func NewFilmRepository(db *gorm.DB) FilmRepository {
 func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Film, error) {
 	var films []entity.Film
 
-	const limit = 10
+	const limit = 5
 	if page < 1 {
 		page = 1
 	}
