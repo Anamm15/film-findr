@@ -17,6 +17,7 @@ type UserController interface {
 	GetUserById(ctx *gin.Context)
 	RegisterUser(ctx *gin.Context)
 	LoginUser(ctx *gin.Context)
+	LogoutUser(ctx *gin.Context)
 	UpdateUser(ctx *gin.Context)
 	DeleteUser(ctx *gin.Context)
 }

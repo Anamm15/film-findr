@@ -16,6 +16,7 @@ func UserRoute(server *gin.Engine, userController controller.UserController, jwt
 		user.GET("/:id", userController.GetUserById)
 		user.POST("/register", userController.RegisterUser)
 		user.POST("/login", userController.LoginUser)
+		user.POST(("/logout"), middleware.Authenticate(jwtService), userController.LogoutUser)
 		user.PATCH("/update", middleware.Authenticate(jwtService), userController.UpdateUser)
 		user.DELETE("/delete/:id", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), userController.DeleteUser)
 	}
