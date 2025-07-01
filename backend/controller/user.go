@@ -152,7 +152,11 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	err := c.userService.UpdateUser(ctx, user)
+	photoProfil, err := ctx.FormFile("photo_profil")
+	if err == nil {
+		err = c.userService.UpdateUser(ctx, user, photoProfil)
+	}
+
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_USER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

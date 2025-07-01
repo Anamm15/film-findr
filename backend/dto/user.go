@@ -76,10 +76,11 @@ type (
 	}
 
 	UserUpdateRequest struct {
-		ID       int    `json:"id"`
-		Nama     string `json:"nama" form:"nama"`
-		Bio      string `json:"bio" form:"bio"`
-		Username string `json:"username" form:"username"`
+		ID             int    `json:"id"`
+		Nama           string `json:"nama" form:"nama"`
+		Bio            string `json:"bio" form:"bio"`
+		Username       string `json:"username" form:"username"`
+		OldPhotoProfil string `json:"old_photo_profil"`
 	}
 
 	UserResponseWithFilm struct {

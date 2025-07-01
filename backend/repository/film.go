@@ -73,8 +73,40 @@ func (r *filmRepository) CreateFilm(ctx context.Context, tx *gorm.DB, film entit
 	return film, err
 }
 
-func (r *filmRepository) UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error) {
-	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", film.ID).Updates(film).Error
+func (r *filmRepository) UpdateFilm(ctx context.Context, reqFilm dto.UpdateFilmRequest) (entity.Film, error) {
+	var film entity.Film
+
+	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", reqFilm.ID).First(&film).Error
+
+	if reqFilm.Judul != "" {
+		film.Judul = reqFilm.Judul
+	}
+
+	if reqFilm.Sinopsis != "" {
+		film.Sinopsis = reqFilm.Sinopsis
+	}
+
+	if reqFilm.Sutradara != "" {
+		film.Sutradara = reqFilm.Sutradara
+	}
+
+	if reqFilm.Status != "" {
+		film.Status = reqFilm.Status
+	}
+
+	if !reqFilm.TanggalRilis.IsZero() {
+		film.TanggalRilis = reqFilm.TanggalRilis
+	}
+
+	if reqFilm.Durasi != 0 {
+		film.Durasi = reqFilm.Durasi
+	}
+
+	if reqFilm.TotalEpisode != 0 {
+		film.TotalEpisode = reqFilm.TotalEpisode
+	}
+
+	err = r.db.WithContext(ctx).Save(&film).Error
 	return entity.Film{}, err
 }
 

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"FilmFindr/dto"
 	"FilmFindr/entity"
 
 	"gorm.io/gorm"
@@ -13,7 +14,7 @@ type UserRepository interface {
 	GetUserById(ctx context.Context, id int) (entity.User, error)
 	CreateUser(ctx context.Context, user entity.User) (entity.User, error)
 	GetUserByUsername(ctx context.Context, username string) (entity.User, error)
-	UpdateUser(ctx context.Context, user entity.User) error
+	UpdateUser(ctx context.Context, user dto.UserUpdateRequest) error
 	DeleteUser(ctx context.Context, id int) error
 }
 
@@ -68,7 +69,7 @@ func (r *userRepository) GetUserByUsername(ctx context.Context, username string)
 	return user, nil
 }
 
-func (r *userRepository) UpdateUser(ctx context.Context, userReq entity.User) error {
+func (r *userRepository) UpdateUser(ctx context.Context, userReq dto.UserUpdateRequest) error {
 	var user entity.User
 	if err := r.db.WithContext(ctx).First(&user, userReq.ID).Error; err != nil {
 		return err
@@ -84,6 +85,10 @@ func (r *userRepository) UpdateUser(ctx context.Context, userReq entity.User) er
 
 	if userReq.Bio != "" {
 		user.Bio = userReq.Bio
+	}
+
+	if userReq.OldPhotoProfil != user.PhotoProfil && userReq.OldPhotoProfil != "" {
+		user.PhotoProfil = userReq.OldPhotoProfil
 	}
 
 	if err := r.db.Save(&user).Error; err != nil {

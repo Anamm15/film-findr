@@ -18,7 +18,7 @@ type UserService interface {
 	GetUserById(ctx context.Context, id int) (dto.UserResponse, error)
 	RegisterUser(ctx context.Context, user dto.UserCreateRequest, photoProfil *multipart.FileHeader) (dto.UserResponse, error)
 	LoginUser(ctx context.Context, req dto.UserLoginRequest) (entity.User, error)
-	UpdateUser(ctx context.Context, user dto.UserUpdateRequest) error
+	UpdateUser(ctx context.Context, user dto.UserUpdateRequest, photoProfil *multipart.FileHeader) error
 	DeleteUser(ctx context.Context, id int) error
 }
 
@@ -131,14 +131,33 @@ func (s *userService) LoginUser(ctx context.Context, req dto.UserLoginRequest) (
 	return entity.User{}, dto.ErrEmailOrPassword
 }
 
-func (s *userService) UpdateUser(ctx context.Context, user dto.UserUpdateRequest) error {
-	userRequest := entity.User{
-		ID:       user.ID,
-		Username: user.Username,
-		Nama:     user.Nama,
-		Bio:      user.Bio,
+func (s *userService) UpdateUser(ctx context.Context, user dto.UserUpdateRequest, photoProfil *multipart.FileHeader) error {
+	if photoProfil != nil {
+		src, err := photoProfil.Open()
+		if err != nil {
+			return err
+		}
+		defer src.Close()
+
+		uniqueFileName := utils.GenerateUniqueImageName(user.Username, photoProfil.Filename)
+		uploadResult, err := s.cloudinary.Upload.Upload(ctx, src, uploader.UploadParams{
+			Folder:   "user",
+			PublicID: uniqueFileName,
+		})
+		if err != nil {
+			return err
+		}
+
+		// hapus file lama di cloud
+		err = s.cloudinary.Delete(ctx, user.OldPhotoProfil)
+		if err != nil {
+			return err
+		}
+
+		user.OldPhotoProfil = uploadResult.SecureURL
 	}
-	err := s.userRepository.UpdateUser(ctx, userRequest)
+
+	err := s.userRepository.UpdateUser(ctx, user)
 	if err != nil {
 		return dto.ErrUpdateUser
 	}

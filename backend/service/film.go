@@ -185,13 +185,14 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 			tx.Rollback()
 			return dto.FilmResponse{}, err
 		}
-		defer src.Close()
 
 		uniqueName := utils.GenerateUniqueImageName(createdFilm.Judul, file.Filename)
 		uploadResult, err := s.cloudinary.Upload.Upload(ctx, src, uploader.UploadParams{
 			Folder:   "ReviewFilem",
 			PublicID: uniqueName,
 		})
+		src.Close()
+
 		if err != nil {
 			tx.Rollback()
 			return dto.FilmResponse{}, err
@@ -202,15 +203,15 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 			Url:    uploadResult.SecureURL,
 		}
 
-		filmGambarResponse = append(filmGambarResponse, dto.FilmGambarResponse{
-			ID:  filmGambar.ID,
-			Url: filmGambar.Url,
-		})
-
 		if err := s.filmGambarRepository.Save(ctx, tx, filmGambar); err != nil {
 			tx.Rollback()
 			return dto.FilmResponse{}, err
 		}
+
+		filmGambarResponse = append(filmGambarResponse, dto.FilmGambarResponse{
+			ID:  filmGambar.ID,
+			Url: filmGambar.Url,
+		})
 	}
 
 	// Commit transaction jika semua berhasil
