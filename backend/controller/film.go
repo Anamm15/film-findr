@@ -27,7 +27,10 @@ type filmController struct {
 	filmGenreService service.FilmGenreService
 }
 
-func NewFilmController(filmService service.FilmService, filmGenreService service.FilmGenreService) FilmController {
+func NewFilmController(
+	filmService service.FilmService,
+	filmGenreService service.FilmGenreService,
+) FilmController {
 	return &filmController{
 		filmService:      filmService,
 		filmGenreService: filmGenreService,

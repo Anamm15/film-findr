@@ -7,7 +7,6 @@ import (
 	"FilmFindr/service"
 	"FilmFindr/utils"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,17 +20,21 @@ type ReviewController interface {
 }
 
 type reviewController struct {
-	reviewService service.ReviewService
+	reviewService  service.ReviewService
+	sessionService service.SessionService
 }
 
-func NewReviewController(reviewService service.ReviewService) ReviewController {
+func NewReviewController(
+	reviewService service.ReviewService,
+	sessionService service.SessionService,
+) ReviewController {
 	return &reviewController{
-		reviewService: reviewService,
+		reviewService:  reviewService,
+		sessionService: sessionService,
 	}
 }
 
 func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
-	session := sessions.Default(ctx)
 	id := ctx.Param("id")
 	pageStr := ctx.Query("page")
 	page, err := strconv.Atoi(pageStr)
@@ -39,9 +42,8 @@ func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
 		page = 1
 	}
 
-	userIdSession := session.Get("user_id")
-	userId, ok := userIdSession.(int)
-	if !ok {
+	userId, err := c.sessionService.GetUserID(ctx)
+	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
 		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
 		return
@@ -59,7 +61,6 @@ func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
 }
 
 func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
-	session := sessions.Default(ctx)
 	id := ctx.Param("id")
 	pageStr := ctx.Query("page")
 	page, err := strconv.Atoi(pageStr)
@@ -67,9 +68,8 @@ func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
 		page = 1
 	}
 
-	userIdSession := session.Get("user_id")
-	userId, ok := userIdSession.(int)
-	if !ok {
+	userId, err := c.sessionService.GetUserID(ctx)
+	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
 		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
 		return

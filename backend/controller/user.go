@@ -20,14 +20,20 @@ type UserController interface {
 }
 
 type userController struct {
-	userService service.UserService
-	jwtService  service.JWTService
+	userService    service.UserService
+	jwtService     service.JWTService
+	sessionService service.SessionService
 }
 
-func NewUserController(userService service.UserService, jwtService service.JWTService) UserController {
+func NewUserController(
+	userService service.UserService,
+	jwtService service.JWTService,
+	sessionService service.SessionService,
+) UserController {
 	return &userController{
-		userService: userService,
-		jwtService:  jwtService,
+		userService:    userService,
+		jwtService:     jwtService,
+		sessionService: sessionService,
 	}
 }
 
@@ -103,9 +109,12 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 		Role:  user.Role,
 	}
 
-	session := sessions.Default(ctx)
-	session.Set("user_id", user.ID)
-	session.Save()
+	err = c.sessionService.SaveUserID(ctx, user.ID)
+	if err != nil {
+		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGIN, err.Error(), nil)
+		ctx.AbortWithStatusJSON(dto.STATUS_INTERNAL_SERVER_ERROR, response)
+		return
+	}
 
 	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse, nil)
 	ctx.JSON(dto.STATUS_OK, response)
@@ -113,11 +122,11 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 
 func (c *userController) LogoutUser(ctx *gin.Context) {
 	session := sessions.Default(ctx)
-	userID := session.Get("user_id")
+	_, err := c.sessionService.GetUserID(ctx)
 
-	if userID == nil {
-		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_USER_NOT_LOGIN, dto.ErrUserNotLogin.Error(), nil)
-		ctx.JSON(dto.STATUS_BAD_REQUEST, response)
+	if err == nil {
+		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.ErrUserNotLogin.Error(), nil)
+		ctx.JSON(dto.STATUS_UNAUTHORIZED, response)
 		return
 	}
 

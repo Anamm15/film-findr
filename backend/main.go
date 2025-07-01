@@ -46,6 +46,7 @@ func main() {
 		filmRepository         repository.FilmRepository         = repository.NewFilmRepository(db)
 		userFilmRepository     repository.UserFilmRepository     = repository.NewUserFilmRepository(db)
 
+		sessionService   service.SessionService   = service.NewSessionService()
 		genreService     service.GenreService     = service.NewGenreService(genreRepository)
 		filmGenreService service.FilmGenreService = service.NewFilmGenreService(filmGenreRepository, db)
 		userService      service.UserService      = service.NewUserService(cloudinaryCloud, userRepository)
@@ -54,9 +55,9 @@ func main() {
 		filmService      service.FilmService      = service.NewFilmService(db, cloudinaryCloud, filmRepository, filmGambarRepository, filmGenreRepository, reviewRepository)
 
 		genreController    controller.GenreController    = controller.NewGenreController(genreService)
-		userController     controller.UserController     = controller.NewUserController(userService, jwtService)
+		userController     controller.UserController     = controller.NewUserController(userService, jwtService, sessionService)
 		userFilmController controller.UserFilmController = controller.NewUserFilmController(userFilmService)
-		reviewController   controller.ReviewController   = controller.NewReviewController(reviewService)
+		reviewController   controller.ReviewController   = controller.NewReviewController(reviewService, sessionService)
 		filmController     controller.FilmController     = controller.NewFilmController(filmService, filmGenreService)
 	)
 
