@@ -3,7 +3,7 @@ package migrations
 import (
 	"errors"
 
-	"ReviewPiLem/entity"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )

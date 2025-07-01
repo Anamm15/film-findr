@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"ReviewPiLem/entity"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )
@@ -24,7 +24,8 @@ func NewGenreRepository(db *gorm.DB) GenreRepository {
 
 func (r *genreRepository) GetAllGenre(ctx context.Context) ([]entity.Genre, error) {
 	var genres []entity.Genre
-	if err := r.db.Find(&genres).Error; err != nil {
+	if err := r.db.WithContext(ctx).Select("id", "nama").
+		Find(&genres).Error; err != nil {
 		return nil, err
 	}
 

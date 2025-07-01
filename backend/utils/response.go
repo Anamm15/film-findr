@@ -5,15 +5,17 @@ type Response struct {
 	Message string `json:"message"`
 	Error   any    `json:"error,omitempty"`
 	Data    any    `json:"data,omitempty"`
+	Meta    any    `json:"meta,omitempty"`
 }
 
 type EmptyObj struct{}
 
-func BuildResponseSuccess(message string, data any) Response {
+func BuildResponseSuccess(message string, data any, metadata any) Response {
 	res := Response{
 		Status:  true,
 		Message: message,
 		Data:    data,
+		Meta:    metadata,
 	}
 	return res
 }

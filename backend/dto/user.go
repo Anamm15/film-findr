@@ -12,7 +12,6 @@ const (
 	MESSAGE_FAILED_CREATED_USER   = "Failed created user"
 	MESSAGE_FAILED_UPDATED_USER   = "Failed updated user"
 	MESSAGE_FAILED_DELETED_USER   = "Failed deleted user"
-	MESSAGE_FAILED_LOGIN          = "Failed to login"
 	MESSAGE_FAILED_LOGOUT         = "Failed to logout"
 	MESSAGE_FAILED_USER_NOT_LOGIN = "User not login"
 

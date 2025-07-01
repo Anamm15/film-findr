@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/repository"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
+	"FilmFindr/repository"
 )
 
 type GenreService interface {
@@ -30,15 +30,15 @@ func (s *genreService) GetAllGenre(ctx context.Context) ([]dto.GenreRequest, err
 		return nil, dto.ErrGetAllGenre
 	}
 
-	var genreResponse []dto.GenreRequest
+	var response []dto.GenreRequest
 	for _, genre := range genres {
-		genreResponse = append(genreResponse, dto.GenreRequest{
+		response = append(response, dto.GenreRequest{
 			ID:   genre.ID,
 			Nama: genre.Nama,
 		})
 	}
 
-	return genreResponse, nil
+	return response, nil
 }
 
 func (s *genreService) CreateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error) {
@@ -52,7 +52,12 @@ func (s *genreService) CreateGenre(ctx context.Context, genre dto.GenreRequest) 
 		return dto.GenreResponse{}, dto.ErrGetAllGenre
 	}
 
-	return dto.GenreResponse{ID: createdGenre.ID, Nama: createdGenre.Nama}, nil
+	response := dto.GenreResponse{
+		ID:   createdGenre.ID,
+		Nama: createdGenre.Nama,
+	}
+
+	return response, nil
 }
 
 func (s *genreService) UpdateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error) {
@@ -66,8 +71,10 @@ func (s *genreService) UpdateGenre(ctx context.Context, genre dto.GenreRequest) 
 		return dto.GenreResponse{}, dto.ErrUpdateGenre
 	}
 
-	return dto.GenreResponse{
+	response := dto.GenreResponse{
 		ID:   updatedGenre.ID,
 		Nama: updatedGenre.Nama,
-	}, nil
+	}
+
+	return response, nil
 }

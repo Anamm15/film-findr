@@ -4,11 +4,11 @@ import (
 	"context"
 	"mime/multipart"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/helpers"
-	"ReviewPiLem/repository"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
+	"FilmFindr/helpers"
+	"FilmFindr/repository"
+	"FilmFindr/utils"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
@@ -50,6 +50,7 @@ func (s *userService) GetAllUser(ctx context.Context) ([]dto.UserResponse, error
 			PhotoProfil: user.PhotoProfil,
 		})
 	}
+
 	return userResponse, nil
 }
 
@@ -101,7 +102,7 @@ func (s *userService) RegisterUser(ctx context.Context, userCreateRequest dto.Us
 		Role:        helpers.ENUM_ROLE_USER,
 	}
 
-	userRepspone, err := s.userRepository.RegisterUser(ctx, user)
+	userRepspone, err := s.userRepository.CreateUser(ctx, user)
 	if err != nil {
 		return dto.UserResponse{}, dto.ErrCreateUser
 	}

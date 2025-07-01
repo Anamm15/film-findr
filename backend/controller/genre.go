@@ -1,11 +1,9 @@
 package controller
 
 import (
-	"net/http"
-
-	"ReviewPiLem/dto"
-	"ReviewPiLem/service"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/service"
+	"FilmFindr/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,31 +28,31 @@ func (s *genreController) GetAllGenre(ctx *gin.Context) {
 	genres, err := s.genreService.GetAllGenre(ctx)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_GENRE, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_GENRE, genres)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_GENRE, genres, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (s *genreController) CreateGenre(ctx *gin.Context) {
 	var genre dto.GenreRequest
 	if err := ctx.ShouldBindJSON(&genre); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	createdGenre, err := s.genreService.CreateGenre(ctx, genre)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_GENRE, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (s *genreController) UpdateGenre(ctx *gin.Context) {
@@ -62,18 +60,18 @@ func (s *genreController) UpdateGenre(ctx *gin.Context) {
 	var genre dto.GenreRequest
 	genre.ID = utils.StringToInt(genreId)
 	if err := ctx.ShouldBindJSON(&genre); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	updatedGenre, err := s.genreService.UpdateGenre(ctx, genre)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_GENRE, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }

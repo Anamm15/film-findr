@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"slices"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +14,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		roleInterface, exists := c.Get("role")
 		if !exists {
-			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, dto.MESSAGE_FAILED_DENIED_ACCESS, nil)
+			res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, dto.MESSAGE_FAILED_REQUIRED_FIELD, nil)
 			c.JSON(http.StatusForbidden, res)
 			c.Abort()
 			return
@@ -26,7 +26,7 @@ func AuthorizeRole(allowedRoles ...string) gin.HandlerFunc {
 			return
 		}
 
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, dto.MESSAGE_FAILED_DENIED_ACCESS, nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UNAUTHORIZED, dto.MESSAGE_FAILED_UNAUTHORIZED, nil)
 		c.JSON(http.StatusForbidden, res)
 		c.Abort()
 	}

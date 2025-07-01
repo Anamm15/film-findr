@@ -1,4 +1,4 @@
-module ReviewPiLem
+module FilmFindr
 
 go 1.23.0
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"ReviewPiLem/entity"
-	"ReviewPiLem/helpers"
+	"FilmFindr/entity"
+	"FilmFindr/helpers"
 
 	"gorm.io/gorm"
 )

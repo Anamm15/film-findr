@@ -4,8 +4,8 @@ import (
 	"context"
 	"math"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )

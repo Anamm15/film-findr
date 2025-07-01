@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )
@@ -12,7 +12,7 @@ import (
 type FilmRepository interface {
 	GetAllFilm(ctx context.Context, page int) ([]entity.Film, error)
 	CreateFilm(ctx context.Context, tx *gorm.DB, film entity.Film) (entity.Film, error)
-	UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
+	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
 	GetFilmByID(ctx context.Context, id int) (entity.Film, error)
 	UpdateStatus(ctx context.Context, id int, status string) error
@@ -38,14 +38,14 @@ func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Fil
 	offset := (page - 1) * limit
 
 	if err := r.db.WithContext(ctx).
-		Order("created_at DESC").
-		Limit(limit).
-		Offset(offset).
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
 		}).
 		Preload("FilmGenre.Genre").
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset).
 		Find(&films).Error; err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Fil
 
 func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (entity.Film, error) {
 	var film entity.Film
-	if err := r.db.
+	if err := r.db.WithContext(ctx).
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
@@ -69,28 +69,28 @@ func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (entity.Film, 
 }
 
 func (r *filmRepository) CreateFilm(ctx context.Context, tx *gorm.DB, film entity.Film) (entity.Film, error) {
-	err := tx.Create(&film).Error
+	err := tx.WithContext(ctx).Create(&film).Error
 	return film, err
 }
 
-func (r *filmRepository) UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error) {
-	err := r.db.Save(&film).Error
-	return film, err
+func (r *filmRepository) UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error) {
+	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", film.ID).Updates(film).Error
+	return entity.Film{}, err
 }
 
 func (r *filmRepository) DeleteFilm(ctx context.Context, id int) error {
-	err := r.db.Delete(&entity.Film{}, id).Error
+	err := r.db.WithContext(ctx).Delete(&entity.Film{}, id).Error
 	return err
 }
 
 func (r *filmRepository) UpdateStatus(ctx context.Context, id int, status string) error {
-	err := r.db.Model(&entity.Film{}).Where("id = ?", id).Update("status", status).Error
+	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", id).Update("status", status).Error
 	return err
 }
 
 func (r *filmRepository) CheckStatusFilm(ctx context.Context, id int) (entity.Film, error) {
 	var film entity.Film
-	if err := r.db.Select("id", "status").Where("id = ?", id).First(&film).Error; err != nil {
+	if err := r.db.WithContext(ctx).Select("id", "status").Where("id = ?", id).First(&film).Error; err != nil {
 		return entity.Film{}, err
 	}
 
@@ -112,7 +112,7 @@ func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmReque
 		r.db.Joins("JOIN film_genre ON film_genre.film_id = films.id").Where("film_genre.genre_id IN (?)", req.Genres)
 	}
 
-	if err := r.db.
+	if err := r.db.WithContext(ctx).
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")

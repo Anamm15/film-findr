@@ -5,10 +5,10 @@ import (
 	"math"
 	"mime/multipart"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/repository"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
+	"FilmFindr/repository"
+	"FilmFindr/utils"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
@@ -19,7 +19,7 @@ type FilmService interface {
 	GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error)
 	GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error)
 	CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error)
-	UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error)
+	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
 	UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error
 	SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error)
@@ -233,7 +233,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 	}, nil
 }
 
-func (s *filmService) UpdateFilm(ctx context.Context, film entity.Film) (entity.Film, error) {
+func (s *filmService) UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error) {
 	updatedFilm, err := s.filmRepository.UpdateFilm(ctx, film)
 	if err != nil {
 		return entity.Film{}, dto.ErrUpdateFilm

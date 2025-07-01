@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"net/http"
 	"strconv"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/service"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/service"
+	"FilmFindr/utils"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -43,20 +42,20 @@ func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
 	userIdSession := session.Get("user_id")
 	userId, ok := userIdSession.(int)
 	if !ok {
-		res := utils.BuildResponseFailed("Gagal mengambil session user", "user_id tidak ditemukan atau bukan string", nil)
-		ctx.JSON(http.StatusUnauthorized, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
+		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
 		return
 	}
 
 	review, err := c.reviewService.GetReviewByUserId(ctx, utils.StringToInt(id), userId, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, review)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, review, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
@@ -71,20 +70,20 @@ func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
 	userIdSession := session.Get("user_id")
 	userId, ok := userIdSession.(int)
 	if !ok {
-		res := utils.BuildResponseFailed("Gagal mengambil session user", "user_id tidak ditemukan atau bukan string", nil)
-		ctx.JSON(http.StatusUnauthorized, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
+		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
 		return
 	}
 
 	reviews, err := c.reviewService.GetReviewByFilmId(ctx, utils.StringToInt(id), userId, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_REVIEW, reviews)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_REVIEW, reviews, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *reviewController) CreateReview(ctx *gin.Context) {
@@ -93,58 +92,58 @@ func (c *reviewController) CreateReview(ctx *gin.Context) {
 
 	var review dto.CreateReviewRequest
 	if err := ctx.ShouldBindJSON(&review); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	createdReview, err := c.reviewService.CreateReview(ctx, review, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_REVIEW, createdReview)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_REVIEW, createdReview, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *reviewController) UpdateReview(ctx *gin.Context) {
 	var review dto.UpdateReviewRequest
 	if err := ctx.ShouldBindJSON(&review); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	err := c.reviewService.UpdateReview(ctx, review)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *reviewController) UpdateReaksiReview(ctx *gin.Context) {
 	var review dto.UpdateReaksiReviewRequest
 	if err := ctx.ShouldBindJSON(&review); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	err := c.reviewService.UpdateReaksiReview(ctx, review)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *reviewController) DeleteReview(ctx *gin.Context) {
@@ -153,10 +152,10 @@ func (c *reviewController) DeleteReview(ctx *gin.Context) {
 	err := c.reviewService.DeleteReview(ctx, utils.StringToInt(id))
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_REVIEW, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_REVIEW, nil)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_REVIEW, nil, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }

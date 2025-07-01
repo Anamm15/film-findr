@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"ReviewPiLem/entity"
+	"FilmFindr/entity"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"

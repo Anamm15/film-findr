@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"ReviewPiLem/helpers"
+	"FilmFindr/helpers"
 
 	"gorm.io/gorm"
 )

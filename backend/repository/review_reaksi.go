@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )

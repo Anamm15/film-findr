@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/helpers"
-	"ReviewPiLem/repository"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
+	"FilmFindr/helpers"
+	"FilmFindr/repository"
 )
 
 type ReviewService interface {

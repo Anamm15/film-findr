@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"ReviewPiLem/controller"
-	"ReviewPiLem/middleware"
-	"ReviewPiLem/service"
+	"FilmFindr/controller"
+	"FilmFindr/middleware"
+	"FilmFindr/service"
 
 	"github.com/gin-gonic/gin"
 )

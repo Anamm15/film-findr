@@ -8,6 +8,7 @@ import (
 const (
 	// failed message
 	MESSAGE_FAILED_FILM_NOT_FOUND      = "Film not found"
+	MESSAGE_FAILED_GET_ALL_FILM        = "Failed get all film"
 	MESSAGE_FAILED_CREATED_FILM        = "Failed created film"
 	MESSAGE_FAILED_UPDATED_FILM        = "Failed updated film"
 	MESSAGE_FAILED_DELETED_FILM        = "Failed deleted film"
@@ -63,6 +64,18 @@ type (
 		Rating       float64              `json:"rating"`
 		Gambar       []FilmGambarResponse `json:"film_gambar"`
 		Genres       []GenreResponse      `json:"genres"`
+	}
+
+	UpdateFilmRequest struct {
+		ID           int       `json:"id" validate:"required"`
+		Judul        string    `json:"judul" validate:"required"`
+		Sinopsis     string    `json:"sinopsis" validate:"required"`
+		Sutradara    string    `json:"sutradara" validate:"required"`
+		Status       string    `json:"status" validate:"required"`
+		Durasi       int       `json:"durasi" validate:"required"`
+		TotalEpisode int       `json:"total_episode" validate:"required"`
+		TanggalRilis time.Time `json:"tanggal_rilis" time_format:"2006-01-02" validate:"required"`
+		Genre        []int     `json:"genres" validate:"required"`
 	}
 
 	UpdateStatusFilmRequest struct {

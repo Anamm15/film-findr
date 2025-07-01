@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/repository"
+	"FilmFindr/dto"
+	"FilmFindr/entity"
+	"FilmFindr/repository"
 
 	"gorm.io/gorm"
 )

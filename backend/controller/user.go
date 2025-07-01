@@ -1,12 +1,9 @@
 package controller
 
 import (
-	"net/http"
-
-	"ReviewPiLem/dto"
-	"ReviewPiLem/entity"
-	"ReviewPiLem/service"
-	"ReviewPiLem/utils"
+	"FilmFindr/dto"
+	"FilmFindr/service"
+	"FilmFindr/utils"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -38,12 +35,12 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 	users, err := c.userService.GetAllUser(ctx)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_LIST_USER, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_USER, users)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_USER, users, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *userController) GetUserById(ctx *gin.Context) {
@@ -51,19 +48,19 @@ func (c *userController) GetUserById(ctx *gin.Context) {
 	userResponse, err := c.userService.GetUserById(ctx, utils.StringToInt(id))
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, userResponse)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, userResponse, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *userController) RegisterUser(ctx *gin.Context) {
 	var user dto.UserCreateRequest
 	if err := ctx.ShouldBind(&user); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
@@ -77,31 +74,31 @@ func (c *userController) RegisterUser(ctx *gin.Context) {
 
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_CREATED_USER, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_USER, userResponse)
-	ctx.JSON(http.StatusCreated, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_USER, userResponse, nil)
+	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
 func (c *userController) LoginUser(ctx *gin.Context) {
 	var req dto.UserLoginRequest
 	if err := ctx.ShouldBind(&req); err != nil {
-		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.AbortWithStatusJSON(dto.STATUS_BAD_REQUEST, response)
 		return
 	}
 
 	user, err := c.userService.LoginUser(ctx.Request.Context(), req)
 	if err != nil {
 		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGIN, err.Error(), nil)
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		ctx.AbortWithStatusJSON(dto.STATUS_BAD_REQUEST, response)
 		return
 	}
 
 	token := c.jwtService.GenerateToken(user.ID, user.Role)
-	userResponse := entity.Authorization{
+	userResponse := dto.AuthorizationRequest{
 		Token: token,
 		Role:  user.Role,
 	}
@@ -110,8 +107,8 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 	session.Set("user_id", user.ID)
 	session.Save()
 
-	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse)
-	ctx.JSON(http.StatusOK, response)
+	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse, nil)
+	ctx.JSON(dto.STATUS_OK, response)
 }
 
 func (c *userController) LogoutUser(ctx *gin.Context) {
@@ -120,19 +117,19 @@ func (c *userController) LogoutUser(ctx *gin.Context) {
 
 	if userID == nil {
 		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_USER_NOT_LOGIN, dto.ErrUserNotLogin.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, response)
 		return
 	}
 
 	session.Clear()
 	if err := session.Save(); err != nil {
 		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGOUT, dto.ErrFailedSaveSession.Error(), err.Error())
-		ctx.JSON(http.StatusInternalServerError, response)
+		ctx.JSON(dto.STATUS_INTERNAL_SERVER_ERROR, response)
 		return
 	}
 
-	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil)
-	ctx.JSON(http.StatusOK, response)
+	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil, nil)
+	ctx.JSON(dto.STATUS_OK, response)
 }
 
 func (c *userController) UpdateUser(ctx *gin.Context) {
@@ -141,20 +138,20 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 	var user dto.UserUpdateRequest
 	user.ID = userId
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_DATA_FROM_BODY, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
 	err := c.userService.UpdateUser(ctx, user)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_USER, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_USER, nil)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_USER, nil, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }
 
 func (c *userController) DeleteUser(ctx *gin.Context) {
@@ -162,10 +159,10 @@ func (c *userController) DeleteUser(ctx *gin.Context) {
 	err := c.userService.DeleteUser(ctx, utils.StringToInt(userId))
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_USER, err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_USER, nil)
-	ctx.JSON(http.StatusOK, res)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_USER, nil, nil)
+	ctx.JSON(dto.STATUS_OK, res)
 }

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"ReviewPiLem/entity"
+	"FilmFindr/entity"
 
 	"gorm.io/gorm"
 )
