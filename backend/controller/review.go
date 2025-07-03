@@ -56,7 +56,7 @@ func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, review, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, review)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -82,7 +82,7 @@ func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_REVIEW, reviews, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_REVIEW, reviews)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -104,7 +104,7 @@ func (c *reviewController) CreateReview(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_REVIEW, createdReview, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_REVIEW, createdReview)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -123,7 +123,7 @@ func (c *reviewController) UpdateReview(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -142,7 +142,7 @@ func (c *reviewController) UpdateReaksiReview(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_REVIEW, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -156,6 +156,6 @@ func (c *reviewController) DeleteReview(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_REVIEW, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_REVIEW, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }

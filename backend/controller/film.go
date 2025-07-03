@@ -51,7 +51,7 @@ func (s *filmController) GetAllFilm(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_FILM, films, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_FILM, films)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -64,7 +64,7 @@ func (s *filmController) GetFilmById(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_FILM, film, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_FILM, film)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -97,7 +97,7 @@ func (s *filmController) CreateFilm(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM, createdFilm, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM, createdFilm)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -116,7 +116,7 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_FILM, updatedFilm, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_FILM, updatedFilm)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -129,7 +129,7 @@ func (s *filmController) DeleteFilm(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -148,7 +148,7 @@ func (s *filmController) AddFilmGenre(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM_GENRE, createdFilmGenre, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_FILM_GENRE, createdFilmGenre)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -167,7 +167,7 @@ func (s *filmController) DeleteFilmGenre(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM_GENRE, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_FILM_GENRE, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -188,7 +188,7 @@ func (s *filmController) UpdateStatus(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_STATUS_FILM, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_STATUS_FILM, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -225,6 +225,6 @@ func (s *filmController) SearchFilm(c *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_SEARCH_FILM, films, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_SEARCH_FILM, films)
 	c.JSON(dto.STATUS_OK, res)
 }

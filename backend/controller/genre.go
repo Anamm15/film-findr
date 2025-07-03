@@ -32,7 +32,7 @@ func (s *genreController) GetAllGenre(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_GENRE, genres, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_GENRE, genres)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -51,7 +51,7 @@ func (s *genreController) CreateGenre(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -72,6 +72,6 @@ func (s *genreController) UpdateGenre(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre)
 	ctx.JSON(dto.STATUS_OK, res)
 }

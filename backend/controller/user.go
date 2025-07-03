@@ -45,7 +45,7 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_USER, users, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_USER, users)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -58,7 +58,7 @@ func (c *userController) GetUserById(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, userResponse, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, userResponse)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -84,7 +84,7 @@ func (c *userController) RegisterUser(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_USER, userResponse, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_USER, userResponse)
 	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
@@ -116,7 +116,7 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse, nil)
+	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse)
 	ctx.JSON(dto.STATUS_OK, response)
 }
 
@@ -137,7 +137,7 @@ func (c *userController) LogoutUser(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil, nil)
+	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil)
 	ctx.JSON(dto.STATUS_OK, response)
 }
 
@@ -163,7 +163,7 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_USER, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_UPDATED_USER, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -176,6 +176,6 @@ func (c *userController) DeleteUser(ctx *gin.Context) {
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_USER, nil, nil)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_DELETED_USER, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }
