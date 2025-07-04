@@ -27,7 +27,7 @@ func main() {
 	}
 
 	server := gin.Default()
-	server.Use(middleware.CORSMiddleware())
+	server.Use(middleware.SetupCORS())
 
 	store := cookie.NewStore([]byte("secret123"))
 	server.Use(sessions.Sessions("token", store))

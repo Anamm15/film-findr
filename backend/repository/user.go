@@ -60,7 +60,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user entity.User) (enti
 
 func (r *userRepository) GetUserByUsername(ctx context.Context, username string) (entity.User, error) {
 	var user entity.User
-	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil").
+	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil", "password").
 		Where("username = ?", username).
 		Take(&user).Error; err != nil {
 		return entity.User{}, err

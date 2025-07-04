@@ -56,7 +56,7 @@ func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Fil
 func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (entity.Film, error) {
 	var film entity.Film
 	if err := r.db.WithContext(ctx).
-		Select("id", "judul", "tanggal_rilis", "durasi", "status").
+		Select("id", "judul", "tanggal_rilis", "durasi", "status", "total_episode", "sutradara", "sinopsis").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
 		}).

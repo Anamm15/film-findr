@@ -17,7 +17,7 @@ const FilmCard = ({ movie, onClick }) => {
         onClick={onClick}
     >
       <img
-        className="w-full h-60 object-cover"
+        className="w-full h-[320px] object-cover"
         src={film_gambar[0].url}
         alt={judul}
       />
@@ -27,7 +27,7 @@ const FilmCard = ({ movie, onClick }) => {
           {genres && genres.map((genre) => (
             <span
               key={genre.id}
-              className="bg-blue-500 px-2 py-0.5 rounded-full"
+              className="bg-[#4895ef] px-2 py-0.5 rounded-full"
             >
               {genre.nama}
             </span>

@@ -42,12 +42,12 @@ cd film-findr
 ```
 
 ### 2. Atur Backend
-# a. Masuk ke direktori backend 
+#### a. Masuk ke direktori backend 
 ```bash
 cd backend
 ```
 
-# b. Buat file .env dan isi dengan
+#### b. Buat file .env dan isi dengan
 ```bash
 DB_HOST=localhost
 DB_PORT=5432
@@ -57,23 +57,24 @@ DB_NAME=film-findr
 PORT=8080
 ```
 
-# c. Jalankan backend
+#### c. Jalankan backend
 ```bash
-Jalankan backend
+go mod tidy
+go run main.go
 ```
 
 ### 2. Atur Frontend
-# a. Masuk ke direktori frontend 
+#### a. Masuk ke direktori frontend 
 ```bash
 cd frontend
 ```
 
-# b. Install dependency
+#### b. Install dependency
 ```bash
 npm install
 ```
 
-# c. Jalankan React dev server
+#### c. Jalankan React dev server
 ```bash
 npm run dev
 ```

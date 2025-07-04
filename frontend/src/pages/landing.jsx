@@ -31,9 +31,9 @@ const LandingPage = () => {
 
     return (
         <>
-          <div className="p-4 container mx-auto">
-            <h1 className="text-2xl font-bold mb-4">Daftar Film</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="p-4 xl:max-w-[1280px] mx-auto">
+            <h1 className="text-4xl font-bold mb-4">Daftar Film</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {films && films.map((film) => (
                 <FilmCard key={film.id} movie={film} onClick={() => handleClickCard(film.id)}  />
               ))}

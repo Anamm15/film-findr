@@ -8,7 +8,9 @@ export const getReviewByUserId = async (id) => {
 };
 
 export const getReviewByFilmId = async (id, page) => {
-    const response = await axios.get(`${BASE_URL}/getReviewByFilmId/${id}?page=${page}`);
+    const response = await axios.get(`${BASE_URL}/getReviewByFilmId/${id}?page=${page}`, {
+        withCredentials: true,
+    });
     return response;
 };
 
