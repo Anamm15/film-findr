@@ -105,7 +105,7 @@ func (c *reviewController) CreateReview(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_REVIEW, createdReview)
-	ctx.JSON(dto.STATUS_OK, res)
+	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
 func (c *reviewController) UpdateReview(ctx *gin.Context) {

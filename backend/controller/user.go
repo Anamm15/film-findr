@@ -123,8 +123,7 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 func (c *userController) LogoutUser(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 	_, err := c.sessionService.GetUserID(ctx)
-
-	if err == nil {
+	if err != nil {
 		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.ErrUserNotLogin.Error(), nil)
 		ctx.JSON(dto.STATUS_UNAUTHORIZED, response)
 		return

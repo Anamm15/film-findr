@@ -7,6 +7,7 @@ import (
 	"FilmFindr/entity"
 	"FilmFindr/helpers"
 	"FilmFindr/repository"
+	"FilmFindr/utils"
 )
 
 type UserFilmService interface {
@@ -50,10 +51,11 @@ func (s *userFilmService) GetUserFilmByUserId(ctx context.Context, userId int) (
 			})
 		}
 
+		formattedDate := utils.FormatDate(userFilm.Film.TanggalRilis)
 		FilmResponse = dto.FilmResponse{
 			ID:           userFilm.Film.ID,
 			Judul:        userFilm.Film.Judul,
-			TanggalRilis: userFilm.Film.TanggalRilis,
+			TanggalRilis: formattedDate,
 			Durasi:       userFilm.Film.Durasi,
 			Status:       userFilm.Film.Status,
 			Gambar:       FilmGambarResponse,

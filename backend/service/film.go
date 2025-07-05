@@ -81,10 +81,11 @@ func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmRespo
 			})
 		}
 
+		formattedDate := utils.FormatDate(film.TanggalRilis)
 		filmResponses = append(filmResponses, dto.FilmResponse{
 			ID:           film.ID,
 			Judul:        film.Judul,
-			TanggalRilis: film.TanggalRilis,
+			TanggalRilis: formattedDate,
 			Durasi:       film.Durasi,
 			Status:       film.Status,
 			Rating:       rating,
@@ -121,12 +122,13 @@ func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse
 		})
 	}
 
+	formattedDate := utils.FormatDate(film.TanggalRilis)
 	filmResponse := dto.FilmResponse{
 		ID:           film.ID,
 		Judul:        film.Judul,
 		Sinopsis:     film.Sinopsis,
 		Sutradara:    film.Sutradara,
-		TanggalRilis: film.TanggalRilis,
+		TanggalRilis: formattedDate,
 		TotalEpisode: film.TotalEpisode,
 		Durasi:       film.Durasi,
 		Status:       film.Status,
@@ -219,6 +221,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 		return dto.FilmResponse{}, err
 	}
 
+	formattedDate := utils.FormatDate(createdFilm.TanggalRilis)
 	return dto.FilmResponse{
 		ID:           createdFilm.ID,
 		Judul:        createdFilm.Judul,
@@ -227,7 +230,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 		Status:       createdFilm.Status,
 		Durasi:       createdFilm.Durasi,
 		TotalEpisode: createdFilm.TotalEpisode,
-		TanggalRilis: createdFilm.TanggalRilis,
+		TanggalRilis: formattedDate,
 		Rating:       0,
 		Gambar:       filmGambarResponse,
 		Genres:       genreResponse,
@@ -290,10 +293,11 @@ func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest)
 			})
 		}
 
+		formattedDate := utils.FormatDate(film.TanggalRilis)
 		filmResponses = append(filmResponses, dto.FilmResponse{
 			ID:           film.ID,
 			Judul:        film.Judul,
-			TanggalRilis: film.TanggalRilis,
+			TanggalRilis: formattedDate,
 			Durasi:       film.Durasi,
 			Status:       film.Status,
 			Rating:       rating,

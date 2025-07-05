@@ -56,7 +56,7 @@ func (u *userFilmController) CreateUserFilm(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_CREATED_USER_FILM, userFilm)
-	ctx.JSON(dto.STATUS_OK, res)
+	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
 func (u *userFilmController) UpdateStatusUserFilm(ctx *gin.Context) {

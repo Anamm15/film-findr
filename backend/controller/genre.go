@@ -52,7 +52,7 @@ func (s *genreController) CreateGenre(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_CREATED, createdGenre)
-	ctx.JSON(dto.STATUS_OK, res)
+	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
 func (s *genreController) UpdateGenre(ctx *gin.Context) {

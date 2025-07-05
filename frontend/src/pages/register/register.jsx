@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../api/user";
+import { registerUser } from "../../service/user";
 
 const RegisterPage = () => {
     const [nama, setNama] = useState("");

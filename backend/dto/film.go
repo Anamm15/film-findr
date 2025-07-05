@@ -60,7 +60,7 @@ type (
 		Status       string               `json:"status"`
 		Durasi       int                  `json:"durasi"`
 		TotalEpisode int                  `json:"total_episode"`
-		TanggalRilis time.Time            `json:"tanggal_rilis" time_format:"2006-01-02"`
+		TanggalRilis string               `json:"tanggal_rilis"`
 		Rating       float64              `json:"rating"`
 		Gambar       []FilmGambarResponse `json:"film_gambar"`
 		Genres       []GenreResponse      `json:"genres"`

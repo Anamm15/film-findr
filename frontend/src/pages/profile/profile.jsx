@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { getReviewByUserId } from "../api/review";
 import { useParams } from "react-router-dom";
-import { getUserById } from "../api/user";
+import { getReviewByUserId } from "../../service/review";
+import { getUserById } from "../../service/user";
 
 
 const ProfilePage = () => {

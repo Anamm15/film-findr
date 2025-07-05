@@ -2,6 +2,7 @@ package utils
 
 import (
 	"strconv"
+	"time"
 )
 
 func StringToInt(str string) int {
@@ -10,4 +11,8 @@ func StringToInt(str string) int {
 		return 0
 	}
 	return intValue
+}
+
+func FormatDate(t time.Time) string {
+	return t.Format("02 Jan 2006")
 }

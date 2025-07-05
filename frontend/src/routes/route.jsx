@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "../pages/login";
-import RegisterPage from "../pages/register";
-import LandingPage from "../pages/landing";
-import DetailFilmPage from "../pages/detailFilm";
-import DashboardPage from "../pages/dashboard";
-import ProfilePage from "../pages/profile";
+import LandingPage from "../pages/landing/landing";
+import LoginPage from "../pages/login/login";
+import RegisterPage from "../pages/register/register";
+import DetailFilmPage from "../pages/detailFilm/detailFilm";
+import DashboardPage from "../pages/dashboard/dashboard";
+import ProfilePage from "../pages/profile/profile";
 
 const router = createBrowserRouter([{
     path: "/",

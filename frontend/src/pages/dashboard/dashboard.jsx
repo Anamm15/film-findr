@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { createFilm } from "../api/film";
 import { Link } from "react-router-dom";
-import { getAllGenre } from "../api/genre";
+import { createFilm } from "../../service/film";
+import { getAllGenre } from "../../service/genre";
 
 const DashboardPage = () => {
     const [judul, setJudul] = useState("");
