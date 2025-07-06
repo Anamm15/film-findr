@@ -1,103 +1,128 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getReviewByUserId } from "../../service/review";
 import { getUserById } from "../../service/user";
-
+import Review from "../detailFilm/components/Review";
+import { AuthContext } from "../../contexts/authContext";
+import { getUserFilmByUserId } from "../../service/userFilm";
+import Informasi from "./components/Informasi";
+import WatchlistLayout from "../../layouts/WatchlistLayout";
 
 const ProfilePage = () => {
+    const params = useParams();
+    const routeId = params.id;
+    const { user: currentUser } = useContext(AuthContext);
+
     const [user, setUser] = useState(null);
     const [review, setReview] = useState([]);
+    const [watchlists, setWatchlists] = useState([]);
     const [page, setPage] = useState(1);
-    const id = useParams().id;
+
+    const finalId = routeId || currentUser?.id;
 
     useEffect(() => {
         const fetchUser = async () => {
+            if (!finalId) return;
             try {
-                const response = await getUserById(id);
+                const response = await getUserById(finalId);
                 setUser(response.data.data);
             } catch (error) {
-                console.error("Error fetching user:", error.data.message);
+                console.error("Error fetching user:", error?.response?.data?.message || error.message);
             }
         };
-        fetchUser();
-    }, [id]);
 
+        fetchUser();
+    }, [finalId, routeId, currentUser]);
 
     useEffect(() => {
         const fetchReview = async () => {
+            if (!finalId) return;
             try {
-                const response = await getReviewByUserId(id, page);
+                const response = await getReviewByUserId(finalId, page);
                 setReview(response.data.data);
             } catch (error) {
-                console.error("Error fetching review:", error.data.message);
+                console.error("Error fetching review:", error?.response?.data?.message || error.message);
+                console.log(error);
             }
         };
 
         fetchReview();
-    }, [id, page]);
+    }, [finalId, page]);
+
+    useEffect(() => {
+        const fetchWatchlists = async () => {
+            if (!finalId) return;
+            try {
+                const response = await getUserFilmByUserId(finalId);
+                if (response.status === 200) {
+                    setWatchlists(response.data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching watchlists:", error?.response?.data?.message || error.message);
+            }
+        };
+
+        fetchWatchlists();
+    }, [finalId]);
 
     return (
         <>
-        <div>
-            <div className="bg-white rounded-xl shadow p-5">
-                <h2 className="text-xl font-semibold mb-4">Profil</h2>
-                <div className="space-y-4">
-                    <p className="font-semibold">Nama: {user?.nama}</p>
-                    <p className="font-semibold">Username: {user?.username}</p>
+            <div className="mt-28 flex justify-center px-4">
+                <div className="w-full max-w-4xl bg-gradient-to-br from-indigo-50 to-white rounded-3xl shadow-xl p-8 space-y-6">
+                    <div className="flex items-center gap-6">
+                        <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-indigo-400 to-purple-400 flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                            {user?.nama?.charAt(0).toUpperCase() || "?"}
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-800">{user?.nama}</h1>
+                            <p className="text-gray-500">@{user?.username}</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-semibold mb-2 text-indigo-700">Informasi Pribadi</h2>
+                            <ul className="text-gray-700 space-y-1">
+                                <li><span className="font-medium">Nama:</span> {user?.nama}</li>
+                                <li><span className="font-medium">Username:</span> {user?.username}</li>
+                                {/* Tambahkan data lain di sini jika ada */}
+                            </ul>
+                        </div>
+
+                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <h2 className="text-lg font-semibold mb-2 text-indigo-700">Aktivitas</h2>
+                            <p className="text-gray-600">
+                                Total Ulasan: {review?.reviews?.length || 0}
+                            </p>
+                            <p className="text-gray-600">
+                                Total Watchlist: {watchlists?.length || 0}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <h2 className="text-lg font-semibold mb-2 text-indigo-700">Tentang Saya</h2>
+                        <p className="text-gray-600">{user?.bio}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow p-5">
-            <h2 className="text-xl font-semibold mb-4">Review</h2>
-            <div className="space-y-4">
-              {review.reviews && review.reviews.map((r, idx) => (
-                <div key={idx} className="border-b pb-3">
-                  <p className="font-semibold">{r.user.username}</p>
-                  <p className="text-gray-600">{r.komentar}</p>
 
-                  <div className="flex items-center space-x-4 mt-2">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`w-5 h-5 cursor-pointer ${
-                        r.user_reaksi?.reaksi === "like" ? "text-blue-500" : "text-gray-400"
-                        }`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path d="M2 10c0-.6.4-1 1-1h3V5.5A2.5 2.5 0 018.5 3h1.1c.2 0 .4.1.6.3l3.4 3.4c.2.2.3.5.3.7v6.2c0 .3-.1.5-.3.7l-3.4 3.4c-.2.2-.4.3-.6.3h-1.1A2.5 2.5 0 016 15.5V13H3a1 1 0 01-1-1v-2z" />
-                    </svg>
-
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`w-5 h-5 cursor-pointer ${
-                        r.user_reaksi?.reaksi === "dislike" ? "text-red-500" : "text-gray-400"
-                      }`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M18 10c0 .6-.4 1-1 1h-3v3.5a2.5 2.5 0 01-2.5 2.5h-1.086a1 1 0 01-.707-.293l-3.414-3.414a1 1 0 01-.293-.707V6.414a1 1 0 01.293-.707L9.707 2.293A1 1 0 0110.414 2H11.5A2.5 2.5 0 0114 4.5V7h3a1 1 0 011 1v2z" />
-                    </svg>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-12 px-4 max-w-4xl mx-auto space-y-4">
+                <h2 className="text-3xl font-semibold ps-4 pt-4">Watchlist</h2>
+                {
+                    watchlists && watchlists.map((watch) => (
+                        <WatchlistLayout key={watch.id} watchlist={watch}>
+                            <Informasi watch={watch} />
+                        </WatchlistLayout>
+                    ))
+                }
             </div>
 
-            {/* Pagination */}
-            <div className="flex justify-center mt-6 space-x-2">
-              {Array.from({ length: review.count_page }, (_, i) => (
-                <button
-                  key={i}
-                  className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm"
-                  onClick={() => setPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <div className="mt-12 px-4 max-w-4xl mx-auto">
+                <Review review={review} setPage={setPage} page={page} />
             </div>
-          </div>
         </>
-    )
-}
+    );
+};
 
-export default ProfilePage
+export default ProfilePage;

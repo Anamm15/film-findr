@@ -5,13 +5,13 @@ import (
 	"FilmFindr/service"
 	"FilmFindr/utils"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 type UserController interface {
 	GetAllUser(ctx *gin.Context)
 	GetUserById(ctx *gin.Context)
+	Me(ctx *gin.Context)
 	RegisterUser(ctx *gin.Context)
 	LoginUser(ctx *gin.Context)
 	LogoutUser(ctx *gin.Context)
@@ -20,20 +20,17 @@ type UserController interface {
 }
 
 type userController struct {
-	userService    service.UserService
-	jwtService     service.JWTService
-	sessionService service.SessionService
+	userService service.UserService
+	jwtService  service.JWTService
 }
 
 func NewUserController(
 	userService service.UserService,
 	jwtService service.JWTService,
-	sessionService service.SessionService,
 ) UserController {
 	return &userController{
-		userService:    userService,
-		jwtService:     jwtService,
-		sessionService: sessionService,
+		userService: userService,
+		jwtService:  jwtService,
 	}
 }
 
@@ -52,6 +49,20 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 func (c *userController) GetUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	userResponse, err := c.userService.GetUserById(ctx, utils.StringToInt(id))
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_USER, userResponse)
+	ctx.JSON(dto.STATUS_OK, res)
+}
+
+func (c *userController) Me(ctx *gin.Context) {
+	userId := ctx.MustGet("user_id").(int)
+
+	userResponse, err := c.userService.GetUserById(ctx, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
@@ -109,32 +120,22 @@ func (c *userController) LoginUser(ctx *gin.Context) {
 		Role:  user.Role,
 	}
 
-	err = c.sessionService.SaveUserID(ctx, user.ID)
-	if err != nil {
-		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGIN, err.Error(), nil)
-		ctx.AbortWithStatusJSON(dto.STATUS_INTERNAL_SERVER_ERROR, response)
-		return
-	}
+	ctx.SetCookie(
+		"access_token",
+		token,
+		3600*12,
+		"/",
+		"",
+		false,
+		true,
+	)
 
 	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGIN, userResponse)
 	ctx.JSON(dto.STATUS_OK, response)
 }
 
 func (c *userController) LogoutUser(ctx *gin.Context) {
-	session := sessions.Default(ctx)
-	_, err := c.sessionService.GetUserID(ctx)
-	if err != nil {
-		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.ErrUserNotLogin.Error(), nil)
-		ctx.JSON(dto.STATUS_UNAUTHORIZED, response)
-		return
-	}
-
-	session.Clear()
-	if err := session.Save(); err != nil {
-		response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_LOGOUT, dto.ErrFailedSaveSession.Error(), err.Error())
-		ctx.JSON(dto.STATUS_INTERNAL_SERVER_ERROR, response)
-		return
-	}
+	ctx.SetCookie("access_token", "", -1, "/", "", false, true)
 
 	response := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_LOGOUT, nil)
 	ctx.JSON(dto.STATUS_OK, response)

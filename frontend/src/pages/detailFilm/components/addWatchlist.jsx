@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 import { createUserFilm } from "../../../service/userFilm";
 import { WATCH_LIST_STATUS } from "../../../utils/constant";
 
@@ -15,7 +15,7 @@ const WatchListForm = (props) => {
                 film_id: Number(id),
                 status: watchListStatus
             }
-            const response = createUserFilm(data)
+            const response = await createUserFilm(data)
             console.log(response);
             if (response.status === 201) {
                 // setMessage(response.data.message);

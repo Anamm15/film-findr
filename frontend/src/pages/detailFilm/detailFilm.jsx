@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getFilmById, getAllFilm } from "../../service/film";
 import { getReviewByFilmId } from "../../service/review";
-import Navbar from "../../components/navbar";
-import WatchListForm from "./components/addWatchlist";
-import RekomendasiFilm from "./components/rekomendasi";
-import AddReview from "./components/addReview";
-import Sinopsis from "./components/sinopsis";
-import Review from "./components/review";
-import InformasiFilm from "./components/informasiFilm";
+import WatchListForm from "./components/AddWatchlist";
+import RekomendasiFilm from "./components/Rekomendasi";
+import AddReview from "./components/AddReview";
+import Sinopsis from "./components/Sinopsis";
+import Review from "./components/Review";
+import InformasiFilm from "./components/InformasiFilm";
 import Gambar from "./components/Gambar";
 
 const DetailFilmPage = () => {
@@ -64,12 +63,10 @@ const DetailFilmPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-10">
-      <Navbar /> 
       {
         film && (
           <>
             <div className="flex gap-6 my-8 shadow-md rounded-xl p-4 relative mt-28">
-              {/* Gambar Carousel */}
               <Gambar film={film} />
               <div>
                   <h1 className="text-3xl font-bold mb-4">{film.judul}</h1>

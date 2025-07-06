@@ -2,8 +2,10 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/review";
 
-export const getReviewByUserId = async (id) => {
-    const response = await axios.get(`${BASE_URL}/getReviewById/${id}`);
+export const getReviewByUserId = async (id, page) => {
+    const response = await axios.get(`${BASE_URL}/getReviewUserById/${id}?page=${page}`, {
+        withCredentials: true,
+    });
     return response;
 };
 
@@ -14,38 +16,30 @@ export const getReviewByFilmId = async (id, page) => {
     return response;
 };
 
-export const createReview = async (data, token) => {
+export const createReview = async (data) => {
     const response = await axios.post(`${BASE_URL}/create`, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
     });
     return response;
 };
 
-export const updateReview = async (data, token) => {
+export const updateReview = async (data) => {
     const response = await axios.put(`${BASE_URL}/update`, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
     });
     return response;
 };
 
-export const updateReaksiReview = async (data, token) => {
+export const updateReaksiReview = async (data) => {
     const response = await axios.patch(`${BASE_URL}/updateReaksiReview`, data, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
     });
     return response;
 };
 
-export const deleteReview = async (id, token) => {
+export const deleteReview = async (id) => {
     const response = await axios.delete(`${BASE_URL}/delete/${id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
     });
     return response;
 };

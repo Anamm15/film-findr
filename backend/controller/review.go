@@ -20,17 +20,17 @@ type ReviewController interface {
 }
 
 type reviewController struct {
-	reviewService  service.ReviewService
-	sessionService service.SessionService
+	reviewService service.ReviewService
+	jwtService    service.JWTService
 }
 
 func NewReviewController(
 	reviewService service.ReviewService,
-	sessionService service.SessionService,
+	jwtService service.JWTService,
 ) ReviewController {
 	return &reviewController{
-		reviewService:  reviewService,
-		sessionService: sessionService,
+		reviewService: reviewService,
+		jwtService:    jwtService,
 	}
 }
 
@@ -42,21 +42,16 @@ func (c *reviewController) GetReviewByUserId(ctx *gin.Context) {
 		page = 1
 	}
 
-	userId, err := c.sessionService.GetUserID(ctx)
-	if err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
-		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
-		return
-	}
-
-	review, err := c.reviewService.GetReviewByUserId(ctx, utils.StringToInt(id), userId, page)
+	tokenStr, _ := ctx.Cookie("access_token")
+	userId, _, _ := c.jwtService.GetDataByToken(tokenStr)
+	reviews, err := c.reviewService.GetReviewByUserId(ctx, utils.StringToInt(id), userId, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_REVIEW, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, review)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_REVIEW, reviews)
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
@@ -68,13 +63,8 @@ func (c *reviewController) GetReviewByFilmId(ctx *gin.Context) {
 		page = 1
 	}
 
-	userId, err := c.sessionService.GetUserID(ctx)
-	if err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SESSION_EXPIRED, dto.MESSAGE_FAILED_SESSION_EXPIRED, nil)
-		ctx.JSON(dto.STATUS_UNAUTHORIZED, res)
-		return
-	}
-
+	tokenStr, _ := ctx.Cookie("access_token")
+	userId, _, _ := c.jwtService.GetDataByToken(tokenStr)
 	reviews, err := c.reviewService.GetReviewByFilmId(ctx, utils.StringToInt(id), userId, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_REVIEW, err.Error(), nil)

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createReview } from "../../../service/review";
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 
 
 const AddReview = (props) => {

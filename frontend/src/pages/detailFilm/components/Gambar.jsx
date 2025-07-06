@@ -9,7 +9,7 @@ const Gambar = (props) => {
                 key={img.id}
                 src={img.url}
                 alt={`Gambar ${img.id + 1}`}
-                className="rounded-lg shadow-md object-cover h-[450px] w-[350px]"
+                className="rounded-lg shadow-md object-cover h-[450px] w-[300px]"
                 />
             ))}
         </div>

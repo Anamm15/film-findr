@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../service/user";
-
+import { AuthContext } from "../../contexts/authContext";
 
 const LoginPage = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
+    const { refetchUser } = useContext(AuthContext);
 
     const handleLogin = async(e) => {
         e.preventDefault();
@@ -20,7 +21,7 @@ const LoginPage = () => {
             const response = await loginUser(data);
             if (response.status === 200) {
                 setMessage(response.data.message);
-                localStorage.setItem("token", response.data.data.token);
+                await refetchUser();
                 navigate("/");
             }
         } catch (error) {

@@ -14,6 +14,7 @@ func UserRoute(server *gin.Engine, userController controller.UserController, jwt
 	{
 		user.GET("/getAllUser", userController.GetAllUser)
 		user.GET("/:id", userController.GetUserById)
+		user.GET("/me", middleware.Authenticate(jwtService), userController.Me)
 		user.POST("/register", userController.RegisterUser)
 		user.POST("/login", userController.LoginUser)
 		user.POST(("/logout"), middleware.Authenticate(jwtService), userController.LogoutUser)
