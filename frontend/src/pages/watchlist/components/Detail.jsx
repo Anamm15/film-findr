@@ -10,8 +10,6 @@ const Detail = (props) => {
     const [errorStatus, setErrorStatus] = useState(null);
 
     const handleUpdate = async() => {
-        console.log("debugg");
-        
         const data = {
             id: watchlist.id,
             status: status,
@@ -25,7 +23,7 @@ const Detail = (props) => {
                 setErrorStatus(false);
             }
         } catch (error) {
-            setMessages(error.response.data.message);
+            setMessages(error.response.data.error);
             setErrorStatus(true);
         }
     };

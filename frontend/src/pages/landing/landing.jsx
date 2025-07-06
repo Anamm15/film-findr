@@ -14,7 +14,7 @@ const LandingPage = () => {
                 const response = await getAllFilm();
                 setFilms(response.data.data);
             } catch (error) {
-                console.error("Error fetching films:", error.data.message);
+                console.error("Error fetching films:", error);
             }
         }
 

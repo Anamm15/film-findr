@@ -25,8 +25,7 @@ const LoginPage = () => {
                 navigate("/");
             }
         } catch (error) {
-            console.log(error);
-            setMessage(error.response.data.message);
+            setMessage(error.response.data.error);
         }
     }
 

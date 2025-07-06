@@ -24,7 +24,7 @@ const RegisterPage = () => {
                 navigate("/login");
             }
         } catch (error) {
-            setMessage(error.response.data.message);
+            setMessage(error.response.data.error);
         }
     };
 

@@ -27,7 +27,7 @@ const ProfilePage = () => {
                 const response = await getUserById(finalId);
                 setUser(response.data.data);
             } catch (error) {
-                console.error("Error fetching user:", error?.response?.data?.message || error.message);
+                console.error("Error fetching user:", error);
             }
         };
 
@@ -41,8 +41,7 @@ const ProfilePage = () => {
                 const response = await getReviewByUserId(finalId, page);
                 setReview(response.data.data);
             } catch (error) {
-                console.error("Error fetching review:", error?.response?.data?.message || error.message);
-                console.log(error);
+                console.error("Error fetching review:", error);
             }
         };
 
@@ -58,7 +57,7 @@ const ProfilePage = () => {
                     setWatchlists(response.data.data);
                 }
             } catch (error) {
-                console.error("Error fetching watchlists:", error?.response?.data?.message || error.message);
+                console.error("Error fetching watchlists:", error);
             }
         };
 

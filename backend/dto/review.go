@@ -19,12 +19,15 @@ const (
 )
 
 var (
-	ErrGetReviewByUserId = errors.New("Failed to get review")
-	ErrGetReviewFilmById = errors.New("Failed to get review in this film")
-	ErrGetReviewByID     = errors.New("Failed to get review")
-	ErrCreateReview      = errors.New("Failed to create review")
-	ErrUpdateReview      = errors.New("Failed to update review")
-	ErrDeleteReview      = errors.New("Failed to delete review")
+	ErrGetReviewByUserId           = errors.New("Failed to get review")
+	ErrGetReviewFilmById           = errors.New("Failed to get review in this film")
+	ErrGetReviewByID               = errors.New("Failed to get review")
+	ErrCreateReview                = errors.New("Failed to create review")
+	ErrUpdateReview                = errors.New("Failed to update review")
+	ErrUpdateReaksiReview          = errors.New("Failed to update reaksi review")
+	ErrDeleteReview                = errors.New("Failed to delete review")
+	ErrCreateReviewWithStatus      = errors.New("Review with status not yet aired can't be created")
+	ErrCreateReviewWithNoWatchlist = errors.New("You must add this film to your watchlist first")
 )
 
 type (

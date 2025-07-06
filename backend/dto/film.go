@@ -26,13 +26,14 @@ const (
 )
 
 var (
-	ErrGetAllFilm       = errors.New("Failed to get all film")
-	ErrGetFilmByID      = errors.New("Failed to get film by id")
+	ErrGetFilm          = errors.New("Failed to get film")
 	ErrCreateFilm       = errors.New("Failed to create film")
 	ErrUpdateFilm       = errors.New("Failed to update film")
 	ErrDeleteFilm       = errors.New("Failed to delete film")
 	ErrUpdateStatusFilm = errors.New("Failed to update status film")
+	ErrCheckStatusFilm  = errors.New("Failed to check status film")
 	ErrGetImageRequest  = errors.New("No image files found")
+	ErrSearchFilm       = errors.New("Failed to search film")
 )
 
 type (

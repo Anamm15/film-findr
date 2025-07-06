@@ -15,9 +15,11 @@ const (
 )
 
 var (
-	ErrCreateUserFilm       = errors.New("Failed to create user film")
-	ErrUpdateStatusUserFilm = errors.New("Failed to update status user film")
-	ErrCheckUserFilm        = errors.New("Failed to check user film")
+	ErrGetUserFilm           = errors.New("Failed to get user film")
+	ErrCreateUserFilm        = errors.New("Failed to create user film")
+	ErrUpdateStatusUserFilm  = errors.New("Failed to update status user film")
+	ErrCheckUserFilm         = errors.New("Failed to check user film")
+	ErrStatusFilmNotYetAired = errors.New("Film with not yet aired must be plan to watch")
 )
 
 type (

@@ -29,7 +29,7 @@ var (
 	ErrGetAllUser        = errors.New("Failed to get all user")
 	ErrGetUserByID       = errors.New("Failed to get user by id")
 	ErrCreateUser        = errors.New("Failed to create user")
-	ErrCheckUsername     = errors.New("Failed to check username")
+	ErrCheckUsername     = errors.New("Username is not found")
 	ErrUpdateUser        = errors.New("Failed to update user")
 	ErrDeleteUser        = errors.New("Failed to delete user")
 	ErrFailedLogin       = errors.New("Failed to login")
@@ -38,6 +38,7 @@ var (
 	ErrUserNotFound      = errors.New("User not found")
 	ErrUserNotLogin      = errors.New("User not login")
 	ErrFailedSaveSession = errors.New("Failed to save session")
+	ErrFailedUploadFile  = errors.New("Failed to upload file")
 )
 
 type (

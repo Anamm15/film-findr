@@ -55,7 +55,7 @@ func NewFilmService(
 func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error) {
 	films, err := s.filmRepository.GetAllFilm(ctx, page)
 	if err != nil {
-		return []dto.FilmResponse{}, dto.ErrGetAllGenre
+		return []dto.FilmResponse{}, dto.ErrGetFilm
 	}
 
 	var filmResponses []dto.FilmResponse
@@ -100,7 +100,7 @@ func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmRespo
 func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error) {
 	film, err := s.filmRepository.GetFilmByID(ctx, id)
 	if err != nil {
-		return dto.FilmResponse{}, dto.ErrGetFilmByID
+		return dto.FilmResponse{}, dto.ErrGetFilm
 	}
 
 	rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
@@ -143,7 +143,7 @@ func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse
 func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error) {
 	tx := s.db.Begin()
 	if tx.Error != nil {
-		return dto.FilmResponse{}, tx.Error
+		return dto.FilmResponse{}, dto.ErrCreateFilm
 	}
 
 	film := entity.Film{
@@ -162,7 +162,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 
 	if err != nil {
 		tx.Rollback()
-		return dto.FilmResponse{}, err
+		return dto.FilmResponse{}, dto.ErrCreateFilm
 	}
 
 	for _, genreID := range filmReq.Genre {
@@ -177,7 +177,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 		})
 		if err != nil {
 			tx.Rollback()
-			return dto.FilmResponse{}, err
+			return dto.FilmResponse{}, dto.ErrCreateFilm
 		}
 	}
 
@@ -185,7 +185,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 		src, err := file.Open()
 		if err != nil {
 			tx.Rollback()
-			return dto.FilmResponse{}, err
+			return dto.FilmResponse{}, dto.ErrCreateFilm
 		}
 
 		uniqueName := utils.GenerateUniqueImageName(createdFilm.Judul, file.Filename)
@@ -197,7 +197,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 
 		if err != nil {
 			tx.Rollback()
-			return dto.FilmResponse{}, err
+			return dto.FilmResponse{}, dto.ErrFailedUploadFile
 		}
 
 		filmGambar := entity.FilmGambar{
@@ -207,7 +207,7 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 
 		if err := s.filmGambarRepository.Save(ctx, tx, filmGambar); err != nil {
 			tx.Rollback()
-			return dto.FilmResponse{}, err
+			return dto.FilmResponse{}, dto.ErrCreateFilm
 		}
 
 		filmGambarResponse = append(filmGambarResponse, dto.FilmGambarResponse{
@@ -216,9 +216,8 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 		})
 	}
 
-	// Commit transaction jika semua berhasil
 	if err := tx.Commit().Error; err != nil {
-		return dto.FilmResponse{}, err
+		return dto.FilmResponse{}, dto.ErrCreateFilm
 	}
 
 	formattedDate := utils.FormatDate(createdFilm.TanggalRilis)
@@ -267,7 +266,7 @@ func (s *filmService) UpdateStatus(ctx context.Context, id int, req dto.UpdateSt
 func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error) {
 	films, err := s.filmRepository.SearchFilm(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, dto.ErrSearchFilm
 	}
 
 	var filmResponses []dto.FilmResponse

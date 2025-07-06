@@ -27,13 +27,13 @@ const WatchListPage = () => {
 
   return (
     <div className="mx-auto max-w-4xl mt-28 px-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center mb-8">🎬 Your Watchlist</h1>
-      { watchlist && watchlist.map((watch) => (
-        <WatchlistLayout key={watch.id} watchlist={watch}>
-            <Informasi watch={watch} />
-            <Detail watchlist={watch} />
-        </WatchlistLayout>
-      ))}
+        <h1 className="text-3xl font-bold text-center mb-8">🎬 Your Watchlist</h1>
+        { watchlist && watchlist.map((watch) => (
+            <WatchlistLayout key={watch.id} watchlist={watch}>
+                <Informasi watch={watch} />
+                <Detail watchlist={watch} />
+            </WatchlistLayout>
+        ))}
     </div>
   );
 };

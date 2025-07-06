@@ -8,6 +8,7 @@ const AddReview = (props) => {
     const [message, setMessage] = useState("");
     const [rating, setRating] = useState(1);
     const [newReview, setNewReview] = useState("");
+    const [colorMessage, setColorMessage] = useState("");
 
     const handleAddReview = async (e) => {
         e.preventDefault();
@@ -19,13 +20,14 @@ const AddReview = (props) => {
               rating: Number(rating)
             };
             
-            const response = await createReview(data, localStorage.getItem("token"));
+            const response = await createReview(data);
             
-            setMessage(response.data.data.message);
+            setMessage(response.data.message);
+            setColorMessage("text-green-600");
             setNewReview("");
           } catch (error) {
-          // console.log(error);
-            setMessage(error.response.data.message);
+            setMessage(error.response.data.error);
+            setColorMessage("text-red-600");
         }
     };
 
@@ -63,7 +65,7 @@ const AddReview = (props) => {
                 className="rounded text-lg">
                 Tambah Review
             </Button>
-            {message && <p>{message}</p>}
+            {message && <p classname={`${colorMessage} mt-2`}>{message}</p>}
             </form>
         </div>
     )

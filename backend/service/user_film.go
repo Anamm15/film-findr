@@ -28,7 +28,7 @@ func NewUserFilmService(userFilmRepository repository.UserFilmRepository, filmRe
 func (s *userFilmService) GetUserFilmByUserId(ctx context.Context, userId int) ([]dto.UserFilmResponse, error) {
 	userFilms, err := s.userFilmRepository.GetUserFilmByUserId(ctx, userId)
 	if err != nil {
-		return nil, err
+		return nil, dto.ErrGetUserFilm
 	}
 
 	var userFilmResponses []dto.UserFilmResponse
@@ -81,16 +81,16 @@ func (s *userFilmService) CreateUserFilm(ctx context.Context, userFilmReq dto.Us
 
 	film, err := s.filmRepository.CheckStatusFilm(ctx, userFilmReq.FilmID)
 	if err != nil {
-		return entity.UserFilm{}, err
+		return entity.UserFilm{}, dto.ErrCheckUserFilm
 	}
 
 	if film.Status == helpers.ENUM_FILM_NOT_YET_AIRED && userFilm.Status != helpers.ENUM_LIST_FILM_PLAN_TO_WATCH {
-		return entity.UserFilm{}, dto.ErrCreateUserFilm
+		return entity.UserFilm{}, dto.ErrStatusFilmNotYetAired
 	}
 
 	userFilmRes, err := s.userFilmRepository.CreateUserFilm(ctx, userFilm)
 	if err != nil {
-		return entity.UserFilm{}, err
+		return entity.UserFilm{}, dto.ErrCreateUserFilm
 	}
 
 	return userFilmRes, nil
@@ -103,7 +103,7 @@ func (s *userFilmService) UpdateStatusUserFilm(ctx context.Context, userFilm dto
 	}
 
 	if film.Status == helpers.ENUM_FILM_NOT_YET_AIRED && userFilm.Status != helpers.ENUM_LIST_FILM_PLAN_TO_WATCH {
-		return dto.ErrUpdateStatusUserFilm
+		return dto.ErrStatusFilmNotYetAired
 	}
 
 	if err := s.userFilmRepository.UpdateStatusUserFilm(ctx, userFilm.ID, userFilm.Status); err != nil {

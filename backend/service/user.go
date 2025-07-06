@@ -60,6 +60,10 @@ func (s *userService) GetUserById(ctx context.Context, id int) (dto.UserResponse
 		return dto.UserResponse{}, dto.ErrGetUserByID
 	}
 
+	if user.ID == 0 {
+		return dto.UserResponse{}, dto.ErrUserNotFound
+	}
+
 	return dto.UserResponse{
 		ID:          user.ID,
 		Username:    user.Username,
@@ -74,7 +78,7 @@ func (s *userService) RegisterUser(ctx context.Context, userCreateRequest dto.Us
 	if photoProfil != nil {
 		src, err := photoProfil.Open()
 		if err != nil {
-			return dto.UserResponse{}, err
+			return dto.UserResponse{}, dto.ErrFailedUploadFile
 		}
 		defer src.Close()
 
@@ -84,7 +88,7 @@ func (s *userService) RegisterUser(ctx context.Context, userCreateRequest dto.Us
 			PublicID: uniqueFileName,
 		})
 		if err != nil {
-			return dto.UserResponse{}, err
+			return dto.UserResponse{}, dto.ErrFailedUploadFile
 		}
 	}
 
@@ -119,7 +123,7 @@ func (s *userService) RegisterUser(ctx context.Context, userCreateRequest dto.Us
 func (s *userService) LoginUser(ctx context.Context, req dto.UserLoginRequest) (entity.User, error) {
 	userResponse, err := s.userRepository.GetUserByUsername(ctx, req.Username)
 	if err != nil {
-		return entity.User{}, dto.ErrCheckUsername
+		return entity.User{}, dto.ErrEmailOrPassword
 	}
 
 	checkPassword, _ := helpers.CheckPassword(userResponse.Password, []byte(req.Password))
@@ -135,7 +139,7 @@ func (s *userService) UpdateUser(ctx context.Context, user dto.UserUpdateRequest
 	if photoProfil != nil {
 		src, err := photoProfil.Open()
 		if err != nil {
-			return err
+			return dto.ErrFailedUploadFile
 		}
 		defer src.Close()
 
@@ -151,7 +155,7 @@ func (s *userService) UpdateUser(ctx context.Context, user dto.UserUpdateRequest
 		// hapus file lama di cloud
 		err = s.cloudinary.Delete(ctx, user.OldPhotoProfil)
 		if err != nil {
-			return err
+			return dto.ErrFailedUploadFile
 		}
 
 		user.OldPhotoProfil = uploadResult.SecureURL

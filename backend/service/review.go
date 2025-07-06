@@ -49,15 +49,19 @@ func (s *reviewService) CreateReview(ctx context.Context, reviewReq dto.CreateRe
 
 	film, err := s.filmRepository.CheckStatusFilm(ctx, reviewReq.FilmID)
 	if err != nil {
-		return dto.CreateReviewResponse{}, err
+		return dto.CreateReviewResponse{}, dto.ErrCheckStatusFilm
 	}
 	if film.Status == helpers.ENUM_FILM_NOT_YET_AIRED {
-		return dto.CreateReviewResponse{}, dto.ErrCreateReview
+		return dto.CreateReviewResponse{}, dto.ErrCreateReviewWithStatus
 	}
 
 	checkUserFilm, err := s.userFilmRepository.CheckUserFilm(ctx, userId, reviewReq.FilmID)
-	if err != nil || !checkUserFilm {
+	if err != nil {
 		return dto.CreateReviewResponse{}, dto.ErrCheckUserFilm
+	}
+
+	if !checkUserFilm {
+		return dto.CreateReviewResponse{}, dto.ErrCreateReviewWithNoWatchlist
 	}
 
 	createdReview, err := s.reviewRepository.CreateReview(ctx, review)
@@ -130,7 +134,12 @@ func (s *reviewService) GetReviewByFilmId(ctx context.Context, filmId int, userI
 }
 
 func (s *reviewService) UpdateReview(ctx context.Context, review dto.UpdateReviewRequest) error {
-	return s.reviewRepository.UpdateReview(ctx, review)
+	err := s.reviewRepository.UpdateReview(ctx, review)
+	if err != nil {
+		return dto.ErrUpdateReview
+	}
+
+	return nil
 }
 
 func (s *reviewService) UpdateReaksiReview(ctx context.Context, review dto.UpdateReaksiReviewRequest) error {
@@ -143,12 +152,16 @@ func (s *reviewService) UpdateReaksiReview(ctx context.Context, review dto.Updat
 
 	err := s.reaksiReviewRepository.UpdateOrCreateUserReaksi(ctx, reaksiReview)
 	if err != nil {
-		return dto.ErrUpdateReview
+		return dto.ErrUpdateReaksiReview
 	}
 
 	return nil
 }
 
 func (s *reviewService) DeleteReview(ctx context.Context, id int) error {
-	return s.reviewRepository.DeleteReview(ctx, id)
+	err := s.reviewRepository.DeleteReview(ctx, id)
+	if err != nil {
+		return dto.ErrDeleteReview
+	}
+	return nil
 }
