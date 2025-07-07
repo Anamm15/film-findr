@@ -30,7 +30,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepository) GetAllUser(ctx context.Context) ([]entity.User, error) {
 	var user []entity.User
-	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil").
+	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil", "role").
 		Find(&user).Error; err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (r *userRepository) GetUserById(ctx context.Context, userId int) (entity.Us
 	var user entity.User
 
 	if err := r.db.WithContext(ctx).
-		Select("id", "username", "nama", "bio", "photo_profil").
+		Select("id", "username", "nama", "bio", "photo_profil", "role").
 		Where("id = ?", userId).
 		First(&user).Error; err != nil {
 		return entity.User{}, err
@@ -60,7 +60,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user entity.User) (enti
 
 func (r *userRepository) GetUserByUsername(ctx context.Context, username string) (entity.User, error) {
 	var user entity.User
-	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil", "password").
+	if err := r.db.WithContext(ctx).Select("id", "username", "nama", "bio", "photo_profil", "password", "role").
 		Where("username = ?", username).
 		Take(&user).Error; err != nil {
 		return entity.User{}, err

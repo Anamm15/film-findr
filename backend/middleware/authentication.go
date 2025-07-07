@@ -14,7 +14,7 @@ func Authenticate(jwtService service.JWTService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		tokenStr, err := ctx.Cookie("access_token")
 		if err != nil || tokenStr == "" {
-			response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_PROSES_REQUEST, dto.MESSAGE_TOKEN_NOT_FOUUND, nil)
+			response := utils.BuildResponseFailed(dto.MESSAGE_FAILED_PROSES_REQUEST, dto.MESSAGE_LOGIN_FIRST, nil)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
