@@ -15,7 +15,7 @@ const Review = (props) => {
                 }`}
                 >
                 <p className="font-semibold text-2xl">{r.user.username}</p>
-                <p className="text-gray-600 text-lg">{r.komentar}</p>
+                <p className="text-text text-lg">{r.komentar}</p>
 
                 <div className="flex items-center gap-x-6 mt-2">
                     {/* Like Icon */}

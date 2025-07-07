@@ -3,12 +3,12 @@
 const InformasiFilm = (props) => {
     const { film } = props;
     return (
-        <div className="bg-white mb-6 space-y-3 text-lg">
+        <div className="bg-white mb-6 space-y-3 text-lg text-secondary">
             <div className="flex flex-wrap gap-2 mb-2">
                 {film.genres.map((genre) => (
                 <span
                     key={genre.id}
-                    className="bg-[#4895ef] text-white px-3 py-1 rounded-full"
+                    className="bg-tertiary text-white px-3 py-1 rounded-full"
                 >
                     {genre.nama}
                 </span>

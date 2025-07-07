@@ -10,10 +10,16 @@ export default {
         'inter': ['Inter', 'sans-serif'],
       },
       colors: {
-        'primary': '#3f37c9',
-        'secondary': '#4361ee',
-        'tertiary': '#4895ef',
-      }
+        'primary': '#007BFF',
+        'secondary': '#6C757D',
+        'tertiary': '#FF1493',
+        'text': '#121212',
+        'background': '#FFFFFF',
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(135deg, #007BFF 20%, #8A2BE2 80%)',
+        'gradient-secondary': 'linear-gradient(135deg, #007BFF 30%, #FF1493 70%)',
+      },
     },
   },
   plugins: [],
