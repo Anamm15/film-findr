@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
 const WatchlistLayout = (props) => {
-    const { watchlist, children, key } = props;
+    const { watchlist, children } = props;
     return (
         <div
-          key={key}
+          key={watchlist.id}
           className="flex gap-6 bg-white rounded-2xl shadow-lg p-4 hover:shadow-xl transition-shadow"
         >
             <div className="flex-shrink-0 w-32 h-48 overflow-hidden rounded-xl shadow">

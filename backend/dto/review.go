@@ -56,8 +56,8 @@ type (
 	}
 
 	ReviewByUserResponse struct {
-		CountReview int              `json:"count_review"`
-		Reviews     []ReviewResponse `json:"reviews"`
+		CountPage int              `json:"count_page"`
+		Reviews   []ReviewResponse `json:"reviews"`
 	}
 
 	CreateReviewRequest struct {

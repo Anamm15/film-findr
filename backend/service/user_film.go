@@ -11,7 +11,7 @@ import (
 )
 
 type UserFilmService interface {
-	GetUserFilmByUserId(ctx context.Context, userId int) ([]dto.UserFilmResponse, error)
+	GetUserFilmByUserId(ctx context.Context, userId int, page int) (dto.GetUserFilmResponse, error)
 	CreateUserFilm(ctx context.Context, userFilm dto.UserFilmCreateRequest) (entity.UserFilm, error)
 	UpdateStatusUserFilm(ctx context.Context, userFilm dto.UserFilmUpdateStatusRequest) error
 }
@@ -21,14 +21,20 @@ type userFilmService struct {
 	filmRepository     repository.FilmRepository
 }
 
-func NewUserFilmService(userFilmRepository repository.UserFilmRepository, filmRepository repository.FilmRepository) UserFilmService {
-	return &userFilmService{userFilmRepository: userFilmRepository, filmRepository: filmRepository}
+func NewUserFilmService(
+	userFilmRepository repository.UserFilmRepository,
+	filmRepository repository.FilmRepository,
+) UserFilmService {
+	return &userFilmService{
+		userFilmRepository: userFilmRepository,
+		filmRepository:     filmRepository,
+	}
 }
 
-func (s *userFilmService) GetUserFilmByUserId(ctx context.Context, userId int) ([]dto.UserFilmResponse, error) {
-	userFilms, err := s.userFilmRepository.GetUserFilmByUserId(ctx, userId)
+func (s *userFilmService) GetUserFilmByUserId(ctx context.Context, userId int, page int) (dto.GetUserFilmResponse, error) {
+	userFilms, countUserFilm, err := s.userFilmRepository.GetUserFilmByUserId(ctx, userId, page)
 	if err != nil {
-		return nil, dto.ErrGetUserFilm
+		return dto.GetUserFilmResponse{}, dto.ErrGetUserFilm
 	}
 
 	var userFilmResponses []dto.UserFilmResponse
@@ -69,7 +75,10 @@ func (s *userFilmService) GetUserFilmByUserId(ctx context.Context, userId int) (
 		})
 	}
 
-	return userFilmResponses, nil
+	var GetUserFilmResponse dto.GetUserFilmResponse
+	GetUserFilmResponse.UserFilms = userFilmResponses
+	GetUserFilmResponse.CountPage = int(countUserFilm)
+	return GetUserFilmResponse, nil
 }
 
 func (s *userFilmService) CreateUserFilm(ctx context.Context, userFilmReq dto.UserFilmCreateRequest) (entity.UserFilm, error) {
@@ -103,7 +112,7 @@ func (s *userFilmService) UpdateStatusUserFilm(ctx context.Context, userFilm dto
 	}
 
 	if film.Status == helpers.ENUM_FILM_NOT_YET_AIRED && userFilm.Status != helpers.ENUM_LIST_FILM_PLAN_TO_WATCH {
-		return dto.ErrStatusFilmNotYetAired
+		return dto.ErrUpdateStatusUserFilm
 	}
 
 	if err := s.userFilmRepository.UpdateStatusUserFilm(ctx, userFilm.ID, userFilm.Status); err != nil {

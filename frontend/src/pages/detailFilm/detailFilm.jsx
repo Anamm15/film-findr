@@ -6,7 +6,7 @@ import WatchListForm from "./components/AddWatchlist";
 import RekomendasiFilm from "./components/Rekomendasi";
 import AddReview from "./components/AddReview";
 import Sinopsis from "./components/Sinopsis";
-import Review from "./components/Review";
+import ReviewLayout from "../../layouts/Review";
 import InformasiFilm from "./components/InformasiFilm";
 import Gambar from "./components/Gambar";
 
@@ -76,7 +76,7 @@ const DetailFilmPage = () => {
             </div>
 
             <Sinopsis sinopsis={film.sinopsis} />
-            <Review review={review} setPage={setPage} page={page} />
+            <ReviewLayout review={review} setPage={setPage} page={page} />
             <AddReview id={id} />
             <RekomendasiFilm films={films} />
           </>

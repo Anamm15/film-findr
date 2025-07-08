@@ -32,7 +32,7 @@ const AddReview = (props) => {
     };
 
     return (
-        <div className="bg-white rounded-xl shadow p-6">
+        <div className="bg-background rounded-xl shadow p-6">
             <h2 className="text-3xl font-semibold mb-4">Tambah Review</h2>
             <form onSubmit={handleAddReview} className="space-y-4">
             <textarea
@@ -65,7 +65,7 @@ const AddReview = (props) => {
                 className="rounded text-lg">
                 Tambah Review
             </Button>
-            {message && <p classname={`${colorMessage} mt-2`}>{message}</p>}
+            {message && <p classname={`${colorMessage} mt-2 text-sm`}>{message}</p>}
             </form>
         </div>
     )

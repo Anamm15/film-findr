@@ -40,4 +40,9 @@ type (
 		Status string       `json:"status"`
 		Film   FilmResponse `json:"film"`
 	}
+
+	GetUserFilmResponse struct {
+		UserFilms []UserFilmResponse `json:"user_films"`
+		CountPage int                `json:"count_page"`
+	}
 )

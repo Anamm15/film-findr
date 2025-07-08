@@ -1,6 +1,6 @@
 import { ThumbsUp, ThumbsDown } from "react-feather";
 
-const Review = (props) => {
+const ReviewLayout = (props) => {
     const { review, setPage, page } = props;
     
     return (
@@ -48,4 +48,4 @@ const Review = (props) => {
 }
 
 
-export default Review;
+export default ReviewLayout;

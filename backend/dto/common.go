@@ -33,7 +33,7 @@ const (
 	MESSAGE_FAILED_ACCESS_RESTRICTED  = "Access is restricted"
 	MESSAGE_TOKEN_NOT_FOUUND          = "Token not found"
 	MESSAGE_LOGIN_FIRST               = "Please login first"
-	MESSAGE_INVALID_TOKEN             = "Invalid token"
+	MESSAGE_INVALID_TOKEN             = "Invalid token, please login again"
 	MESSAGE_FAILED_DENIED_ACCESS      = "Access is denied"
 )
 

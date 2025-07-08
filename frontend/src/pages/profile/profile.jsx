@@ -2,11 +2,11 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getReviewByUserId } from "../../service/review";
 import { getUserById } from "../../service/user";
-import Review from "../detailFilm/components/Review";
 import { AuthContext } from "../../contexts/authContext";
 import { getUserFilmByUserId } from "../../service/userFilm";
-import Informasi from "./components/Informasi";
-import WatchlistLayout from "../../layouts/WatchlistLayout";
+import ReviewLayout from "../../layouts/Review";
+import Watchlist from "./components/Watchlist";
+import Akun from "./components/Akun";
 
 const ProfilePage = () => {
     const params = useParams();
@@ -15,8 +15,9 @@ const ProfilePage = () => {
 
     const [user, setUser] = useState(null);
     const [review, setReview] = useState([]);
-    const [watchlists, setWatchlists] = useState([]);
-    const [page, setPage] = useState(1);
+    const [watchlists, setWatchlists] = useState(null);
+    const [watchlistPage, setWatchlistPage] = useState(1);
+    const [reviewPage, setReviewPage] = useState(1);
 
     const finalId = routeId || currentUser?.id;
 
@@ -38,7 +39,7 @@ const ProfilePage = () => {
         const fetchReview = async () => {
             if (!finalId) return;
             try {
-                const response = await getReviewByUserId(finalId, page);
+                const response = await getReviewByUserId(finalId, reviewPage);
                 setReview(response.data.data);
             } catch (error) {
                 console.error("Error fetching review:", error);
@@ -46,13 +47,13 @@ const ProfilePage = () => {
         };
 
         fetchReview();
-    }, [finalId, page]);
+    }, [finalId, reviewPage]);
 
     useEffect(() => {
         const fetchWatchlists = async () => {
             if (!finalId) return;
             try {
-                const response = await getUserFilmByUserId(finalId);
+                const response = await getUserFilmByUserId(finalId, watchlistPage);
                 if (response.status === 200) {
                     setWatchlists(response.data.data);
                 }
@@ -62,63 +63,14 @@ const ProfilePage = () => {
         };
 
         fetchWatchlists();
-    }, [finalId]);
+    }, [finalId, watchlistPage]);
 
     return (
         <>
-            <div className="mt-28 flex justify-center px-4">
-                <div className="w-full max-w-4xl bg-gradient-to-br from-indigo-50 to-white rounded-3xl shadow-xl p-8 space-y-6">
-                    <div className="flex items-center gap-6">
-                        <div className="w-24 h-24 rounded-full bg-gradient-primary flex items-center justify-center text-white text-3xl font-bold shadow-md">
-                            {user?.nama?.charAt(0).toUpperCase() || "?"}
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-text">{user?.nama}</h1>
-                            <p className="text-secondary">@{user?.username}</p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <div className="bg-background p-4 rounded-xl shadow-sm border border-gray-100">
-                            <h2 className="text-lg font-semibold mb-2 text-primary">Informasi Pribadi</h2>
-                            <ul className="text-secondary space-y-1">
-                                <li><span className="font-medium">Nama:</span> {user?.nama}</li>
-                                <li><span className="font-medium">Username:</span> {user?.username}</li>
-                                {/* Tambahkan data lain di sini jika ada */}
-                            </ul>
-                        </div>
-
-                        <div className="bg-background p-4 rounded-xl shadow-sm border border-gray-100">
-                            <h2 className="text-lg font-semibold mb-2 text-primary">Aktivitas</h2>
-                            <p className="text-secondary">
-                                Total Ulasan: {review?.reviews?.length || 0}
-                            </p>
-                            <p className="text-secondary">
-                                Total Watchlist: {watchlists?.length || 0}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-background p-4 rounded-xl shadow-sm border border-gray-100">
-                        <h2 className="text-lg font-semibold mb-2 text-primary">Tentang Saya</h2>
-                        <p className="text-secondary">{user?.bio}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-12 px-4 max-w-4xl mx-auto space-y-4">
-                <h2 className="text-3xl font-semibold ps-4 pt-4">Watchlist</h2>
-                {
-                    watchlists && watchlists.map((watch) => (
-                        <WatchlistLayout key={watch.id} watchlist={watch}>
-                            <Informasi watch={watch} />
-                        </WatchlistLayout>
-                    ))
-                }
-            </div>
-
+            <Akun user={user} review={review} watchlists={watchlists} />
+            <Watchlist watchlists={watchlists} watchlistPage={watchlistPage} setWatchlistPage={setWatchlistPage} />
             <div className="mt-12 px-4 max-w-4xl mx-auto">
-                <Review review={review} setPage={setPage} page={page} />
+                <ReviewLayout review={review} setPage={setReviewPage} page={reviewPage} />
             </div>
         </>
     );

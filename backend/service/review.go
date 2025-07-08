@@ -83,7 +83,7 @@ func (s *reviewService) GetReviewByUserId(ctx context.Context, id int, userId in
 	}
 
 	var reviewsResponse dto.ReviewByUserResponse
-	reviewsResponse.CountReview = int(countReview)
+	reviewsResponse.CountPage = int(countReview)
 
 	for _, review := range reviews {
 		userReaksiReview, _ := s.reaksiReviewRepository.GetReaksiReviewByUserId(ctx, review.ID, userId)

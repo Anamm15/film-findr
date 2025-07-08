@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"math"
 
 	"FilmFindr/entity"
 
@@ -9,7 +10,7 @@ import (
 )
 
 type UserFilmRepository interface {
-	GetUserFilmByUserId(ctx context.Context, userId int) ([]entity.UserFilm, error)
+	GetUserFilmByUserId(ctx context.Context, userId int, page int) ([]entity.UserFilm, int64, error)
 	CreateUserFilm(ctx context.Context, userFilm entity.UserFilm) (entity.UserFilm, error)
 	UpdateStatusUserFilm(ctx context.Context, userFilmId int, status string) error
 	CheckUserFilm(ctx context.Context, userId int, filmId int) (bool, error)
@@ -23,8 +24,22 @@ func NewUserFilmRepository(db *gorm.DB) UserFilmRepository {
 	return &userFilmRepository{db: db}
 }
 
-func (r *userFilmRepository) GetUserFilmByUserId(ctx context.Context, userId int) ([]entity.UserFilm, error) {
+func (r *userFilmRepository) GetUserFilmByUserId(ctx context.Context, userId int, page int) ([]entity.UserFilm, int64, error) {
 	var userFilms []entity.UserFilm
+	var userFilmsCount int64
+
+	const limit = 5
+	if page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * limit
+
+	if err := r.db.WithContext(ctx).
+		Model(&entity.UserFilm{}).
+		Where("user_id = ?", userId).
+		Count(&userFilmsCount).Error; err != nil {
+		return nil, 0, err
+	}
 
 	if err := r.db.WithContext(ctx).
 		Model(&entity.UserFilm{}).
@@ -39,11 +54,15 @@ func (r *userFilmRepository) GetUserFilmByUserId(ctx context.Context, userId int
 		Preload("Film.FilmGenre.Genre", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "nama")
 		}).
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset).
 		Find(&userFilms).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return userFilms, nil
+	totalPage := math.Ceil(float64(userFilmsCount) / float64(limit))
+	return userFilms, int64(totalPage), nil
 }
 
 func (r *userFilmRepository) CreateUserFilm(ctx context.Context, userFilm entity.UserFilm) (entity.UserFilm, error) {

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"FilmFindr/dto"
 	"FilmFindr/service"
 	"FilmFindr/utils"
@@ -24,9 +26,14 @@ func NewUserFilmController(userFilmService service.UserFilmService) UserFilmCont
 
 func (u *userFilmController) GetUserFilmByUserId(ctx *gin.Context) {
 	userIdParam := ctx.Param("id")
+	pageStr := ctx.Query("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
+	}
 	userId := utils.StringToInt(userIdParam)
 
-	userFilms, err := u.userFilmService.GetUserFilmByUserId(ctx, userId)
+	userFilms, err := u.userFilmService.GetUserFilmByUserId(ctx, userId, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

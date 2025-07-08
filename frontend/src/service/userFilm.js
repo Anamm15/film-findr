@@ -2,8 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/userFilm";
 
-export const getUserFilmByUserId = async (id) => {
-    const response = await axios.get(`${BASE_URL}/getUserFilmByUserId/${id}`, {
+export const getUserFilmByUserId = async (id, page) => {
+    const response = await axios.get(`${BASE_URL}/getUserFilmByUserId/${id}?page=${page}`, {
         withCredentials: true
     });
     return response;
