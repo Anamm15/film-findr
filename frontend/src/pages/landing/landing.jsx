@@ -4,7 +4,7 @@ import ListFilm from "./components/ListFilm";
 
 
 const LandingPage = () => {
-    const [films, setFilms] = useState([]);
+    const [films, setFilms] = useState(null);
     const [isFilmsFetched, setIsFilmsFetched] = useState(false);
 
     useEffect(() => {
@@ -27,7 +27,9 @@ const LandingPage = () => {
         <>
             <div className="p-4 xl:max-w-[1280px] mx-auto mt-28">
                 <h1 className="text-4xl font-bold mb-4 text-text">Daftar Film</h1>
-                <ListFilm films={films} />
+                {
+                    films && <ListFilm films={films.films} />
+                }
             </div>
         </>
       );      

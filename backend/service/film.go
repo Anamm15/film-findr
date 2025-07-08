@@ -16,7 +16,7 @@ import (
 )
 
 type FilmService interface {
-	GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error)
+	GetAllFilm(ctx context.Context, page int) (dto.GetFilmResponse, error)
 	GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error)
 	CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error)
 	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
@@ -52,10 +52,10 @@ func NewFilmService(
 	}
 }
 
-func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmResponse, error) {
-	films, err := s.filmRepository.GetAllFilm(ctx, page)
+func (s *filmService) GetAllFilm(ctx context.Context, page int) (dto.GetFilmResponse, error) {
+	films, countFilm, err := s.filmRepository.GetAllFilm(ctx, page)
 	if err != nil {
-		return []dto.FilmResponse{}, dto.ErrGetFilm
+		return dto.GetFilmResponse{}, dto.ErrGetFilm
 	}
 
 	var filmResponses []dto.FilmResponse
@@ -94,7 +94,11 @@ func (s *filmService) GetAllFilm(ctx context.Context, page int) ([]dto.FilmRespo
 		})
 	}
 
-	return filmResponses, nil
+	GetFilmResponses := dto.GetFilmResponse{
+		Film:      filmResponses,
+		CountPage: int(countFilm),
+	}
+	return GetFilmResponses, nil
 }
 
 func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error) {

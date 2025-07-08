@@ -1,0 +1,38 @@
+/* Style dasar untuk setiap link di navbar */
+.nav-link {
+    position: relative; /* Diperlukan agar pseudo-element ::after bisa diposisikan */
+    padding-bottom: 8px; /* Memberi sedikit ruang untuk garis bawah */
+    text-decoration: none; /* Menghilangkan garis bawah default */
+    color: inherit; /* Mewarisi warna dari parent (text-primary) */
+    transition: color 0.3s ease-in-out;
+}
+
+/* Membuat pseudo-element ::after sebagai garis bawah kustom */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Ketebalan garis bawah */
+    background-color: #007BFF; /* Ganti dengan warna primary Anda */
+    
+    /* Inilah inti animasinya: skala awal 0 (tak terlihat) */
+    transform: scaleX(0);
+    transform-origin: center; /* Animasi dimulai dari tengah */
+    
+    /* Transisi untuk efek yang halus */
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Style saat link di-hover atau aktif */
+.nav-link:hover::after,
+.nav-link.active::after {
+    /* Membuat garis bawah muncul dengan animasi skala ke 100% */
+    transform: scaleX(1);
+}
+
+/* (Opsional) Mengubah warna teks saat link aktif agar lebih menonjol */
+.nav-link.active {
+    color: #007BFF; /* Ganti dengan warna primary Anda */
+}

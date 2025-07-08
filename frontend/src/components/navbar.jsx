@@ -1,8 +1,10 @@
+import { NavLink } from "react-router-dom";
 import { logoutUser } from "../service/user";
-import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/authContext";
 import Button from "./Button";
+
+import "../styles/navbar.css";
 
 const Navbar = () => {
     const { user, loading } = useContext(AuthContext);
@@ -26,12 +28,14 @@ const Navbar = () => {
         <nav className="fixed z-50 w-screen bg-background border-b border-[#e0e0e0] h-20 shadow-md top-0 left-0 flex justify-center items-center">
             <div className="flex justify-between items-center w-full xl:w-[1280px] p-4">
                 <div className="text-3xl font-bold cursor-pointer text-primary">
-                    <Link to="/">Film-Findr</Link>
+                    {/* Menggunakan NavLink di sini juga opsional, tapi lebih konsisten */}
+                    <NavLink to="/">Film-Findr</NavLink>
                 </div>
                 <div className="flex gap-10 font-bold text-xl text-primary">
-                    <Link to="/">Top Film</Link>
-                    <Link to={`/profile/${user?.id}`}>Profile</Link>
-                    <Link to="/watchlist">Watch List</Link>
+                    {/* 2. Ganti semua <Link> yang relevan menjadi <NavLink> dan tambahkan className */}
+                    <NavLink to="/" className="nav-link" end>Top Film</NavLink>
+                    <NavLink to={`/profile/${user?.id}`} className="nav-link">Profile</NavLink>
+                    <NavLink to="/watchlist" className="nav-link">Watch List</NavLink>
                 </div>
                 <div>
                     {
@@ -42,10 +46,10 @@ const Navbar = () => {
                         ) : (
                             <div className="flex gap-5">
                                 <Button className="w-28 py-2 rounded-3xl font-semibold">
-                                    <Link to="/login">Login</Link>
+                                    <NavLink to="/login">Login</NavLink>
                                 </Button>
                                 <Button className="w-28 py-2 rounded-3xl font-semibold">
-                                    <Link to="/register">Register</Link>
+                                    <NavLink to="/register">Register</NavLink>
                                 </Button>
                             </div>
                         )
@@ -55,6 +59,5 @@ const Navbar = () => {
         </nav>
     )
 }
-
 
 export default Navbar;

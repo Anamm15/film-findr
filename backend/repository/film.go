@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"math"
 
 	"FilmFindr/dto"
 	"FilmFindr/entity"
@@ -10,7 +11,7 @@ import (
 )
 
 type FilmRepository interface {
-	GetAllFilm(ctx context.Context, page int) ([]entity.Film, error)
+	GetAllFilm(ctx context.Context, page int) ([]entity.Film, int64, error)
 	CreateFilm(ctx context.Context, tx *gorm.DB, film entity.Film) (entity.Film, error)
 	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
@@ -28,16 +29,24 @@ func NewFilmRepository(db *gorm.DB) FilmRepository {
 	return &filmRepository{db: db}
 }
 
-func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Film, error) {
+func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Film, int64, error) {
 	var films []entity.Film
+	var count int64
 
-	const limit = 5
+	const limit = 10
 	if page < 1 {
 		page = 1
 	}
 	offset := (page - 1) * limit
 
 	if err := r.db.WithContext(ctx).
+		Model(&entity.Film{}).
+		Count(&count).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&entity.Film{}).
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
@@ -47,10 +56,11 @@ func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Fil
 		Limit(limit).
 		Offset(offset).
 		Find(&films).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return films, nil
+	totalPage := int64(math.Ceil(float64(count) / float64(limit)))
+	return films, totalPage, nil
 }
 
 func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (entity.Film, error) {

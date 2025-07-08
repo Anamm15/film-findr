@@ -67,6 +67,11 @@ type (
 		Genres       []GenreResponse      `json:"genres"`
 	}
 
+	GetFilmResponse struct {
+		CountPage int            `json:"count_page"`
+		Film      []FilmResponse `json:"films"`
+	}
+
 	UpdateFilmRequest struct {
 		ID           int       `json:"id" validate:"required"`
 		Judul        string    `json:"judul" validate:"required"`
