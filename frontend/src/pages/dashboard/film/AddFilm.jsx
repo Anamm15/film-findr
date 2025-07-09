@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { createFilm } from "../../service/film";
-import { getAllGenre } from "../../service/genre";
+import { createFilm } from "../../../service/film";
+import { getAllGenre } from "../../../service/genre";
+import Input from "../../../components/Input";
+import Button from "../../../components/Button";
+import TextArea from "../../../components/Textarea";
 
 const AddFilmPage = () => {
    const [judul, setJudul] = useState("");
@@ -15,6 +17,7 @@ const AddFilmPage = () => {
    const [genres, setGenres] = useState([]);
    const [selectedGenres, setSelectedGenres] = useState([]);
    const [message, setMessage] = useState("");
+   const [colorMessage, setColorMessage] = useState("");
    const [isGenresLoaded, setIsGenresLoaded] = useState(false);
 
 
@@ -34,7 +37,7 @@ const AddFilmPage = () => {
       }
    }, [isGenresLoaded]);
 
-    const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
       try {
          const formData = new FormData();
@@ -52,126 +55,110 @@ const AddFilmPage = () => {
          }
 
          const response = await createFilm(formData);
-         if (response.status === 200) {
+         if (response.status === 201) {
             setMessage(response.data.message);
+            setColorMessage("text-green-600");
          }
       } catch (error) {
          setMessage(error.data.message);
+         setColorMessage("text-red-600");
       }
-    }
+   };
 
     return (
       <>
-         <div className="flex items-center justify-center min-h-screen bg-gray-100">
-         <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-               <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">Login</h2>
-               <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Judul</label>
-                     <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Masukkan Judul"
-                        value={judul}
-                        onChange={(e) => setJudul(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Status</label>
-                     <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Pilih Status"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Sinopsis</label>
-                     <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Deskripsikan sinosis"
-                        value={sinopsis}
-                        onChange={(e) => setSinopsis(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Sutradara</label>
-                     <input
-                        type="text"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Masukkan Sutradara"
-                        value={sutradara}
-                        onChange={(e) => setSutradara(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Tanggal Rilis</label>
-                     <input
-                        type="date"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Masukkan tanggal rilis"
-                        value={tanggalRilis}
-                        onChange={(e) => setTanggalRilis(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Total Episode</label>
-                     <input
-                        type="number"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Masukkan Total Episode"
-                        value={totalEpisode}
-                        onChange={(e) => setTotalEpisode(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Durasi</label>
-                     <input
-                        type="number"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Masukkan Total Episode"
-                        value={durasi}
-                        onChange={(e) => setDurasi(e.target.value)}
-                     />
-                  </div>
-                  <div className="mb-2">
-                     <label className="block text-gray-600 text-sm mb-2">Masukkan Gambar Pendukung</label>
-                     <input
-                              type="file"
-                              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                              placeholder="Enter your password"
-                              multiple
-                              onChange={(e) => setImageFiles(e.target.files)}
-                     />
-                  </div>
-                  <div className="mb-4">
-                     <label className="block text-gray-600 text-sm mb-2">Pilih genre</label>
-                     <select
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        value={selectedGenres}
-                        defaultValue={genres && genres[0]?.id}
-                        onChange={(e) => setSelectedGenres(e.target.value)}
+         <h1 className="text-4xl font-bold mb-5">Add Film</h1>
+         <form 
+            onSubmit={handleSubmit}
+            className="w-full relative">
+            <div className="w-full grid lg:grid-cols-2 gap-4">
+               <Input
+                  type="text"
+                  placeholder="Masukkan Judul"
+                  label="Judul"
+                  value={judul}
+                  onChange={(e) => setJudul(e.target.value)}
+               />
+               <Input
+                  type="text"
+                  label="Status"
+                  placeholder="Pilih Status"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+               />
+               <Input 
+                  type="text"
+                  label="Sutradara"
+                  placeholder="Masukkan Sutradara"
+                  value={sutradara}
+                  onChange={(e) => setSutradara(e.target.value)}
+               />
+               <Input 
+                  type="date"
+                  label="Tanggal Rilis"
+                  placeholder="Masukkan tanggal rilis"
+                  value={tanggalRilis}
+                  onChange={(e) => setTanggalRilis(e.target.value)}
+               />
+               <Input 
+                  type="number"
+                  label="Total Episode"
+                  placeholder="Masukkan Total Episode"
+                  value={totalEpisode}
+                  onChange={(e) => setTotalEpisode(e.target.value)}
+               />
+               <Input 
+                  type="number"
+                  label="Durasi"
+                  placeholder="Masukkan Durasi"
+                  value={durasi}
+                  onChange={(e) => setDurasi(e.target.value)}
+               />
+               <Input 
+                  type="file"
+                  label="Image"
+                  multiple={true}
+                  onChange={(e) => setImageFiles(e.target.files)}
+               />
+            </div>
+            <TextArea
+               label="Sinopsis"
+               placeholder="Masukkan Sinopsis"
+               value={sinopsis}
+               onChange={(e) => setSinopsis(e.target.value)}
+            />
+            <div className="mt-4">
+               <label className="block text-gray-600 text-sm mb-2">Pilih Genre</label>
+               <div className="flex flex-wrap gap-2">
+                  {genres.map((genre) => (
+                     <button
+                     key={genre.id}
+                     type="button"
+                     className={`px-3 py-1 text-sm rounded-full border transition
+                        ${selectedGenres.includes(genre.id)
+                           ? "bg-primary text-white border-primary"
+                           : "bg-background text-gray-700 border-gray-300 hover:bg-gray-100"}`}
+                     onClick={() => {
+                        setSelectedGenres((prev) =>
+                           prev.includes(genre.id)
+                           ? prev.filter((id) => id !== genre.id)
+                           : [...prev, genre.id]
+                        );
+                     }}
                      >
-                        {
-                           genres && genres.map((genre) => (
-                              <option key={genre.id} value={genre.id}>{genre.nama}</option>
-                           ))
-                        }
-                     </select>
-                  </div>
-                  <p>Sudah punya akun? <Link to="/login" className="text-blue-500">Login</Link> </p>
-                  <button
-                     type="submit"
-                     className="mt-2 w-full bg-blue-500 hover:bg-blue-700 text-white py-2 rounded transition duration-200"
-                  >
-                     Submit
-                  </button>
-                  {message && <p className="text-red-500 mt-2">{message}</p>}
-               </form>
-         </div>
-      </div>
+                     {genre.nama}
+                     </button>
+                  ))}
+               </div>
+            </div>
+            <Button
+               type="submit"
+               className="mt-4 w-40 py-2 rounded-lg absolute right-0"
+            >
+               Submit
+            </Button>
+            {message && <p className={`mt-16 absolute right-0 text-sm ${colorMessage}`}>{message}</p>}
+         </form>
       </>
    )
 }

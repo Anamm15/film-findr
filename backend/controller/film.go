@@ -192,39 +192,52 @@ func (s *filmController) UpdateStatus(ctx *gin.Context) {
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
-func (s *filmController) SearchFilm(c *gin.Context) {
-	keyword := c.Query("keyword")
-	status := c.Query("status")
-	genreIDs := c.QueryArray("genre_ids")
-
-	var genresId []int
-	if len(genreIDs) > 0 {
-		genresId = make([]int, len(genreIDs))
-		for i, genreID := range genreIDs {
-			genresId[i] = utils.StringToInt(genreID)
-		}
+func (s *filmController) SearchFilm(ctx *gin.Context) {
+	keyword := ctx.Query("keyword")
+	// status := ctx.Query("status")
+	// genreIDs := ctx.QueryArray("genre_ids")
+	pageStr := ctx.Query("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		page = 1
 	}
+
+	// var genresId []int
+	// if len(genreIDs) > 0 {
+	// 	genresId = make([]int, len(genreIDs))
+	// 	for i, genreID := range genreIDs {
+	// 		genresId[i] = utils.StringToInt(genreID)
+	// 	}
+	// }
 
 	var req dto.SearchFilmRequest
-	req = dto.SearchFilmRequest{
-		Keyword: keyword,
-		Status:  status,
-		Genres:  genresId,
-	}
 
-	films, err := s.filmService.SearchFilm(c, req)
+	// if keyword != "" {
+	// 	req.Keyword = &keyword
+	// }
+
+	// if status != "" {
+	// 	req.Status = &status
+	// }
+
+	// if len(genresId) > 0 {
+	// 	req.Genres = &genresId
+	// }
+
+	req.Keyword = keyword
+	films, err := s.filmService.SearchFilm(ctx, req, page)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_SEARCH_FILM, err.Error(), nil)
-		c.JSON(dto.STATUS_BAD_REQUEST, res)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	if len(films) == 0 {
+	if len(films.Film) == 0 {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_FILM_NOT_FOUND, dto.MESSAGE_FAILED_FILM_NOT_FOUND, nil)
-		c.JSON(dto.STATUS_BAD_REQUEST, res)
+		ctx.JSON(dto.STATUS_NOT_FOUND, res)
 		return
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_SEARCH_FILM, films)
-	c.JSON(dto.STATUS_OK, res)
+	ctx.JSON(dto.STATUS_OK, res)
 }

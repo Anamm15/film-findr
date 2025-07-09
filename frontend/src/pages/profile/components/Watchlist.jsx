@@ -7,7 +7,7 @@ const Watchlist = (props) => {
         <div className="mt-12 px-4 max-w-4xl mx-auto space-y-4">
             <h2 className="text-3xl font-semibold ps-4 pt-4">Watchlist</h2>
             {
-                watchlists && watchlists.user_films.map((user_film) => (
+                watchlists?.user_films && watchlists.user_films.map((user_film) => (
                     <WatchlistLayout watchlist={user_film}>
                         <Informasi watch={user_film} />
                     </WatchlistLayout>

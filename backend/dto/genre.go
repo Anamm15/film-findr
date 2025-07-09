@@ -19,7 +19,7 @@ const (
 var (
 	ErrGetAllGenre = errors.New("Failed to get all genre")
 	ErrCreateGenre = errors.New("Failed to create genre")
-	ErrUpdateGenre = errors.New("Failed to update genre")
+	ErrDeleteGenre = errors.New("Failed to delete genre")
 )
 
 type (

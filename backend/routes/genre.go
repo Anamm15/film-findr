@@ -14,6 +14,6 @@ func GenreRoute(router *gin.Engine, genreController controller.GenreController, 
 	{
 		genre.GET("/getAllGenre", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.GetAllGenre)
 		genre.POST("/create", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.CreateGenre)
-		genre.PUT("/update/:id", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.UpdateGenre)
+		genre.DELETE("/delete/:id", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.DeleteGenre)
 	}
 }

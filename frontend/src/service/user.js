@@ -3,12 +3,16 @@ import axios from "axios";
 const BASE_URL = "http://localhost:5000/user";
 
 export const getAllUser = async () => {
-    const response = await axios.get(`${BASE_URL}/getAllUser`);
+    const response = await axios.get(`${BASE_URL}/getAllUser`, {
+        withCredentials: true,
+    });
     return response;
 };
 
 export const getUserById = async (id) => {
-    const response = await axios.get(`${BASE_URL}/${id}`);
+    const response = await axios.get(`${BASE_URL}/${id}`, {
+        withCredentials: true,
+    });
     return response;
 };
 

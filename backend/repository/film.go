@@ -18,7 +18,7 @@ type FilmRepository interface {
 	GetFilmByID(ctx context.Context, id int) (entity.Film, error)
 	UpdateStatus(ctx context.Context, id int, status string) error
 	CheckStatusFilm(ctx context.Context, id int) (entity.Film, error)
-	SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]entity.Film, error)
+	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) ([]entity.Film, int64, error)
 }
 
 type filmRepository struct {
@@ -139,28 +139,46 @@ func (r *filmRepository) CheckStatusFilm(ctx context.Context, id int) (entity.Fi
 	return film, nil
 }
 
-func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]entity.Film, error) {
+func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) ([]entity.Film, int64, error) {
 	var films []entity.Film
+	var countFilm int64
 
-	if req.Keyword != "" {
-		r.db.Where("judul LIKE ? OR sinopsis LIKE ? OR sutradara LIKE ?", "%"+req.Keyword+"%", "%"+req.Keyword+"%", "%"+req.Keyword+"%")
+	const limit = 10
+	if page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * limit
+
+	baseQuery := r.db.WithContext(ctx).Model(&entity.Film{})
+
+	kw := "%" + req.Keyword + "%"
+	baseQuery = baseQuery.Where("judul ILIKE ? ", kw)
+	// if req.Status != nil {
+	// 	baseQuery = baseQuery.Where("status = ?", *req.Status)
+	// }
+
+	// if req.Genres != nil && len(*req.Genres) > 0 {
+	// 	baseQuery = baseQuery.Joins("JOIN film_genre ON film_genre.film_id = films.id").
+	// 		Where("film_genre.genre_id IN ?", *req.Genres)
+	// }
+
+	if err := baseQuery.Count(&countFilm).Error; err != nil {
+		return nil, 0, err
 	}
 
-	if req.Status != "" {
-		r.db.Where("status = ?", req.Status)
-	}
-
-	if len(req.Genres) > 0 {
-		r.db.Joins("JOIN film_genre ON film_genre.film_id = films.id").Where("film_genre.genre_id IN (?)", req.Genres)
-	}
-
-	if err := r.db.WithContext(ctx).
+	if err := baseQuery.
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
-		}).Preload("FilmGenre.Genre").Find(&films).Error; err != nil {
-		return nil, err
+		}).
+		Preload("FilmGenre.Genre").
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&films).Error; err != nil {
+		return nil, 0, err
 	}
 
-	return films, nil
+	totalPage := int64(math.Ceil(float64(countFilm) / float64(limit)))
+	return films, totalPage, nil
 }

@@ -56,6 +56,8 @@ const ProfilePage = () => {
             const response = await getUserFilmByUserId(finalId, watchlistPage);
             if (response.status === 200) {
                setWatchlists(response.data.data);
+               console.log(response.data.data);
+               
             }
          } catch (error) {
             console.error("Error fetching watchlists:", error);

@@ -89,8 +89,8 @@ type (
 	}
 
 	SearchFilmRequest struct {
-		Keyword string
-		Status  string
-		Genres  []int
+		Keyword string `json:"keyword"`
+		// Status  *string `json:"status"`
+		// Genres  *[]int  `json:"genres"`
 	}
 )

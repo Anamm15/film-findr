@@ -18,7 +18,7 @@ var (
 	ErrGetUserFilm           = errors.New("Failed to get user film")
 	ErrCreateUserFilm        = errors.New("Failed to create user film")
 	ErrUpdateStatusUserFilm  = errors.New("Failed to update status user film")
-	ErrCheckUserFilm         = errors.New("Failed to check user film")
+	ErrCheckUserFilm         = errors.New("You must add to your watchlist to review")
 	ErrStatusFilmNotYetAired = errors.New("Film with not yet aired must be plan to watch")
 )
 

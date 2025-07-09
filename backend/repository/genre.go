@@ -11,7 +11,7 @@ import (
 type GenreRepository interface {
 	GetAllGenre(ctx context.Context) ([]entity.Genre, error)
 	CreateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error)
-	UpdateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error)
+	DeleteGenre(ctx context.Context, genre entity.Genre) error
 }
 
 type genreRepository struct {
@@ -33,11 +33,11 @@ func (r *genreRepository) GetAllGenre(ctx context.Context) ([]entity.Genre, erro
 }
 
 func (r *genreRepository) CreateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error) {
-	err := r.db.Create(&genre).Error
+	err := r.db.WithContext(ctx).Create(&genre).Error
 	return genre, err
 }
 
-func (r *genreRepository) UpdateGenre(ctx context.Context, genre entity.Genre) (entity.Genre, error) {
-	err := r.db.Save(&genre).Error
-	return genre, err
+func (r *genreRepository) DeleteGenre(ctx context.Context, genre entity.Genre) error {
+	err := r.db.WithContext(ctx).Delete(&genre).Error
+	return err
 }

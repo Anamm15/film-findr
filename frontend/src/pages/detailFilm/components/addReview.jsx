@@ -65,7 +65,7 @@ const AddReview = (props) => {
                 className="rounded text-lg">
                 Tambah Review
             </Button>
-            {message && <p classname={`${colorMessage} mt-2 text-sm`}>{message}</p>}
+            {message && <p className={`${colorMessage} mt-2 text-sm`}>{message}</p>}
             </form>
         </div>
     )

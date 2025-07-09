@@ -22,7 +22,7 @@ type FilmService interface {
 	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
 	UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error
-	SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error)
+	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error)
 }
 
 type filmService struct {
@@ -267,10 +267,10 @@ func (s *filmService) UpdateStatus(ctx context.Context, id int, req dto.UpdateSt
 	return nil
 }
 
-func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest) ([]dto.FilmResponse, error) {
-	films, err := s.filmRepository.SearchFilm(ctx, req)
+func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error) {
+	films, countFilm, err := s.filmRepository.SearchFilm(ctx, req, page)
 	if err != nil {
-		return nil, dto.ErrSearchFilm
+		return dto.GetFilmResponse{}, dto.ErrSearchFilm
 	}
 
 	var filmResponses []dto.FilmResponse
@@ -309,5 +309,9 @@ func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest)
 		})
 	}
 
-	return filmResponses, nil
+	getFilmResponses := dto.GetFilmResponse{
+		CountPage: int(countFilm),
+		Film:      filmResponses,
+	}
+	return getFilmResponses, nil
 }

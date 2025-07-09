@@ -11,7 +11,7 @@ import (
 type GenreService interface {
 	GetAllGenre(ctx context.Context) ([]dto.GenreRequest, error)
 	CreateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error)
-	UpdateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error)
+	DeleteGenre(ctx context.Context, genre dto.GenreRequest) error
 }
 
 type genreService struct {
@@ -60,21 +60,16 @@ func (s *genreService) CreateGenre(ctx context.Context, genre dto.GenreRequest) 
 	return response, nil
 }
 
-func (s *genreService) UpdateGenre(ctx context.Context, genre dto.GenreRequest) (dto.GenreResponse, error) {
+func (s *genreService) DeleteGenre(ctx context.Context, genre dto.GenreRequest) error {
 	genreEntity := entity.Genre{
 		ID:   genre.ID,
 		Nama: genre.Nama,
 	}
 
-	updatedGenre, err := s.genreRepository.UpdateGenre(ctx, genreEntity)
+	err := s.genreRepository.DeleteGenre(ctx, genreEntity)
 	if err != nil {
-		return dto.GenreResponse{}, dto.ErrUpdateGenre
+		return dto.ErrDeleteGenre
 	}
 
-	response := dto.GenreResponse{
-		ID:   updatedGenre.ID,
-		Nama: updatedGenre.Nama,
-	}
-
-	return response, nil
+	return nil
 }

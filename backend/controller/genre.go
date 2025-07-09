@@ -11,7 +11,7 @@ import (
 type GenreController interface {
 	GetAllGenre(ctx *gin.Context)
 	CreateGenre(ctx *gin.Context)
-	UpdateGenre(ctx *gin.Context)
+	DeleteGenre(ctx *gin.Context)
 }
 
 type genreController struct {
@@ -55,7 +55,7 @@ func (s *genreController) CreateGenre(ctx *gin.Context) {
 	ctx.JSON(dto.STATUS_CREATED, res)
 }
 
-func (s *genreController) UpdateGenre(ctx *gin.Context) {
+func (s *genreController) DeleteGenre(ctx *gin.Context) {
 	genreId := ctx.Param("id")
 	var genre dto.GenreRequest
 	genre.ID = utils.StringToInt(genreId)
@@ -65,13 +65,13 @@ func (s *genreController) UpdateGenre(ctx *gin.Context) {
 		return
 	}
 
-	updatedGenre, err := s.genreService.UpdateGenre(ctx, genre)
+	err := s.genreService.DeleteGenre(ctx, genre)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_GENRE, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, updatedGenre)
+	res := utils.BuildResponseSuccess(dto.MESSAGE_GENRE_UPDATED, nil)
 	ctx.JSON(dto.STATUS_OK, res)
 }

@@ -13,6 +13,7 @@ import ReviewDashboardPage from "../pages/dashboard/Review";
 import GenreDashboardPage from "../pages/dashboard/Genre";
 import ContributorDashboardPage from "../pages/dashboard/Contributor";
 import AssignmentDashboardPage from "../pages/dashboard/Assignment";
+import AddFilmPage from "../pages/dashboard/film/AddFilm";
 
 const AppRoutes = () => {
    return (
@@ -46,6 +47,8 @@ const AppRoutes = () => {
             <Route path="genres" element={<GenreDashboardPage />} />
             <Route path="contributors" element={<ContributorDashboardPage />} />
             <Route path="assignments" element={<AssignmentDashboardPage />} />
+
+            <Route path="films/new" element={<AddFilmPage />} />
          </Route>
       </Routes>
    );

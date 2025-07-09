@@ -38,7 +38,7 @@ const Akun = (props) => {
 
                 <div className="bg-background p-4 rounded-xl shadow-sm border border-gray-100">
                     <h2 className="text-lg font-semibold mb-2 text-primary">Tentang Saya</h2>
-                    <p className="text-secondary">{user?.bio}</p>
+                    <p className="text-secondary whitespace-pre-line">{user?.bio}</p>
                 </div>
             </div>
         </div>
