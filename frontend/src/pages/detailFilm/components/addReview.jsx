@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createReview } from "../../../service/review";
 import Button from "../../../components/Button";
-
+import TextArea from "../../../components/Textarea";
 
 const AddReview = (props) => {
     const { id } = props;
@@ -33,16 +33,15 @@ const AddReview = (props) => {
 
     return (
         <div className="bg-background rounded-xl shadow p-6">
-            <h2 className="text-3xl font-semibold mb-4">Tambah Review</h2>
+            <h2 className="text-3xl font-semibold">Tambah Review</h2>
             <form onSubmit={handleAddReview} className="space-y-4">
-            <textarea
-                type="text"
+            <TextArea 
                 placeholder="Your Comment"
                 value={newReview}
                 onChange={(e) => setNewReview(e.target.value)}
-                className="w-full p-2 border rounded text-lg"
-                rows="4"
-            > </textarea>
+                label=""
+                className="mt-0"
+            />
 
             <div className="flex flex-col gap-2">
                 <label className="mt-2 text-xl font-semibold">Rating</label>
