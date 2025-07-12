@@ -93,4 +93,20 @@ type (
 		// Status  *string `json:"status"`
 		// Genres  *[]int  `json:"genres"`
 	}
+
+	RatingFilm struct {
+		FilmID int     `gorm:"column:film_id"`
+		Rating float64 `gorm:"column:rating"`
+	}
+
+	TopFilm struct {
+		FilmID     int `gorm:"column:film_id"`
+		TotalAdded int `gorm:"column:total_added"`
+	}
+
+	TrendingFilm struct {
+		FilmID      int       `gorm:"column:film_id"`
+		TotalAdded  int       `gorm:"column:total_added"`
+		LastAddedAt time.Time `gorm:"column:last_add_at"`
+	}
 )

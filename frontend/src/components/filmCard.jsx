@@ -6,15 +6,15 @@ const FilmCard = ({ movie, onClick }) => {
     judul,
     genres,
     tanggal_rilis,
-    // rating,
+    rating,
     status,
     durasi,
   } = movie;
 
   return (
-    <div 
-        className="max-w-sm bg-background rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer hover:border border-tertiary"
-        onClick={onClick}
+    <div
+      className="max-w-sm bg-background rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer hover:border border-tertiary"
+      onClick={onClick}
     >
       <img
         className="w-full h-[320px] object-cover"
@@ -38,7 +38,7 @@ const FilmCard = ({ movie, onClick }) => {
           <p><strong>Tanggal Rilis:</strong> {tanggal_rilis}</p>
           <p><strong>Durasi:</strong> {durasi} menit</p>
           <p><strong>Status:</strong> <span className="capitalize">{status}</span></p>
-          <p><strong>Rating:</strong> ⭐ {2}/10</p>
+          <p><strong>Rating:</strong> ⭐ {rating}/10</p>
         </div>
       </div>
     </div>

@@ -13,11 +13,13 @@ import (
 type ReviewRepository interface {
 	GetReviewByFilmId(ctx context.Context, filmId int, page int) ([]entity.Review, int64, error)
 	GetReviewByUserId(ctx context.Context, id int, page int) ([]entity.Review, int64, error)
-	GetRatingByFilmID(ctx context.Context, filmId int) (float64, error)
+	GetRatingFromMaterializedView(ctx context.Context, filmId int) (float64, error)
 	CreateReview(ctx context.Context, review entity.Review) (entity.Review, error)
 	UpdateReview(ctx context.Context, review dto.UpdateReviewRequest) error
 	UpdateReaksiReview(ctx context.Context, review dto.UpdateReaksiReviewRequest) error
 	DeleteReview(ctx context.Context, id int) error
+	CountReview(ctx context.Context) (int64, error)
+	GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyReview, error)
 }
 
 type reviewRepository struct {
@@ -90,18 +92,17 @@ func (r *reviewRepository) GetReviewByUserId(ctx context.Context, id int, page i
 	return review, int64(totalPage), nil
 }
 
-func (r *reviewRepository) GetRatingByFilmID(ctx context.Context, filmId int) (float64, error) {
-	var rating float64
+func (r *reviewRepository) GetRatingFromMaterializedView(ctx context.Context, filmId int) (float64, error) {
+	var rating dto.RatingFilm
 
-	if err := r.db.WithContext(ctx).
-		Model(&entity.Review{}).
-		Select("AVG(rating)").
-		Where("film_id = ?", filmId).
-		Scan(&rating).Error; err != nil {
+	err := r.db.WithContext(ctx).
+		Raw("SELECT * FROM rating_film WHERE film_id = ?", filmId).
+		Scan(&rating).Error
+	if err != nil {
 		return 0, err
 	}
 
-	return rating, nil
+	return rating.Rating, nil
 }
 
 func (r *reviewRepository) CreateReview(ctx context.Context, review entity.Review) (entity.Review, error) {
@@ -149,4 +150,30 @@ func (r *reviewRepository) DeleteReview(ctx context.Context, id int) error {
 		return err
 	}
 	return nil
+}
+
+func (r *reviewRepository) CountReview(ctx context.Context) (int64, error) {
+	var count int64
+
+	err := r.db.WithContext(ctx).
+		Model(entity.Review{}).
+		Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *reviewRepository) GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyReview, error) {
+	var results []dto.WeeklyReview
+
+	err := r.db.WithContext(ctx).
+		Raw("SELECT * FROM weekly_review").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }

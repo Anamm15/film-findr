@@ -1,6 +1,9 @@
 package dto
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 const (
 	// failed
@@ -83,5 +86,10 @@ type (
 		UserID   int    `json:"user_id" validate:"required"`
 		ReviewID int    `json:"review_id" validate:"required"`
 		Reaksi   string `json:"reaksi" validate:"required"`
+	}
+
+	WeeklyReview struct {
+		Weekly      time.Time `gorm:"column:weekly"`
+		TotalReview int64     `gorm:"column:total_review"`
 	}
 )

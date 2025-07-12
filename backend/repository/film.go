@@ -19,6 +19,9 @@ type FilmRepository interface {
 	UpdateStatus(ctx context.Context, id int, status string) error
 	CheckStatusFilm(ctx context.Context, id int) (entity.Film, error)
 	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) ([]entity.Film, int64, error)
+	CountFilm(ctx context.Context) (int64, error)
+	GetTopFilm(ctx context.Context) ([]dto.TopFilm, error)
+	GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error)
 }
 
 type filmRepository struct {
@@ -181,4 +184,43 @@ func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmReque
 
 	totalPage := int64(math.Ceil(float64(countFilm) / float64(limit)))
 	return films, totalPage, nil
+}
+
+func (r *filmRepository) CountFilm(ctx context.Context) (int64, error) {
+	var count int64
+
+	err := r.db.WithContext(ctx).
+		Model(entity.Film{}).
+		Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *filmRepository) GetTopFilm(ctx context.Context) ([]dto.TopFilm, error) {
+	var results []dto.TopFilm
+
+	err := r.db.WithContext(ctx).
+		Raw("SELECT * FROM top_film_watchlist ORDER BY total_add DESC LIMIT 10").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error) {
+	var results []dto.TrendingFilm
+
+	err := r.db.WithContext(ctx).
+		Raw("SELECT * FROM trending_film_weekly ORDER BY total_added DESC LIMIT 10").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }

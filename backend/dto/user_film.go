@@ -1,6 +1,9 @@
 package dto
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 const (
 	MESSAGE_FAILED_UPDATED_STATUS_USER_FILM = "Failed to update status user film"
@@ -44,5 +47,10 @@ type (
 	GetUserFilmResponse struct {
 		UserFilms []UserFilmResponse `json:"user_films"`
 		CountPage int                `json:"count_page"`
+	}
+
+	WeeklyUser struct {
+		Weekly    time.Time `json:"weekly"`
+		TotalUser int64     `json:"total_user"`
 	}
 )

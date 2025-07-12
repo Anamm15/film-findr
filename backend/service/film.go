@@ -64,7 +64,7 @@ func (s *filmService) GetAllFilm(ctx context.Context, page int) (dto.GetFilmResp
 		var fileResponses []dto.FilmGambarResponse
 		var genreResponses []dto.GenreResponse
 
-		rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+		rating, _ := s.reviewRepository.GetRatingFromMaterializedView(ctx, film.ID)
 		rating = math.Round(rating*100) / 100
 
 		for _, file := range film.FilmGambar {
@@ -107,7 +107,7 @@ func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse
 		return dto.FilmResponse{}, dto.ErrGetFilm
 	}
 
-	rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+	rating, _ := s.reviewRepository.GetRatingFromMaterializedView(ctx, film.ID)
 	rating = math.Round(rating*100) / 100
 
 	var fileResponses []dto.FilmGambarResponse
@@ -279,7 +279,7 @@ func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest,
 		var fileResponses []dto.FilmGambarResponse
 		var genreResponses []dto.GenreResponse
 
-		rating, _ := s.reviewRepository.GetRatingByFilmID(ctx, film.ID)
+		rating, _ := s.reviewRepository.GetRatingFromMaterializedView(ctx, film.ID)
 		rating = math.Round(rating*100) / 100
 
 		for _, file := range film.FilmGambar {

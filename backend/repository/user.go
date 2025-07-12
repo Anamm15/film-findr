@@ -16,6 +16,7 @@ type UserRepository interface {
 	GetUserByUsername(ctx context.Context, username string) (entity.User, error)
 	UpdateUser(ctx context.Context, user dto.UserUpdateRequest) error
 	DeleteUser(ctx context.Context, id int) error
+	GetWeeklyUsers(ctx context.Context) ([]dto.WeeklyUser, error)
 }
 
 type userRepository struct {
@@ -104,4 +105,17 @@ func (r *userRepository) DeleteUser(ctx context.Context, userId int) error {
 	}
 
 	return nil
+}
+
+func (r *userRepository) GetWeeklyUsers(ctx context.Context) ([]dto.WeeklyUser, error) {
+	var results []dto.WeeklyUser
+
+	err := r.db.WithContext(ctx).
+		Raw("SELECT * FROM weekly_user").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
