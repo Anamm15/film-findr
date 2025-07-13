@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"FilmFindr/dto"
 	"FilmFindr/entity"
 
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 
 type FilmGambarRepository interface {
 	Save(ctx context.Context, tx *gorm.DB, filmGambar entity.FilmGambar) error
+	FindFilmGambarByFilmIDs(ctx context.Context, filmIDs []int) ([]dto.FilmGambarResponse, error)
 }
 
 type filmGambarRepository struct {
@@ -25,4 +27,17 @@ func (r *filmGambarRepository) Save(ctx context.Context, tx *gorm.DB, filmGambar
 		return err
 	}
 	return nil
+}
+
+func (r *filmGambarRepository) FindFilmGambarByFilmIDs(ctx context.Context, filmIDs []int) ([]dto.FilmGambarResponse, error) {
+	var gambar []dto.FilmGambarResponse
+	err := r.db.WithContext(ctx).
+		Model(entity.FilmGambar{}).
+		Where("film_id IN ?", filmIDs).
+		Find(&gambar).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return gambar, nil
 }

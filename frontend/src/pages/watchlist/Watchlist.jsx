@@ -27,32 +27,31 @@ const WatchListPage = () => {
         fetchWatchlist();
     }, [user, loading, page]);
 
-  return (
-    <div className="mx-auto max-w-4xl mt-28 px-4 space-y-6">
-        <h1 className="text-3xl font-bold text-center mb-8">🎬 Your Watchlist</h1>
-        { watchlist && watchlist.user_films.map((user_film) => (
-            <WatchlistLayout watchlist={user_film}>
-                <Informasi watch={user_film} />
-                <Detail watchlist={user_film} />
-            </WatchlistLayout>
-        ))}
-
-        {/* Pagination */}
-        <div className="flex justify-center mt-2 pb-2 space-x-2">
-            {watchlist && Array.from({ length: watchlist.count_page }, (_, i) => (
-                <button
-                key={i}
-                className={`px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm ${
-                    page === i + 1 ? "bg-primary text-white" : ""
-                }`}
-                onClick={() => setPage(i + 1)}
-                >
-                {i + 1}
-                </button>
+    return (
+        <div className="mx-auto max-w-4xl mt-28 px-4 space-y-6">
+            <h1 className="text-3xl font-bold text-center mb-8">🎬 Your Watchlist</h1>
+            {watchlist && watchlist.user_films?.map((user_film) => (
+                <WatchlistLayout watchlist={user_film}>
+                    <Informasi watch={user_film} />
+                    <Detail watchlist={user_film} />
+                </WatchlistLayout>
             ))}
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-2 pb-2 space-x-2">
+                {watchlist && Array.from({ length: watchlist.count_page }, (_, i) => (
+                    <button
+                        key={i}
+                        className={`px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm ${page === i + 1 ? "bg-primary text-white" : ""
+                            }`}
+                        onClick={() => setPage(i + 1)}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default WatchListPage;

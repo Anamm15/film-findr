@@ -29,7 +29,8 @@ type (
 	}
 
 	GenreResponse struct {
-		ID   int    `json:"id"`
-		Nama string `json:"nama"`
+		ID     int    `json:"id"`
+		FilmID int    `json:"film_id"`
+		Nama   string `json:"nama"`
 	}
 )

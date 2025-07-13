@@ -2,26 +2,26 @@ package repository
 
 import (
 	"context"
-	"math"
 
 	"FilmFindr/dto"
 	"FilmFindr/entity"
+	"FilmFindr/helpers"
 
 	"gorm.io/gorm"
 )
 
 type FilmRepository interface {
-	GetAllFilm(ctx context.Context, page int) ([]entity.Film, int64, error)
+	GetAllFilm(ctx context.Context, offset int) ([]dto.FilmFlat, error)
 	CreateFilm(ctx context.Context, tx *gorm.DB, film entity.Film) (entity.Film, error)
 	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
-	GetFilmByID(ctx context.Context, id int) (entity.Film, error)
+	GetFilmByID(ctx context.Context, id int) (dto.FilmFlat, error)
 	UpdateStatus(ctx context.Context, id int, status string) error
 	CheckStatusFilm(ctx context.Context, id int) (entity.Film, error)
-	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) ([]entity.Film, int64, error)
+	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, offset int) ([]entity.Film, error)
 	CountFilm(ctx context.Context) (int64, error)
-	GetTopFilm(ctx context.Context) ([]dto.TopFilm, error)
-	GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error)
+	GetTopFilm(ctx context.Context) ([]dto.TopFilmFlat, error)
+	GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat, error)
 }
 
 type filmRepository struct {
@@ -32,50 +32,37 @@ func NewFilmRepository(db *gorm.DB) FilmRepository {
 	return &filmRepository{db: db}
 }
 
-func (r *filmRepository) GetAllFilm(ctx context.Context, page int) ([]entity.Film, int64, error) {
-	var films []entity.Film
-	var count int64
-
-	const limit = 10
-	if page < 1 {
-		page = 1
-	}
-	offset := (page - 1) * limit
+func (r *filmRepository) GetAllFilm(ctx context.Context, offset int) ([]dto.FilmFlat, error) {
+	var filmFlats []dto.FilmFlat
 
 	if err := r.db.WithContext(ctx).
-		Model(&entity.Film{}).
-		Count(&count).Error; err != nil {
-		return nil, 0, err
+		Raw(`
+		SELECT f.id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi,
+		       f.total_episode, f.tanggal_rilis,
+		       COALESCE(rf.rating, 0) AS rating
+		FROM films f
+		LEFT JOIN rating_film rf ON rf.film_id = f.id
+		ORDER BY f.created_at DESC
+		LIMIT ? OFFSET ?
+	`, helpers.LIMIT_FILM, offset).Scan(&filmFlats).Error; err != nil {
+		return nil, err
 	}
 
-	if err := r.db.WithContext(ctx).
-		Model(&entity.Film{}).
-		Select("id", "judul", "tanggal_rilis", "durasi", "status").
-		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id", "url", "film_id")
-		}).
-		Preload("FilmGenre.Genre").
-		Order("created_at DESC").
-		Limit(limit).
-		Offset(offset).
-		Find(&films).Error; err != nil {
-		return nil, 0, err
-	}
-
-	totalPage := int64(math.Ceil(float64(count) / float64(limit)))
-	return films, totalPage, nil
+	return filmFlats, nil
 }
 
-func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (entity.Film, error) {
-	var film entity.Film
+func (r *filmRepository) GetFilmByID(ctx context.Context, id int) (dto.FilmFlat, error) {
+	var film dto.FilmFlat
 	if err := r.db.WithContext(ctx).
-		Select("id", "judul", "tanggal_rilis", "durasi", "status", "total_episode", "sutradara", "sinopsis").
-		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
-			return db.Select("id", "url", "film_id")
-		}).
-		Preload("FilmGenre.Genre").
-		First((&film), id).Error; err != nil {
-		return entity.Film{}, err
+		Raw(`
+		SELECT f.id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi,
+		       f.total_episode, f.tanggal_rilis,
+		       COALESCE(rf.rating, 0) AS rating
+		FROM films f
+		LEFT JOIN rating_film rf ON rf.film_id = f.id
+		WHERE f.id = ?
+	`, id).Scan(&film).Error; err != nil {
+		return dto.FilmFlat{}, err
 	}
 
 	return film, nil
@@ -142,15 +129,8 @@ func (r *filmRepository) CheckStatusFilm(ctx context.Context, id int) (entity.Fi
 	return film, nil
 }
 
-func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) ([]entity.Film, int64, error) {
+func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, offset int) ([]entity.Film, error) {
 	var films []entity.Film
-	var countFilm int64
-
-	const limit = 10
-	if page < 1 {
-		page = 1
-	}
-	offset := (page - 1) * limit
 
 	baseQuery := r.db.WithContext(ctx).Model(&entity.Film{})
 
@@ -165,10 +145,6 @@ func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmReque
 	// 		Where("film_genre.genre_id IN ?", *req.Genres)
 	// }
 
-	if err := baseQuery.Count(&countFilm).Error; err != nil {
-		return nil, 0, err
-	}
-
 	if err := baseQuery.
 		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
@@ -176,14 +152,13 @@ func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmReque
 		}).
 		Preload("FilmGenre.Genre").
 		Order("created_at DESC").
-		Limit(limit).
+		Limit(helpers.LIMIT_FILM).
 		Offset(offset).
 		Find(&films).Error; err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	totalPage := int64(math.Ceil(float64(countFilm) / float64(limit)))
-	return films, totalPage, nil
+	return films, nil
 }
 
 func (r *filmRepository) CountFilm(ctx context.Context) (int64, error) {
@@ -199,28 +174,40 @@ func (r *filmRepository) CountFilm(ctx context.Context) (int64, error) {
 	return count, nil
 }
 
-func (r *filmRepository) GetTopFilm(ctx context.Context) ([]dto.TopFilm, error) {
-	var results []dto.TopFilm
-
+func (r *filmRepository) GetTopFilm(ctx context.Context) ([]dto.TopFilmFlat, error) {
+	var topFilmsFlat []dto.TopFilmFlat
 	err := r.db.WithContext(ctx).
-		Raw("SELECT * FROM top_film_watchlist ORDER BY total_add DESC LIMIT 10").
-		Scan(&results).Error
+		Raw(`
+		SELECT f.id AS film_id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi, 
+		       f.total_episode, f.tanggal_rilis, rf.rating
+		FROM top_film_watchlist twc
+		JOIN films f ON f.id = twc.film_id
+		JOIN rating_film rf ON f.id = rf.film_id
+		ORDER BY twc.total_add DESC
+		LIMIT 10
+	`).Scan(&topFilmsFlat).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return results, nil
+	return topFilmsFlat, nil
 }
 
-func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error) {
-	var results []dto.TrendingFilm
-
+func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat, error) {
+	var trendingFilmFlat []dto.TopFilmFlat
 	err := r.db.WithContext(ctx).
-		Raw("SELECT * FROM trending_film_weekly ORDER BY total_added DESC LIMIT 10").
-		Scan(&results).Error
+		Raw(`
+		SELECT f.id AS film_id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi, 
+		       f.total_episode, f.tanggal_rilis, rf.rating
+		FROM trending_film_weekly tfw
+		JOIN films f ON f.id = tfw.film_id
+		JOIN rating_film rf ON f.id = rf.film_id
+		ORDER BY tfw.total_added DESC
+		LIMIT 10
+	`).Scan(&trendingFilmFlat).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return results, nil
+	return trendingFilmFlat, nil
 }

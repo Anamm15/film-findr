@@ -13,6 +13,8 @@ import (
 type FilmController interface {
 	GetAllFilm(ctx *gin.Context)
 	GetFilmById(ctx *gin.Context)
+	GetTopFilm(ctx *gin.Context)
+	GetTrendingFilm(ctx *gin.Context)
 	CreateFilm(ctx *gin.Context)
 	UpdateFilm(ctx *gin.Context)
 	DeleteFilm(ctx *gin.Context)
@@ -239,5 +241,29 @@ func (s *filmController) SearchFilm(ctx *gin.Context) {
 	}
 
 	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_SEARCH_FILM, films)
+	ctx.JSON(dto.STATUS_OK, res)
+}
+
+func (s *filmController) GetTopFilm(ctx *gin.Context) {
+	films, err := s.filmService.GetTopFilm(ctx)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_ALL_FILM, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_FILM, films)
+	ctx.JSON(dto.STATUS_OK, res)
+}
+
+func (s *filmController) GetTrendingFilm(ctx *gin.Context) {
+	films, err := s.filmService.GetTrendingFilm(ctx)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_ALL_FILM, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	res := utils.BuildResponseSuccess(dto.MESSAGE_SUCCESS_GET_LIST_FILM, films)
 	ctx.JSON(dto.STATUS_OK, res)
 }

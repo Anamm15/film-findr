@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"FilmFindr/dto"
 	"FilmFindr/entity"
 
 	"gorm.io/gorm"
@@ -11,6 +12,7 @@ import (
 type FilmGenreRepository interface {
 	CreateFilmGenre(ctx context.Context, tx *gorm.DB, genre entity.FilmGenre) (entity.FilmGenre, error)
 	DeleteFilmGenre(ctx context.Context, filmGenre entity.FilmGenre) error
+	FindGenreByFilmIDs(ctx context.Context, filmIDs []int) ([]dto.GenreResponse, error)
 }
 
 type filmGenreRepository struct {
@@ -37,4 +39,20 @@ func (r *filmGenreRepository) DeleteFilmGenre(ctx context.Context, genre entity.
 	}
 
 	return nil
+}
+
+func (r *filmGenreRepository) FindGenreByFilmIDs(ctx context.Context, filmIDs []int) ([]dto.GenreResponse, error) {
+	var genres []dto.GenreResponse
+	err := r.db.WithContext(ctx).
+		Raw(`
+		SELECT g.id, g.nama, fg.film_id
+		FROM film_genres fg
+		JOIN genres g ON g.id = fg.genre_id
+		WHERE fg.film_id IN ?
+	`, filmIDs).Scan(&genres).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return genres, nil
 }

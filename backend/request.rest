@@ -22,7 +22,7 @@ GET http://localhost:5000/user/1
 GET http://localhost:5000/film/getAllFilm 
 
 ###
-GET http://localhost:5000/film/getFilmById/1
+GET http://localhost:5000/film/getFilmById/12
 
 ###
 POST http://localhost:5000/user/login
@@ -60,3 +60,12 @@ GET http://localhost:5000/review/getReviewByFilmId/1
 
 ###
 GET http://localhost:5000/userFilm/getUserFilmByUserId/1
+
+###
+GET http://localhost:5000/film/getTopFilm
+
+###
+GET http://localhost:5000/film/getTrendingFilm
+
+###
+GET http://localhost:5000/film/getAllFilm

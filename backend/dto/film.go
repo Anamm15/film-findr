@@ -49,8 +49,21 @@ type (
 	}
 
 	FilmGambarResponse struct {
-		ID  int    `json:"id"`
-		Url string `json:"url"`
+		ID     int    `json:"id"`
+		FilmID int    `json:"film_id"`
+		Url    string `json:"url"`
+	}
+
+	FilmFlat struct {
+		ID           int       `json:"id"`
+		Judul        string    `json:"judul"`
+		Sinopsis     string    `json:"sinopsis"`
+		Sutradara    string    `json:"sutradara"`
+		Status       string    `json:"status"`
+		Durasi       int       `json:"durasi"`
+		TotalEpisode int       `json:"total_episode"`
+		TanggalRilis time.Time `json:"tanggal_rilis"`
+		Rating       float64   `json:"rating"`
 	}
 
 	FilmResponse struct {
@@ -99,14 +112,43 @@ type (
 		Rating float64 `gorm:"column:rating"`
 	}
 
+	TopFilmFlat struct {
+		FilmID       int     `json:"film_id"`
+		Judul        string  `json:"judul"`
+		Sinopsis     string  `json:"sinopsis"`
+		Sutradara    string  `json:"sutradara"`
+		Status       string  `json:"status"`
+		Durasi       int     `json:"durasi"`
+		TotalEpisode int     `json:"total_episode"`
+		TanggalRilis string  `json:"tanggal_rilis"`
+		Rating       float64 `json:"rating"`
+	}
+
 	TopFilm struct {
-		FilmID     int `gorm:"column:film_id"`
-		TotalAdded int `gorm:"column:total_added"`
+		ID           int                  `gorm:"column:id" json:"id"`
+		Judul        string               `gorm:"column:judul" json:"judul"`
+		Sinopsis     string               `gorm:"column:sinopsis" json:"sinopsis"`
+		Sutradara    string               `gorm:"column:sutradara" json:"sutradara"`
+		Status       string               `gorm:"column:status" json:"status"`
+		Durasi       int                  `gorm:"column:duras" json:"durasi"`
+		TotalEpisode int                  `gorm:"column:total_episode" json:"total_episode"`
+		TanggalRilis string               `gorm:"column:tanggal_rilis" json:"tanggal_rilis"`
+		Rating       float64              `gorm:"column:rating" json:"rating"`
+		Gambar       []FilmGambarResponse `gorm:"column:film_gambar" json:"film_gambar"`
+		Genres       []GenreResponse      `gorm:"column:genres" json:"genres"`
 	}
 
 	TrendingFilm struct {
-		FilmID      int       `gorm:"column:film_id"`
-		TotalAdded  int       `gorm:"column:total_added"`
-		LastAddedAt time.Time `gorm:"column:last_add_at"`
+		ID           int                  `gorm:"column:id"`
+		Judul        string               `gorm:"column:judul" json:"judul"`
+		Sinopsis     string               `gorm:"column:sinopsis" json:"sinopsis"`
+		Sutradara    string               `gorm:"column:sutradara" json:"sutradara"`
+		Status       string               `gorm:"column:status" json:"status"`
+		Durasi       int                  `gorm:"column:duras" json:"durasi"`
+		TotalEpisode int                  `gorm:"column:total_episode" json:"total_episode"`
+		TanggalRilis string               `gorm:"column:tanggal_rilis" json:"tanggal_rilis"`
+		Rating       float64              `gorm:"column:rating" json:"rating"`
+		Gambar       []FilmGambarResponse `gorm:"column:film_gambar" json:"film_gambar"`
+		Genres       []GenreResponse      `gorm:"column:genres" json:"genres"`
 	}
 )

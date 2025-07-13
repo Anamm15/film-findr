@@ -7,6 +7,7 @@ import (
 
 	"FilmFindr/dto"
 	"FilmFindr/entity"
+	"FilmFindr/helpers"
 	"FilmFindr/repository"
 	"FilmFindr/utils"
 
@@ -23,6 +24,8 @@ type FilmService interface {
 	DeleteFilm(ctx context.Context, id int) error
 	UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error
 	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error)
+	GetTopFilm(ctx context.Context) ([]dto.TopFilm, error)
+	GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error)
 }
 
 type filmService struct {
@@ -53,92 +56,110 @@ func NewFilmService(
 }
 
 func (s *filmService) GetAllFilm(ctx context.Context, page int) (dto.GetFilmResponse, error) {
-	films, countFilm, err := s.filmRepository.GetAllFilm(ctx, page)
+	offset := (page - 1) * helpers.LIMIT_FILM
+
+	countFilm, err := s.filmRepository.CountFilm(ctx)
 	if err != nil {
-		return dto.GetFilmResponse{}, dto.ErrGetFilm
+		return dto.GetFilmResponse{}, err
 	}
 
-	var filmResponses []dto.FilmResponse
+	filmsFlat, err := s.filmRepository.GetAllFilm(ctx, offset)
+	if err != nil {
+		return dto.GetFilmResponse{}, err
+	}
 
-	for _, film := range films {
-		var fileResponses []dto.FilmGambarResponse
-		var genreResponses []dto.GenreResponse
+	filmIDs := make([]int, len(filmsFlat))
+	for i, f := range filmsFlat {
+		filmIDs[i] = f.ID
+	}
 
-		rating, _ := s.reviewRepository.GetRatingFromMaterializedView(ctx, film.ID)
-		rating = math.Round(rating*100) / 100
+	genres, err := s.filmGenreRepository.FindGenreByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return dto.GetFilmResponse{}, err
+	}
 
-		for _, file := range film.FilmGambar {
-			fileResponses = append(fileResponses, dto.FilmGambarResponse{
-				ID:  file.ID,
-				Url: file.Url,
-			})
-		}
+	gambar, err := s.filmGambarRepository.FindFilmGambarByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return dto.GetFilmResponse{}, err
+	}
 
-		for _, genre := range film.FilmGenre {
-			genreResponses = append(genreResponses, dto.GenreResponse{
-				ID:   genre.Genre.ID,
-				Nama: genre.Genre.Nama,
-			})
-		}
+	genreMap := make(map[int][]dto.GenreResponse)
+	for _, g := range genres {
+		genreMap[g.FilmID] = append(genreMap[g.FilmID], g)
+	}
 
-		formattedDate := utils.FormatDate(film.TanggalRilis)
-		filmResponses = append(filmResponses, dto.FilmResponse{
-			ID:           film.ID,
-			Judul:        film.Judul,
+	gambarMap := make(map[int][]dto.FilmGambarResponse)
+	for _, img := range gambar {
+		gambarMap[img.FilmID] = append(gambarMap[img.FilmID], img)
+	}
+
+	var results []dto.FilmResponse
+	for _, flat := range filmsFlat {
+		formattedDate := utils.FormatDate(flat.TanggalRilis)
+		results = append(results, dto.FilmResponse{
+			ID:           flat.ID,
+			Judul:        flat.Judul,
+			Sinopsis:     flat.Sinopsis,
+			Sutradara:    flat.Sutradara,
+			Status:       flat.Status,
+			Durasi:       flat.Durasi,
+			TotalEpisode: flat.TotalEpisode,
 			TanggalRilis: formattedDate,
-			Durasi:       film.Durasi,
-			Status:       film.Status,
-			Rating:       rating,
-			Gambar:       fileResponses,
-			Genres:       genreResponses,
+			Rating:       math.Round(flat.Rating*100) / 100,
+			Genres:       genreMap[flat.ID],
+			Gambar:       gambarMap[flat.ID],
 		})
 	}
 
+	totalPage := int(math.Ceil(float64(countFilm) / float64(helpers.LIMIT_FILM)))
 	GetFilmResponses := dto.GetFilmResponse{
-		Film:      filmResponses,
-		CountPage: int(countFilm),
+		Film:      results,
+		CountPage: totalPage,
 	}
 	return GetFilmResponses, nil
 }
 
 func (s *filmService) GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error) {
-	film, err := s.filmRepository.GetFilmByID(ctx, id)
+	filmFlat, err := s.filmRepository.GetFilmByID(ctx, id)
 	if err != nil {
 		return dto.FilmResponse{}, dto.ErrGetFilm
 	}
 
-	rating, _ := s.reviewRepository.GetRatingFromMaterializedView(ctx, film.ID)
-	rating = math.Round(rating*100) / 100
+	filmIDs := []int{filmFlat.ID}
 
-	var fileResponses []dto.FilmGambarResponse
-	var genreResponses []dto.GenreResponse
-	for _, file := range film.FilmGambar {
-		fileResponses = append(fileResponses, dto.FilmGambarResponse{
-			ID:  file.ID,
-			Url: file.Url,
-		})
+	genres, err := s.filmGenreRepository.FindGenreByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return dto.FilmResponse{}, err
 	}
 
-	for _, genre := range film.FilmGenre {
-		genreResponses = append(genreResponses, dto.GenreResponse{
-			ID:   genre.Genre.ID,
-			Nama: genre.Genre.Nama,
-		})
+	gambar, err := s.filmGambarRepository.FindFilmGambarByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return dto.FilmResponse{}, err
 	}
 
-	formattedDate := utils.FormatDate(film.TanggalRilis)
+	genreMap := make(map[int][]dto.GenreResponse)
+	for _, g := range genres {
+		genreMap[g.FilmID] = append(genreMap[g.FilmID], g)
+	}
+
+	gambarMap := make(map[int][]dto.FilmGambarResponse)
+	for _, img := range gambar {
+		gambarMap[img.FilmID] = append(gambarMap[img.FilmID], img)
+	}
+
+	formattedDate := utils.FormatDate(filmFlat.TanggalRilis)
 	filmResponse := dto.FilmResponse{
-		ID:           film.ID,
-		Judul:        film.Judul,
-		Sinopsis:     film.Sinopsis,
-		Sutradara:    film.Sutradara,
+		ID:           filmFlat.ID,
+		Judul:        filmFlat.Judul,
+		Sinopsis:     filmFlat.Sinopsis,
+		Sutradara:    filmFlat.Sutradara,
 		TanggalRilis: formattedDate,
-		TotalEpisode: film.TotalEpisode,
-		Durasi:       film.Durasi,
-		Status:       film.Status,
-		Rating:       rating,
-		Gambar:       fileResponses,
-		Genres:       genreResponses,
+		TotalEpisode: filmFlat.TotalEpisode,
+		Durasi:       filmFlat.Durasi,
+		Status:       filmFlat.Status,
+		Rating:       filmFlat.Rating,
+		Gambar:       gambarMap[filmFlat.ID],
+		Genres:       genreMap[filmFlat.ID],
 	}
 
 	return filmResponse, nil
@@ -268,9 +289,14 @@ func (s *filmService) UpdateStatus(ctx context.Context, id int, req dto.UpdateSt
 }
 
 func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error) {
-	films, countFilm, err := s.filmRepository.SearchFilm(ctx, req, page)
+	countFilm, err := s.filmRepository.CountFilm(ctx)
 	if err != nil {
-		return dto.GetFilmResponse{}, dto.ErrSearchFilm
+		return dto.GetFilmResponse{}, err
+	}
+
+	films, err := s.filmRepository.SearchFilm(ctx, req, page)
+	if err != nil {
+		return dto.GetFilmResponse{}, err
 	}
 
 	var filmResponses []dto.FilmResponse
@@ -309,9 +335,112 @@ func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest,
 		})
 	}
 
+	totalPage := int(math.Ceil(float64(countFilm) / float64(helpers.LIMIT_FILM)))
 	getFilmResponses := dto.GetFilmResponse{
-		CountPage: int(countFilm),
+		CountPage: totalPage,
 		Film:      filmResponses,
 	}
 	return getFilmResponses, nil
+}
+
+func (s *filmService) GetTopFilm(ctx context.Context) ([]dto.TopFilm, error) {
+	topFilmsFlat, err := s.filmRepository.GetTopFilm(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	filmIDs := make([]int, len(topFilmsFlat))
+	for i, f := range topFilmsFlat {
+		filmIDs[i] = f.FilmID
+	}
+
+	genres, err := s.filmGenreRepository.FindGenreByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	gambar, err := s.filmGambarRepository.FindFilmGambarByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	genreMap := make(map[int][]dto.GenreResponse)
+	for _, g := range genres {
+		genreMap[g.FilmID] = append(genreMap[g.FilmID], g)
+	}
+
+	gambarMap := make(map[int][]dto.FilmGambarResponse)
+	for _, img := range gambar {
+		gambarMap[img.FilmID] = append(gambarMap[img.FilmID], img)
+	}
+
+	var results []dto.TopFilm
+	for _, flat := range topFilmsFlat {
+		results = append(results, dto.TopFilm{
+			ID:           flat.FilmID,
+			Judul:        flat.Judul,
+			Sinopsis:     flat.Sinopsis,
+			Sutradara:    flat.Sutradara,
+			Status:       flat.Status,
+			Durasi:       flat.Durasi,
+			TotalEpisode: flat.TotalEpisode,
+			TanggalRilis: flat.TanggalRilis,
+			Rating:       math.Round(flat.Rating*100) / 100,
+			Genres:       genreMap[flat.FilmID],
+			Gambar:       gambarMap[flat.FilmID],
+		})
+	}
+
+	return results, nil
+}
+
+func (s *filmService) GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, error) {
+	trendingFilmFlat, err := s.filmRepository.GetTrendingFilm(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	filmIDs := make([]int, len(trendingFilmFlat))
+	for i, f := range trendingFilmFlat {
+		filmIDs[i] = f.FilmID
+	}
+
+	genres, err := s.filmGenreRepository.FindGenreByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	gambar, err := s.filmGambarRepository.FindFilmGambarByFilmIDs(ctx, filmIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	genreMap := make(map[int][]dto.GenreResponse)
+	for _, g := range genres {
+		genreMap[g.FilmID] = append(genreMap[g.FilmID], g)
+	}
+
+	gambarMap := make(map[int][]dto.FilmGambarResponse)
+	for _, img := range gambar {
+		gambarMap[img.FilmID] = append(gambarMap[img.FilmID], img)
+	}
+
+	var results []dto.TrendingFilm
+	for _, flat := range trendingFilmFlat {
+		results = append(results, dto.TrendingFilm{
+			ID:           flat.FilmID,
+			Judul:        flat.Judul,
+			Sinopsis:     flat.Sinopsis,
+			Sutradara:    flat.Sutradara,
+			Status:       flat.Status,
+			Durasi:       flat.Durasi,
+			TotalEpisode: flat.TotalEpisode,
+			TanggalRilis: flat.TanggalRilis,
+			Rating:       math.Round(flat.Rating*100) / 100,
+			Genres:       genreMap[flat.FilmID],
+			Gambar:       gambarMap[flat.FilmID],
+		})
+	}
+
+	return results, nil
 }

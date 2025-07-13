@@ -65,4 +65,6 @@ DROP INDEX idx_trending_film_film_id;
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY trending_film_weekly;
 
-SELECT * FROM trending_film_weekly ORDER BY total_added DESC LIMIT 10;
+SELECT * FROM trending_film_weekly
+ JOIN film ON film.id = trending_film_weekly.film_id
+ ORDER BY total_added DESC LIMIT 10;

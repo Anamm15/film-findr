@@ -13,4 +13,7 @@ const (
 	ENUM_LIST_FILM_COMPLETED     = "completed"
 	ENUM_LIST_FILM_ON_HOLD       = "on hold"
 	ENUM_LIST_FILM_ON_DROPPED    = "dropped"
+
+	LIMIT_FILM   = 10
+	LIMIT_REVIEW = 5
 )

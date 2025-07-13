@@ -14,6 +14,8 @@ func FilmRoute(server *gin.Engine, filmController controller.FilmController, jwt
 	{
 		film.GET("/getAllFilm", filmController.GetAllFilm)
 		film.GET("/getFilmById/:id", filmController.GetFilmById)
+		film.GET("/getTopFilm", filmController.GetTopFilm)
+		film.GET("/getTrendingFilm", filmController.GetTrendingFilm)
 		film.GET("/search", filmController.SearchFilm)
 		film.POST("/create", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), filmController.CreateFilm)
 		film.PUT("/update", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), filmController.UpdateFilm)

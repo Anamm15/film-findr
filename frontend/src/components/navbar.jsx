@@ -15,7 +15,7 @@ const Navbar = () => {
         try {
             const response = await logoutUser();
             console.log(response);
-            
+
             if (response.status === 200) {
                 window.location.reload();
             }
@@ -26,7 +26,7 @@ const Navbar = () => {
 
     return (
         <nav className="fixed z-50 w-screen bg-background border-b border-[#e0e0e0] h-20 shadow-md top-0 left-0 flex justify-center items-center">
-            <div className="flex justify-between items-center w-full xl:w-[1280px] p-4">
+            <div className="flex justify-between items-center w-full xl:w-[1280px]">
                 <div className="text-3xl font-bold cursor-pointer text-primary">
                     <NavLink to="/">Film-Findr</NavLink>
                 </div>
@@ -42,7 +42,7 @@ const Navbar = () => {
                 <div>
                     {
                         user ? (
-                            <Button 
+                            <Button
                                 onClick={hanldeLogout}
                                 className="w-28 py-2 rounded-3xl font-semibold">Logout</Button>
                         ) : (
