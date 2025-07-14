@@ -182,7 +182,7 @@ func (r *filmRepository) GetTopFilm(ctx context.Context) ([]dto.TopFilmFlat, err
 		       f.total_episode, f.tanggal_rilis, rf.rating
 		FROM top_film_watchlist twc
 		JOIN films f ON f.id = twc.film_id
-		JOIN rating_film rf ON f.id = rf.film_id
+		LEFT JOIN rating_film rf ON f.id = rf.film_id
 		ORDER BY twc.total_add DESC
 		LIMIT 10
 	`).Scan(&topFilmsFlat).Error
@@ -201,7 +201,7 @@ func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat
 		       f.total_episode, f.tanggal_rilis, rf.rating
 		FROM trending_film_weekly tfw
 		JOIN films f ON f.id = tfw.film_id
-		JOIN rating_film rf ON f.id = rf.film_id
+		LEFT JOIN rating_film rf ON f.id = rf.film_id
 		ORDER BY tfw.total_added DESC
 		LIMIT 10
 	`).Scan(&trendingFilmFlat).Error

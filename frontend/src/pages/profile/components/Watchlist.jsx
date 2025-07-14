@@ -1,5 +1,6 @@
 import WatchlistLayout from "../../../layouts/WatchlistLayout";
 import Informasi from "./Informasi";
+import Pagination from "../../../components/Pagination";
 
 const Watchlist = (props) => {
     const { watchlists, watchlistPage, setWatchlistPage } = props;
@@ -14,20 +15,7 @@ const Watchlist = (props) => {
                 ))
             }
 
-            {/* Pagination */}
-            <div className="flex justify-center mt-2 pb-2 space-x-2">
-                {watchlists && Array.from({ length: watchlists.count_page }, (_, i) => (
-                    <button
-                    key={i}
-                    className={`px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm ${
-                        watchlistPage === i + 1 ? "bg-primary text-white" : ""
-                    }`}
-                    onClick={() => setWatchlistPage(i + 1)}
-                    >
-                    {i + 1}
-                    </button>
-                ))}
-            </div>
+            <Pagination contents={watchlists} page={watchlistPage} setPage={setWatchlistPage} />
         </div>
     )
 }

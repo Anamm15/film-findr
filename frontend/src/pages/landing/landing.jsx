@@ -8,12 +8,13 @@ const LandingPage = () => {
     const [films, setFilms] = useState(null);
     const [isFilmsFetched, setIsFilmsFetched] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [page, setPage] = useState(1);
 
 
     useEffect(() => {
         const fetchAllFilms = async () => {
             try {
-                const response = await getAllFilm();
+                const response = await getAllFilm(page);
                 setFilms(response.data.data);
             } catch (error) {
                 console.error("Error fetching films:", error);
@@ -24,7 +25,7 @@ const LandingPage = () => {
         if (!isFilmsFetched) {
             setIsFilmsFetched(false);
         }
-    }, [isFilmsFetched]);
+    }, [isFilmsFetched, page]);
 
     const handleSearch = async () => {
         try {
@@ -69,7 +70,7 @@ const LandingPage = () => {
 
                 <h1 className="text-4xl font-bold mb-4 text-text">Daftar Film</h1>
                 {
-                    films && <ListFilm films={films.films} />
+                    films && <ListFilm films={films} page={page} setPage={setPage} />
                 }
             </div>
         </>

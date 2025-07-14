@@ -65,12 +65,12 @@ const AddFilmPage = () => {
       }
    };
 
-    return (
+   return (
       <>
          <h1 className="text-4xl font-bold mb-5">Add Film</h1>
-         <form 
+         <form
             onSubmit={handleSubmit}
-            className="w-full relative">
+            className="w-full relative mb-10">
             <div className="w-full grid lg:grid-cols-2 gap-4">
                <Input
                   type="text"
@@ -86,35 +86,35 @@ const AddFilmPage = () => {
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                />
-               <Input 
+               <Input
                   type="text"
                   label="Sutradara"
                   placeholder="Masukkan Sutradara"
                   value={sutradara}
                   onChange={(e) => setSutradara(e.target.value)}
                />
-               <Input 
+               <Input
                   type="date"
                   label="Tanggal Rilis"
                   placeholder="Masukkan tanggal rilis"
                   value={tanggalRilis}
                   onChange={(e) => setTanggalRilis(e.target.value)}
                />
-               <Input 
+               <Input
                   type="number"
                   label="Total Episode"
                   placeholder="Masukkan Total Episode"
                   value={totalEpisode}
                   onChange={(e) => setTotalEpisode(e.target.value)}
                />
-               <Input 
+               <Input
                   type="number"
                   label="Durasi"
                   placeholder="Masukkan Durasi"
                   value={durasi}
                   onChange={(e) => setDurasi(e.target.value)}
                />
-               <Input 
+               <Input
                   type="file"
                   label="Image"
                   multiple={true}
@@ -132,21 +132,21 @@ const AddFilmPage = () => {
                <div className="flex flex-wrap gap-2">
                   {genres.map((genre) => (
                      <button
-                     key={genre.id}
-                     type="button"
-                     className={`px-3 py-1 text-sm rounded-full border transition
+                        key={genre.id}
+                        type="button"
+                        className={`px-3 py-1 text-sm rounded-full border transition
                         ${selectedGenres.includes(genre.id)
-                           ? "bg-primary text-white border-primary"
-                           : "bg-background text-gray-700 border-gray-300 hover:bg-gray-100"}`}
-                     onClick={() => {
-                        setSelectedGenres((prev) =>
-                           prev.includes(genre.id)
-                           ? prev.filter((id) => id !== genre.id)
-                           : [...prev, genre.id]
-                        );
-                     }}
+                              ? "bg-primary text-white border-primary"
+                              : "bg-background text-gray-700 border-gray-300 hover:bg-gray-100"}`}
+                        onClick={() => {
+                           setSelectedGenres((prev) =>
+                              prev.includes(genre.id)
+                                 ? prev.filter((id) => id !== genre.id)
+                                 : [...prev, genre.id]
+                           );
+                        }}
                      >
-                     {genre.nama}
+                        {genre.nama}
                      </button>
                   ))}
                </div>

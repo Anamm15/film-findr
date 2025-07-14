@@ -2,13 +2,23 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:5000/film";
 
-export const getAllFilm = async () => {
-    const response = await axios.get(`${BASE_URL}/getAllFilm`);
+export const getAllFilm = async (page) => {
+    const response = await axios.get(`${BASE_URL}/getAllFilm?page=${page}`);
     return response;
 };
 
 export const getFilmById = async (id) => {
     const response = await axios.get(`${BASE_URL}/getFilmById/${id}`);
+    return response;
+};
+
+export const getTopFilm = async () => {
+    const response = await axios.get(`${BASE_URL}/getTopFilm`);
+    return response;
+};
+
+export const getTrendingFilm = async () => {
+    const response = await axios.get(`${BASE_URL}/getTrendingFilm`);
     return response;
 };
 

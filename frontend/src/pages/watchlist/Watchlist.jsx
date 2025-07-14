@@ -4,6 +4,7 @@ import { getUserFilmByUserId } from "../../service/userFilm";
 import Detail from "./components/Detail";
 import Informasi from "./components/Informasi";
 import WatchlistLayout from "../../layouts/WatchlistLayout";
+import Pagination from "../../components/Pagination"
 
 const WatchListPage = () => {
     const { user, loading } = useContext(AuthContext);
@@ -38,18 +39,7 @@ const WatchListPage = () => {
             ))}
 
             {/* Pagination */}
-            <div className="flex justify-center mt-2 pb-2 space-x-2">
-                {watchlist && Array.from({ length: watchlist.count_page }, (_, i) => (
-                    <button
-                        key={i}
-                        className={`px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm ${page === i + 1 ? "bg-primary text-white" : ""
-                            }`}
-                        onClick={() => setPage(i + 1)}
-                    >
-                        {i + 1}
-                    </button>
-                ))}
-            </div>
+            <Pagination contents={watchlist} page={page} setPage={setPage} />
         </div>
     );
 };
