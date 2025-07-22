@@ -76,13 +76,11 @@ type (
 	}
 
 	UpdateReviewRequest struct {
-		ID       int    `json:"id" validate:"required" binding:"required"`
 		Komentar string `json:"komentar"`
 		Rating   int    `json:"rating"`
 	}
 
 	UpdateReaksiReviewRequest struct {
-		ID       int    `json:"id" validate:"required"`
 		UserID   int    `json:"user_id" validate:"required"`
 		ReviewID int    `json:"review_id" validate:"required"`
 		Reaksi   string `json:"reaksi" validate:"required"`

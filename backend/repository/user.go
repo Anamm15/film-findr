@@ -16,6 +16,7 @@ type UserRepository interface {
 	GetUserByUsername(ctx context.Context, username string) (entity.User, error)
 	UpdateUser(ctx context.Context, user dto.UserUpdateRequest) error
 	DeleteUser(ctx context.Context, id int) error
+	CountUsers(ctx context.Context) (int64, error)
 	GetWeeklyUsers(ctx context.Context) ([]dto.WeeklyUser, error)
 }
 
@@ -105,6 +106,19 @@ func (r *userRepository) DeleteUser(ctx context.Context, userId int) error {
 	}
 
 	return nil
+}
+
+func (r *userRepository) CountUsers(ctx context.Context) (int64, error) {
+	var count int64
+
+	err := r.db.WithContext(ctx).
+		Model(entity.User{}).
+		Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }
 
 func (r *userRepository) GetWeeklyUsers(ctx context.Context) ([]dto.WeeklyUser, error) {

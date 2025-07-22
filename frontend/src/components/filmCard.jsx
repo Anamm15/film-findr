@@ -13,7 +13,7 @@ const FilmCard = ({ movie, onClick }) => {
 
   return (
     <div
-      className="max-w-sm bg-background rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer hover:border border-tertiary"
+      className="max-w-sm bg-background rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
       onClick={onClick}
     >
       <img

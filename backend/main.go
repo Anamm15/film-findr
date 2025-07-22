@@ -55,12 +55,14 @@ func main() {
 		userFilmService  service.UserFilmService  = service.NewUserFilmService(userFilmRepository, filmRepository)
 		reviewService    service.ReviewService    = service.NewReviewService(reviewRepository, reviewReaksiRepository, userFilmRepository, filmRepository)
 		filmService      service.FilmService      = service.NewFilmService(db, cloudinaryCloud, filmRepository, filmGambarRepository, filmGenreRepository, reviewRepository)
+		dashboardService service.DashboardService = service.NewDashboardService(filmRepository, reviewRepository, userRepository, filmService)
 
-		genreController    controller.GenreController    = controller.NewGenreController(genreService)
-		userController     controller.UserController     = controller.NewUserController(userService, jwtService)
-		userFilmController controller.UserFilmController = controller.NewUserFilmController(userFilmService)
-		reviewController   controller.ReviewController   = controller.NewReviewController(reviewService, jwtService)
-		filmController     controller.FilmController     = controller.NewFilmController(filmService, filmGenreService)
+		genreController     controller.GenreController     = controller.NewGenreController(genreService)
+		userController      controller.UserController      = controller.NewUserController(userService, jwtService)
+		userFilmController  controller.UserFilmController  = controller.NewUserFilmController(userFilmService)
+		reviewController    controller.ReviewController    = controller.NewReviewController(reviewService, jwtService)
+		filmController      controller.FilmController      = controller.NewFilmController(filmService, filmGenreService)
+		dashboardController controller.DashboardController = controller.NewDashboardController(dashboardService, jwtService)
 	)
 
 	routes.GenreRoute(server, genreController, jwtService)
@@ -68,6 +70,7 @@ func main() {
 	routes.UserRoute(server, userController, jwtService)
 	routes.ReviewRoute(server, reviewController, jwtService)
 	routes.UserFilmRoutes(server, userFilmController, jwtService)
+	routes.DashboardRoute(server, dashboardController, jwtService)
 
 	if err := migrations.Seeder(db); err != nil {
 		log.Fatalf("error migration seeder: %v", err)

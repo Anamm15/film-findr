@@ -77,7 +77,7 @@ const WeeklyChart = ({ title, data: chartData, icon, borderColor, backgroundColo
    };
 
    return (
-      <div className="bg-background border border-slate-700 p-6 rounded-2xl shadow-lg col-span-1 md:col-span-2">
+      <div className="bg-background border border-slate-300 p-6 rounded-2xl shadow-lg col-span-1 md:col-span-2">
          <div className="flex items-center space-x-2 mb-4">
             {icon}
             <h2 className="text-lg font-semibold text-white">{title}</h2>

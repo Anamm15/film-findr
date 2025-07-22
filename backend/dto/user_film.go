@@ -33,7 +33,6 @@ type (
 	}
 
 	UserFilmUpdateStatusRequest struct {
-		ID     int    `json:"id" validate:"required"`
 		Status string `json:"status" validate:"required"`
 		FilmID int    `json:"film_id" validate:"required"`
 	}

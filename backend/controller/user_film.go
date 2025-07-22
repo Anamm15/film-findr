@@ -31,7 +31,12 @@ func (u *userFilmController) GetUserFilmByUserId(ctx *gin.Context) {
 	if err != nil || page < 1 {
 		page = 1
 	}
-	userId := utils.StringToInt(userIdParam)
+	userId, err := strconv.Atoi(userIdParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
 
 	userFilms, err := u.userFilmService.GetUserFilmByUserId(ctx, userId, page)
 	if err != nil {
@@ -67,6 +72,14 @@ func (u *userFilmController) CreateUserFilm(ctx *gin.Context) {
 }
 
 func (u *userFilmController) UpdateStatusUserFilm(ctx *gin.Context) {
+	userFilmIdParam := ctx.Param("id")
+	userFilmId, err := strconv.Atoi(userFilmIdParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
 	var userFilmReq dto.UserFilmUpdateStatusRequest
 	if err := ctx.ShouldBindJSON(&userFilmReq); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
@@ -74,7 +87,7 @@ func (u *userFilmController) UpdateStatusUserFilm(ctx *gin.Context) {
 		return
 	}
 
-	err := u.userFilmService.UpdateStatusUserFilm(ctx, userFilmReq)
+	err = u.userFilmService.UpdateStatusUserFilm(ctx, userFilmId, userFilmReq)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_USER_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

@@ -58,10 +58,17 @@ func (s *filmController) GetAllFilm(ctx *gin.Context) {
 }
 
 func (s *filmController) GetFilmById(ctx *gin.Context) {
-	id := ctx.Param("id")
-	film, err := s.filmService.GetFilmByID(ctx, utils.StringToInt(id))
+	filmIdParam := ctx.Param("id")
+	filmId, err := strconv.Atoi(filmIdParam)
 	if err != nil {
-		res := utils.BuildResponseFailed("Failed to get film by id", err.Error(), nil)
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	film, err := s.filmService.GetFilmByID(ctx, filmId)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
@@ -104,6 +111,14 @@ func (s *filmController) CreateFilm(ctx *gin.Context) {
 }
 
 func (s *filmController) UpdateFilm(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	filmId, err := strconv.Atoi(idParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
 	var film dto.UpdateFilmRequest
 	if err := ctx.ShouldBindJSON(&film); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
@@ -111,7 +126,7 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 		return
 	}
 
-	updatedFilm, err := s.filmService.UpdateFilm(ctx, film)
+	updatedFilm, err := s.filmService.UpdateFilm(ctx, filmId, film)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
@@ -123,8 +138,15 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 }
 
 func (s *filmController) DeleteFilm(ctx *gin.Context) {
-	id := ctx.Param("id")
-	err := s.filmService.DeleteFilm(ctx, utils.StringToInt(id))
+	filmIdParam := ctx.Param("id")
+	filmId, err := strconv.Atoi(filmIdParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	err = s.filmService.DeleteFilm(ctx, filmId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
@@ -174,16 +196,22 @@ func (s *filmController) DeleteFilmGenre(ctx *gin.Context) {
 }
 
 func (s *filmController) UpdateStatus(ctx *gin.Context) {
-	id := ctx.Param("id")
-	var req dto.UpdateStatusFilmRequest
+	idParam := ctx.Param("id")
+	filmId, err := strconv.Atoi(idParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
 
+	var req dto.UpdateStatusFilmRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	err := s.filmService.UpdateStatus(ctx, utils.StringToInt(id), req)
+	err = s.filmService.UpdateStatus(ctx, filmId, req)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_STATUS_FIlM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

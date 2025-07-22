@@ -9,10 +9,10 @@ import (
 )
 
 func UserFilmRoutes(router *gin.Engine, userFilmController controller.UserFilmController, jwtService service.JWTService) {
-	userFilm := router.Group("/userFilm")
+	userFilms := router.Group("/api/v1/user-films")
 	{
-		userFilm.GET("/getUserFilmByUserId/:id", userFilmController.GetUserFilmByUserId)
-		userFilm.POST("/create", middleware.Authenticate(jwtService), userFilmController.CreateUserFilm)
-		userFilm.PATCH("/updateStatus", middleware.Authenticate(jwtService), userFilmController.UpdateStatusUserFilm)
+		userFilms.GET("/user/:id", userFilmController.GetUserFilmByUserId)
+		userFilms.POST("/", middleware.Authenticate(jwtService), userFilmController.CreateUserFilm)
+		userFilms.PATCH("/:id/status", middleware.Authenticate(jwtService), userFilmController.UpdateStatusUserFilm)
 	}
 }

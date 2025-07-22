@@ -20,7 +20,7 @@ type FilmService interface {
 	GetAllFilm(ctx context.Context, page int) (dto.GetFilmResponse, error)
 	GetFilmByID(ctx context.Context, id int) (dto.FilmResponse, error)
 	CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequest, files []*multipart.FileHeader) (dto.FilmResponse, error)
-	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
+	UpdateFilm(ctx context.Context, filmId int, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
 	UpdateStatus(ctx context.Context, id int, req dto.UpdateStatusFilmRequest) error
 	SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error)
@@ -261,8 +261,8 @@ func (s *filmService) CreateFilm(ctx context.Context, filmReq dto.CreateFilmRequ
 	}, nil
 }
 
-func (s *filmService) UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error) {
-	updatedFilm, err := s.filmRepository.UpdateFilm(ctx, film)
+func (s *filmService) UpdateFilm(ctx context.Context, filmId int, film dto.UpdateFilmRequest) (entity.Film, error) {
+	updatedFilm, err := s.filmRepository.UpdateFilm(ctx, filmId, film)
 	if err != nil {
 		return entity.Film{}, dto.ErrUpdateFilm
 	}
@@ -379,11 +379,8 @@ func (s *filmService) GetTopFilm(ctx context.Context) ([]dto.TopFilm, error) {
 		results = append(results, dto.TopFilm{
 			ID:           flat.FilmID,
 			Judul:        flat.Judul,
-			Sinopsis:     flat.Sinopsis,
-			Sutradara:    flat.Sutradara,
 			Status:       flat.Status,
 			Durasi:       flat.Durasi,
-			TotalEpisode: flat.TotalEpisode,
 			TanggalRilis: flat.TanggalRilis,
 			Rating:       math.Round(flat.Rating*100) / 100,
 			Genres:       genreMap[flat.FilmID],
@@ -430,11 +427,8 @@ func (s *filmService) GetTrendingFilm(ctx context.Context) ([]dto.TrendingFilm, 
 		results = append(results, dto.TrendingFilm{
 			ID:           flat.FilmID,
 			Judul:        flat.Judul,
-			Sinopsis:     flat.Sinopsis,
-			Sutradara:    flat.Sutradara,
 			Status:       flat.Status,
 			Durasi:       flat.Durasi,
-			TotalEpisode: flat.TotalEpisode,
 			TanggalRilis: flat.TanggalRilis,
 			Rating:       math.Round(flat.Rating*100) / 100,
 			Genres:       genreMap[flat.FilmID],

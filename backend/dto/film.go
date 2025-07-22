@@ -9,6 +9,7 @@ const (
 	// failed message
 	MESSAGE_FAILED_FILM_NOT_FOUND      = "Film not found"
 	MESSAGE_FAILED_GET_ALL_FILM        = "Failed get all film"
+	MESSAGE_FAILED_GET_FILM            = "Failed get film"
 	MESSAGE_FAILED_CREATED_FILM        = "Failed created film"
 	MESSAGE_FAILED_UPDATED_FILM        = "Failed updated film"
 	MESSAGE_FAILED_DELETED_FILM        = "Failed deleted film"
@@ -86,7 +87,6 @@ type (
 	}
 
 	UpdateFilmRequest struct {
-		ID           int       `json:"id" validate:"required"`
 		Judul        string    `json:"judul" validate:"required"`
 		Sinopsis     string    `json:"sinopsis" validate:"required"`
 		Sutradara    string    `json:"sutradara" validate:"required"`
@@ -115,11 +115,8 @@ type (
 	TopFilmFlat struct {
 		FilmID       int     `json:"film_id"`
 		Judul        string  `json:"judul"`
-		Sinopsis     string  `json:"sinopsis"`
-		Sutradara    string  `json:"sutradara"`
 		Status       string  `json:"status"`
 		Durasi       int     `json:"durasi"`
-		TotalEpisode int     `json:"total_episode"`
 		TanggalRilis string  `json:"tanggal_rilis"`
 		Rating       float64 `json:"rating"`
 	}
@@ -127,11 +124,8 @@ type (
 	TopFilm struct {
 		ID           int                  `gorm:"column:id" json:"id"`
 		Judul        string               `gorm:"column:judul" json:"judul"`
-		Sinopsis     string               `gorm:"column:sinopsis" json:"sinopsis"`
-		Sutradara    string               `gorm:"column:sutradara" json:"sutradara"`
 		Status       string               `gorm:"column:status" json:"status"`
 		Durasi       int                  `gorm:"column:duras" json:"durasi"`
-		TotalEpisode int                  `gorm:"column:total_episode" json:"total_episode"`
 		TanggalRilis string               `gorm:"column:tanggal_rilis" json:"tanggal_rilis"`
 		Rating       float64              `gorm:"column:rating" json:"rating"`
 		Gambar       []FilmGambarResponse `gorm:"column:film_gambar" json:"film_gambar"`
@@ -141,11 +135,8 @@ type (
 	TrendingFilm struct {
 		ID           int                  `gorm:"column:id"`
 		Judul        string               `gorm:"column:judul" json:"judul"`
-		Sinopsis     string               `gorm:"column:sinopsis" json:"sinopsis"`
-		Sutradara    string               `gorm:"column:sutradara" json:"sutradara"`
 		Status       string               `gorm:"column:status" json:"status"`
 		Durasi       int                  `gorm:"column:duras" json:"durasi"`
-		TotalEpisode int                  `gorm:"column:total_episode" json:"total_episode"`
 		TanggalRilis string               `gorm:"column:tanggal_rilis" json:"tanggal_rilis"`
 		Rating       float64              `gorm:"column:rating" json:"rating"`
 		Gambar       []FilmGambarResponse `gorm:"column:film_gambar" json:"film_gambar"`

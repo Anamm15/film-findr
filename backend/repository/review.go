@@ -15,10 +15,9 @@ type ReviewRepository interface {
 	GetReviewByUserId(ctx context.Context, id int, page int) ([]entity.Review, int64, error)
 	GetRatingFromMaterializedView(ctx context.Context, filmId int) (float64, error)
 	CreateReview(ctx context.Context, review entity.Review) (entity.Review, error)
-	UpdateReview(ctx context.Context, review dto.UpdateReviewRequest) error
-	UpdateReaksiReview(ctx context.Context, review dto.UpdateReaksiReviewRequest) error
+	UpdateReview(ctx context.Context, reviewId int, review dto.UpdateReviewRequest) error
 	DeleteReview(ctx context.Context, id int) error
-	CountReview(ctx context.Context) (int64, error)
+	CountReviews(ctx context.Context) (int64, error)
 	GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyReview, error)
 }
 
@@ -112,9 +111,9 @@ func (r *reviewRepository) CreateReview(ctx context.Context, review entity.Revie
 	return review, nil
 }
 
-func (r *reviewRepository) UpdateReview(ctx context.Context, req dto.UpdateReviewRequest) error {
+func (r *reviewRepository) UpdateReview(ctx context.Context, reviewId int, req dto.UpdateReviewRequest) error {
 	var review entity.Review
-	if err := r.db.First(&review, req.ID).Error; err != nil {
+	if err := r.db.First(&review, reviewId).Error; err != nil {
 		return err
 	}
 
@@ -132,19 +131,6 @@ func (r *reviewRepository) UpdateReview(ctx context.Context, req dto.UpdateRevie
 	return nil
 }
 
-func (r *reviewRepository) UpdateReaksiReview(ctx context.Context, review dto.UpdateReaksiReviewRequest) error {
-	var updatedReview entity.Review
-
-	if err := r.db.WithContext(ctx).
-		Model(&updatedReview).
-		Where("id = ?", review.ID).
-		Update("reaksi", review.Reaksi).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (r *reviewRepository) DeleteReview(ctx context.Context, id int) error {
 	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&entity.Review{}).Error; err != nil {
 		return err
@@ -152,7 +138,7 @@ func (r *reviewRepository) DeleteReview(ctx context.Context, id int) error {
 	return nil
 }
 
-func (r *reviewRepository) CountReview(ctx context.Context) (int64, error) {
+func (r *reviewRepository) CountReviews(ctx context.Context) (int64, error) {
 	var count int64
 
 	err := r.db.WithContext(ctx).

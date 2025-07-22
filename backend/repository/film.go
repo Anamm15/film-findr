@@ -13,7 +13,7 @@ import (
 type FilmRepository interface {
 	GetAllFilm(ctx context.Context, offset int) ([]dto.FilmFlat, error)
 	CreateFilm(ctx context.Context, tx *gorm.DB, film entity.Film) (entity.Film, error)
-	UpdateFilm(ctx context.Context, film dto.UpdateFilmRequest) (entity.Film, error)
+	UpdateFilm(ctx context.Context, filmId int, film dto.UpdateFilmRequest) (entity.Film, error)
 	DeleteFilm(ctx context.Context, id int) error
 	GetFilmByID(ctx context.Context, id int) (dto.FilmFlat, error)
 	UpdateStatus(ctx context.Context, id int, status string) error
@@ -73,10 +73,10 @@ func (r *filmRepository) CreateFilm(ctx context.Context, tx *gorm.DB, film entit
 	return film, err
 }
 
-func (r *filmRepository) UpdateFilm(ctx context.Context, reqFilm dto.UpdateFilmRequest) (entity.Film, error) {
+func (r *filmRepository) UpdateFilm(ctx context.Context, filmId int, reqFilm dto.UpdateFilmRequest) (entity.Film, error) {
 	var film entity.Film
 
-	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", reqFilm.ID).First(&film).Error
+	err := r.db.WithContext(ctx).Model(&entity.Film{}).Where("id = ?", filmId).First(&film).Error
 
 	if reqFilm.Judul != "" {
 		film.Judul = reqFilm.Judul
@@ -178,8 +178,7 @@ func (r *filmRepository) GetTopFilm(ctx context.Context) ([]dto.TopFilmFlat, err
 	var topFilmsFlat []dto.TopFilmFlat
 	err := r.db.WithContext(ctx).
 		Raw(`
-		SELECT f.id AS film_id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi, 
-		       f.total_episode, f.tanggal_rilis, rf.rating
+		SELECT f.id AS film_id, f.judul, f.status, f.durasi, f.tanggal_rilis, rf.rating
 		FROM top_film_watchlist twc
 		JOIN films f ON f.id = twc.film_id
 		LEFT JOIN rating_film rf ON f.id = rf.film_id
@@ -197,8 +196,7 @@ func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat
 	var trendingFilmFlat []dto.TopFilmFlat
 	err := r.db.WithContext(ctx).
 		Raw(`
-		SELECT f.id AS film_id, f.judul, f.sinopsis, f.sutradara, f.status, f.durasi, 
-		       f.total_episode, f.tanggal_rilis, rf.rating
+		SELECT f.id AS film_id, f.judul, f.status, f.durasi, f.tanggal_rilis, rf.rating
 		FROM trending_film_weekly tfw
 		JOIN films f ON f.id = tfw.film_id
 		LEFT JOIN rating_film rf ON f.id = rf.film_id

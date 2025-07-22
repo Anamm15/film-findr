@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"strconv"
+
 	"FilmFindr/dto"
 	"FilmFindr/service"
 	"FilmFindr/utils"
@@ -47,8 +49,15 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 }
 
 func (c *userController) GetUserById(ctx *gin.Context) {
-	id := ctx.Param("id")
-	userResponse, err := c.userService.GetUserById(ctx, utils.StringToInt(id))
+	userIdParam := ctx.Param("id")
+	userId, err := strconv.Atoi(userIdParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	userResponse, err := c.userService.GetUserById(ctx, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
@@ -168,8 +177,15 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 }
 
 func (c *userController) DeleteUser(ctx *gin.Context) {
-	userId := ctx.Param("id")
-	err := c.userService.DeleteUser(ctx, utils.StringToInt(userId))
+	userIdParam := ctx.Param("id")
+	userId, err := strconv.Atoi(userIdParam)
+	if err != nil {
+		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
+		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		return
+	}
+
+	err = c.userService.DeleteUser(ctx, userId)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_DELETED_USER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

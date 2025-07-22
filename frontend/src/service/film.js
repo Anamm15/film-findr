@@ -1,24 +1,24 @@
 import axios from "axios";
+import { BASE_API_URL } from "../utils/constant";
 
-const BASE_URL = "http://localhost:5000/film";
-
+const BASE_URL = `${BASE_API_URL}/films`;
 export const getAllFilm = async (page) => {
-    const response = await axios.get(`${BASE_URL}/getAllFilm?page=${page}`);
+    const response = await axios.get(`${BASE_URL}?page=${page}`);
     return response;
 };
 
 export const getFilmById = async (id) => {
-    const response = await axios.get(`${BASE_URL}/getFilmById/${id}`);
+    const response = await axios.get(`${BASE_URL}/${id}`);
     return response;
 };
 
 export const getTopFilm = async () => {
-    const response = await axios.get(`${BASE_URL}/getTopFilm`);
+    const response = await axios.get(`${BASE_URL}/get-top-film`);
     return response;
 };
 
 export const getTrendingFilm = async () => {
-    const response = await axios.get(`${BASE_URL}/getTrendingFilm`);
+    const response = await axios.get(`${BASE_URL}/get-trending-film`);
     return response;
 };
 
@@ -28,42 +28,42 @@ export const searchFilm = async (keyword) => {
 }
 
 export const createFilm = async (data) => {
-    const response = await axios.post(`${BASE_URL}/create`, data, {
+    const response = await axios.post(`${BASE_URL}/`, data, {
         withCredentials: true,
     });
     return response;
 };
 
-export const updateFilm = async (data) => {
-    const response = await axios.put(`${BASE_URL}/update`, data, {
+export const updateFilm = async (id, data) => {
+    const response = await axios.put(`${BASE_URL}/${id}`, data, {
         withCredentials: true,
     });
     return response;
 };
 
 export const updateFilmStatus = async (id, data) => {
-    const response = await axios.patch(`${BASE_URL}/updateStatus/${id}`, data, {
+    const response = await axios.patch(`${BASE_URL}/${id}/status`, data, {
         withCredentials: true,
     });
     return response;
 };
 
 export const deleteFilm = async (id) => {
-    const response = await axios.delete(`${BASE_URL}/delete/${id}`, {
+    const response = await axios.delete(`${BASE_URL}/${id}`, {
         withCredentials: true,
     });
     return response;
 };
 
 export const addFilmGenre = async (data) => {
-    const response = await axios.post(`${BASE_URL}/addFilmGenre`, data, {
+    const response = await axios.post(`${BASE_URL}/add-film-genre`, data, {
         withCredentials: true,
     });
     return response;
 };
 
 export const deleteFilmGenre = async (data) => {
-    const response = await axios.delete(`${BASE_URL}/deleteFilmGenre`, data, {
+    const response = await axios.delete(`${BASE_URL}/delete-film-genre`, data, {
         withCredentials: true,
     });
     return response;

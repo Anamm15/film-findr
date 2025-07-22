@@ -10,10 +10,10 @@ import (
 )
 
 func GenreRoute(router *gin.Engine, genreController controller.GenreController, jwtService service.JWTService) {
-	genre := router.Group("/genre")
+	genre := router.Group("/api/v1/genres")
 	{
-		genre.GET("/getAllGenre", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.GetAllGenre)
-		genre.POST("/create", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.CreateGenre)
-		genre.DELETE("/delete/:id", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.DeleteGenre)
+		genre.GET("/", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.GetAllGenre)
+		genre.POST("/", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.CreateGenre)
+		genre.DELETE("/:id", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), genreController.DeleteGenre)
 	}
 }

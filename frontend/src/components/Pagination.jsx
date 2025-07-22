@@ -7,7 +7,7 @@ const Pagination = (props) => {
          {contents && Array.from({ length: contents.count_page }, (_, i) => (
             <button
                key={i}
-               className={`px-3 py-1 rounded bg-gray-100 hover:bg-gradient-secondary text-sm ${page === i + 1 ? "bg-gradient-primary text-white" : ""
+               className={`px-3 py-1 rounded bg-gray-100 hover:bg-gradient-secondary hover:text-white text-sm ${page === i + 1 ? "bg-gradient-primary text-white" : ""
                   }`}
                onClick={() => setPage(i + 1)}
             >

@@ -1,32 +1,44 @@
 import { useState, useEffect } from "react";
 import { deleteGenre, getAllGenre } from "../../service/genre";
+// 1. Impor komponen bar chart yang baru
+import GenreBarChart from "./components/GenreBarChart";
 
 const GenreDashboardPage = () => {
+   // ... (semua state dan fungsi useEffect tetap sama)
    const [genres, setGenres] = useState([]);
    const [message, setMessage] = useState("");
    const [colorMessage, setColorMessage] = useState("");
    const [isGenresLoaded, setIsGenresLoaded] = useState(false);
 
    useEffect(() => {
-         const fetchGenres = async () => {
-            try {
-               const response = await getAllGenre();
-               setGenres(response.data.data);
-            } catch (error) {
-               console.error("Error fetching genres:", error.data.message);
-            }
-         };
-   
-         fetchGenres();
-         if (!isGenresLoaded) {
-            setIsGenresLoaded(true);
-         }
-      }, [isGenresLoaded]);
+      const fetchGenres = async () => {
+         try {
+            const response = await getAllGenre();
+            const genresWithData = response.data.data.map(genre => ({
+               ...genre,
+               jumlahFilm: Math.floor(Math.random() * 200) + 50,
+            }));
 
-   const handleDeleteGenre = async(genreId) => {
+            // Urutkan genre dari yang paling sedikit filmnya ke paling banyak
+            // agar di bar chart horizontal, yang terpanjang ada di atas
+            genresWithData.sort((a, b) => a.jumlahFilm - b.jumlahFilm);
+
+            setGenres(genresWithData);
+         } catch (error) {
+            console.error("Error fetching genres:", error);
+         }
+      };
+
+      fetchGenres();
+      if (!isGenresLoaded) {
+         setIsGenresLoaded(true);
+      }
+   }, [isGenresLoaded]);
+
+   // ... (fungsi handleDeleteGenre tetap sama)
+   const handleDeleteGenre = async (genreId) => {
       try {
          const response = await deleteGenre(genreId);
-
          if (response.status === 200) {
             setMessage(response.data.message);
             setColorMessage("text-green-600");
@@ -36,41 +48,55 @@ const GenreDashboardPage = () => {
          setMessage(error.response.data.error);
          setColorMessage("text-red-600");
       }
-   }
+   };
+
 
    return (
-      <div>
-         <h1 className="text-3xl font-bold mb-8">Genre</h1>
-         <div className="mt-4">
-            <label className="block text-gray-600 text-sm mb-2">Pilih Genre</label>
-
-            <div className="flex flex-wrap gap-4 mb-4">
-               {genres.map((genre) => (
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-4 md:p-6">
+         {/* Kolom kiri untuk manajemen genre tidak berubah */}
+         <div className="lg:col-span-2">
+            <h1 className="text-3xl font-bold mb-8">Manajemen Genre</h1>
+            <div>
+               <label className="block text-gray-600 text-sm font-semibold mb-2">Daftar Genre Aktif</label>
+               <div className="flex flex-wrap gap-2">
+                  {genres.map((genre) => (
                      <div
-                     key={genre.id}
-                     className="flex items-center px-3 py-0.5 text-lg rounded-full border text-text hover:bg-primary hover:text-white border-primary"
-                  >
-                     {genre.nama}
-                     <button
-                        onClick={() => handleDeleteGenre(genre.id)}
-                        type="button"
-                        className="ml-2 hover:scale-105"
+                        key={genre.id}
+                        className="flex items-center px-3 py-1 text-sm rounded-full border text-slate-700 bg-slate-100 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 group"
                      >
-                        ×
-                     </button>
-                  </div>
-               ))}
+                        <span>{genre.nama}</span>
+                        <button
+                           onClick={() => handleDeleteGenre(genre.id)}
+                           type="button"
+                           className="ml-2 text-slate-400 group-hover:text-white font-bold"
+                        >
+                           ×
+                        </button>
+                     </div>
+                  ))}
+               </div>
             </div>
-         </div>
-         {
-            message && (
+            {message && (
                <div className={`mt-4 ${colorMessage}`}>
                   <p>{message}</p>
                </div>
-            )
-         }
+            )}
+         </div>
+
+         {/* Kolom kanan untuk grafik */}
+         <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg">
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">Popularitas Genre</h2>
+            <div className="relative h-[400px]">
+               {genres.length > 0 ? (
+                  // 2. Ganti komponen di sini
+                  <GenreBarChart genres={genres} />
+               ) : (
+                  <p className="text-center text-slate-500">Memuat data grafik...</p>
+               )}
+            </div>
+         </div>
       </div>
-   )
-}
+   );
+};
 
 export default GenreDashboardPage;

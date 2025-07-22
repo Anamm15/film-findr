@@ -1,9 +1,9 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:5000/user";
+import { BASE_API_URL } from "../utils/constant";
+const BASE_URL = `${BASE_API_URL}/users`;
 
 export const getAllUser = async () => {
-    const response = await axios.get(`${BASE_URL}/getAllUser`, {
+    const response = await axios.get(`${BASE_URL}/`, {
         withCredentials: true,
     });
     return response;
@@ -24,7 +24,7 @@ export const getMe = async () => {
 };
 
 export const registerUser = async (data) => {
-    const response = await axios.post(`${BASE_URL}/register`, data);
+    const response = await axios.post(`${BASE_URL}/`, data);
     return response;
 };
 
@@ -36,21 +36,21 @@ export const loginUser = async (data) => {
 };
 
 export const logoutUser = async () => {
-    const response = await axios.post(`${BASE_URL}/logout`, {},{
+    const response = await axios.post(`${BASE_URL}/logout`, {}, {
         withCredentials: true,
     });
     return response;
 };
 
 export const updateUser = async (id, data) => {
-    const response = await axios.patch(`${BASE_URL}/update/${id}`, data, {
+    const response = await axios.patch(`${BASE_URL}/${id}`, data, {
         withCredentials: true,
     });
     return response;
 };
 
 export const deleteUser = async (id) => {
-    const response = await axios.delete(`${BASE_URL}/delete/${id}`, {
+    const response = await axios.delete(`${BASE_URL}/${id}`, {
         withCredentials: true,
     });
     return response;

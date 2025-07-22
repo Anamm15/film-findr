@@ -9,13 +9,13 @@ import (
 )
 
 func ReviewRoute(server *gin.Engine, reviewController controller.ReviewController, jwtService service.JWTService) {
-	review := server.Group("/review")
+	review := server.Group("/api/v1/reviews")
 	{
-		review.GET("/getReviewUserById/:id", reviewController.GetReviewByUserId)
-		review.GET("/getReviewByFilmId/:id", reviewController.GetReviewByFilmId)
-		review.POST("/create", middleware.Authenticate(jwtService), reviewController.CreateReview)
-		review.PUT("/update", middleware.Authenticate(jwtService), reviewController.UpdateReview)
-		review.PATCH("/updateReaksiReview", middleware.Authenticate(jwtService), reviewController.UpdateReaksiReview)
-		review.DELETE("/delete/:id", middleware.Authenticate(jwtService), reviewController.DeleteReview)
+		review.GET("/user/:id", reviewController.GetReviewByUserId)
+		review.GET("/film/:id", reviewController.GetReviewByFilmId)
+		review.POST("/", middleware.Authenticate(jwtService), reviewController.CreateReview)
+		review.PUT("/:id", middleware.Authenticate(jwtService), reviewController.UpdateReview)
+		review.PATCH("/:id/reaction", middleware.Authenticate(jwtService), reviewController.UpdateReaksiReview)
+		review.DELETE("/:id", middleware.Authenticate(jwtService), reviewController.DeleteReview)
 	}
 }

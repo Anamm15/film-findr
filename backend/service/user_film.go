@@ -13,7 +13,7 @@ import (
 type UserFilmService interface {
 	GetUserFilmByUserId(ctx context.Context, userId int, page int) (dto.GetUserFilmResponse, error)
 	CreateUserFilm(ctx context.Context, userFilm dto.UserFilmCreateRequest) (entity.UserFilm, error)
-	UpdateStatusUserFilm(ctx context.Context, userFilm dto.UserFilmUpdateStatusRequest) error
+	UpdateStatusUserFilm(ctx context.Context, userFilmId int, userFilm dto.UserFilmUpdateStatusRequest) error
 }
 
 type userFilmService struct {
@@ -105,7 +105,7 @@ func (s *userFilmService) CreateUserFilm(ctx context.Context, userFilmReq dto.Us
 	return userFilmRes, nil
 }
 
-func (s *userFilmService) UpdateStatusUserFilm(ctx context.Context, userFilm dto.UserFilmUpdateStatusRequest) error {
+func (s *userFilmService) UpdateStatusUserFilm(ctx context.Context, userFilmId int, userFilm dto.UserFilmUpdateStatusRequest) error {
 	film, err := s.filmRepository.CheckStatusFilm(ctx, userFilm.FilmID)
 	if err != nil {
 		return err
@@ -115,7 +115,7 @@ func (s *userFilmService) UpdateStatusUserFilm(ctx context.Context, userFilm dto
 		return dto.ErrUpdateStatusUserFilm
 	}
 
-	if err := s.userFilmRepository.UpdateStatusUserFilm(ctx, userFilm.ID, userFilm.Status); err != nil {
+	if err := s.userFilmRepository.UpdateStatusUserFilm(ctx, userFilmId, userFilm.Status); err != nil {
 		return dto.ErrUpdateStatusUserFilm
 	}
 
