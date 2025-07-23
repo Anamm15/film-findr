@@ -1,7 +1,7 @@
 
 
 const Input = (props) => {
-   const { type, placeholder, value, onChange, label, multiple = false } = props;
+   const { type, placeholder, value, onChange, label, multiple = false, className = '' } = props;
 
    return (
       <div>
@@ -9,7 +9,7 @@ const Input = (props) => {
          <input
             id={label}
             type={type}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
+            className={`w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
             placeholder={placeholder}
             value={value}
             onChange={onChange}

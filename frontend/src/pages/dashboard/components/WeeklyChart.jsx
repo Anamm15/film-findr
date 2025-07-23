@@ -1,7 +1,3 @@
-
-
-// src/components/WeeklyChart.jsx
-
 import { Line } from 'react-chartjs-2';
 import {
    Chart as ChartJS,
@@ -33,9 +29,9 @@ const WeeklyChart = ({ title, data: chartData, icon, borderColor, backgroundColo
       plugins: {
          legend: { display: false },
          tooltip: {
-            backgroundColor: '#1e293b', // slate-800
-            titleColor: '#cbd5e1', // slate-300
-            bodyColor: '#94a3b8', // slate-400
+            backgroundColor: '#1e293b',
+            titleColor: '#cbd5e1',
+            bodyColor: '#94a3b8',
             padding: 10,
             cornerRadius: 8,
             displayColors: false,
@@ -43,28 +39,28 @@ const WeeklyChart = ({ title, data: chartData, icon, borderColor, backgroundColo
       },
       scales: {
          x: {
-            ticks: { color: '#94a3b8' }, // slate-400
-            grid: { color: '#334155' }, // slate-700
+            ticks: { color: '#94a3b8' },
+            grid: { color: '#334155' },
          },
          y: {
-            ticks: { color: '#94a3b8' }, // slate-400
-            grid: { color: '#334155' }, // slate-700
+            ticks: { color: '#94a3b8' },
+            grid: { color: '#334155' },
             beginAtZero: true,
          },
       },
       elements: {
          line: {
-            tension: 0.4, // Membuat garis lebih melengkung halus
+            tension: 0.4,
          },
       },
    };
 
    const data = {
-      labels: chartData.labels,
+      labels: chartData?.labels,
       datasets: [
          {
             label: title,
-            data: chartData.values,
+            data: chartData?.values,
             fill: true,
             borderColor: borderColor,
             backgroundColor: backgroundColor,
@@ -83,7 +79,9 @@ const WeeklyChart = ({ title, data: chartData, icon, borderColor, backgroundColo
             <h2 className="text-lg font-semibold text-white">{title}</h2>
          </div>
          <div className="h-64">
-            <Line options={options} data={data} />
+            {
+               data && <Line options={options} data={data} />
+            }
          </div>
       </div>
    );

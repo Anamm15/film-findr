@@ -125,7 +125,7 @@ func (r *userRepository) GetWeeklyUsers(ctx context.Context) ([]dto.WeeklyUser, 
 	var results []dto.WeeklyUser
 
 	err := r.db.WithContext(ctx).
-		Raw("SELECT * FROM weekly_user").
+		Raw("SELECT * FROM weekly_user ORDER BY weekly DESC LIMIT 8").
 		Scan(&results).Error
 	if err != nil {
 		return nil, err

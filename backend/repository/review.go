@@ -155,7 +155,7 @@ func (r *reviewRepository) GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyRe
 	var results []dto.WeeklyReview
 
 	err := r.db.WithContext(ctx).
-		Raw("SELECT * FROM weekly_review").
+		Raw("SELECT * FROM weekly_review ORDER BY weekly DESC LIMIT 8").
 		Scan(&results).Error
 	if err != nil {
 		return nil, err

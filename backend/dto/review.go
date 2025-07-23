@@ -87,7 +87,7 @@ type (
 	}
 
 	WeeklyReview struct {
-		Weekly      time.Time `gorm:"column:weekly"`
-		TotalReview int64     `gorm:"column:total_review"`
+		Label time.Time `json:"label" gorm:"column:weekly"`
+		Value int64     `json:"value" gorm:"column:total_review"`
 	}
 )

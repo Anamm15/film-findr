@@ -1,6 +1,7 @@
 import axios from "axios";
+import { BASE_API_URL } from "../utils/constant";
 
-const BASE_URL = "http://localhost:5000/userFilm";
+const BASE_URL = `${BASE_API_URL}/user-films`;
 
 export const getUserFilmByUserId = async (id, page) => {
     const response = await axios.get(`${BASE_URL}/user/${id}?page=${page}`, {

@@ -3,7 +3,7 @@ import { BASE_API_URL } from "../utils/constant";
 
 const BASE_URL = `${BASE_API_URL}/films`;
 export const getAllFilm = async (page) => {
-    const response = await axios.get(`${BASE_URL}?page=${page}`);
+    const response = await axios.get(`${BASE_URL}/?page=${page}`);
     return response;
 };
 

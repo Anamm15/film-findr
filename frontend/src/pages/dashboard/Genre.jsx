@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { deleteGenre, getAllGenre } from "../../service/genre";
 // 1. Impor komponen bar chart yang baru
 import GenreBarChart from "./components/GenreBarChart";
+import AddGenre from "./components/AddGenre";
 
 const GenreDashboardPage = () => {
    // ... (semua state dan fungsi useEffect tetap sama)
@@ -52,17 +53,17 @@ const GenreDashboardPage = () => {
 
 
    return (
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 p-4 md:p-6">
+      <div className="grid p-4 md:p-6">
          {/* Kolom kiri untuk manajemen genre tidak berubah */}
          <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold mb-8">Manajemen Genre</h1>
             <div>
-               <label className="block text-gray-600 text-sm font-semibold mb-2">Daftar Genre Aktif</label>
+               <label className="block text-text text-2xl font-semibold mb-2">Daftar Genre Aktif</label>
                <div className="flex flex-wrap gap-2">
                   {genres.map((genre) => (
                      <div
                         key={genre.id}
-                        className="flex items-center px-3 py-1 text-sm rounded-full border text-slate-700 bg-slate-100 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 group"
+                        className="flex items-center px-3 py-1 text-sm rounded-full border text-slate-700 bg-slate-100 hover:bg-tertiary hover:text-white hover:border-tertiary transition-all duration-200 group"
                      >
                         <span>{genre.nama}</span>
                         <button
@@ -83,8 +84,11 @@ const GenreDashboardPage = () => {
             )}
          </div>
 
+         {/* Form untuk menambah genre */}
+         <AddGenre />
+
          {/* Kolom kanan untuk grafik */}
-         <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg">
+         <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg mt-10">
             <h2 className="text-2xl font-bold text-slate-800 mb-4">Popularitas Genre</h2>
             <div className="relative h-[400px]">
                {genres.length > 0 ? (

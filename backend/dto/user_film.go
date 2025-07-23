@@ -49,7 +49,7 @@ type (
 	}
 
 	WeeklyUser struct {
-		Weekly    time.Time `json:"weekly"`
-		TotalUser int64     `json:"total_user"`
+		Label time.Time `json:"label" gorm:"column:weekly"`
+		Value int64     `json:"value" gorm:"column:total_user"`
 	}
 )
