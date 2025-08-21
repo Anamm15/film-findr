@@ -13,5 +13,7 @@ func DashboardRoute(server *gin.Engine, dashboardController controller.Dashboard
 	dashboard := server.Group("/api/v1/dashboard")
 	{
 		dashboard.GET("/", middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), dashboardController.GetDashboard)
+		dashboard.GET(("/genre"), middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), dashboardController.GetGenreDashboard)
+		dashboard.GET(("/review"), middleware.Authenticate(jwtService), middleware.AuthorizeRole(helpers.ENUM_ROLE_ADMIN), dashboardController.GetReviewDashboard)
 	}
 }

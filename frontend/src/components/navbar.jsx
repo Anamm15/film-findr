@@ -35,7 +35,7 @@ const Navbar = () => {
                         <div className="flex gap-10 font-bold text-xl text-primary">
                             <NavLink to="/" className="nav-link" end>Home</NavLink>
                             <NavLink to="/top-films" className="nav-link" end>Top Film</NavLink>
-                            <NavLink to={`/profile/${user?.id}`} className="nav-link">Profile</NavLink>
+                            <NavLink to={`/profile/${user?.username}`} className="nav-link">Profile</NavLink>
                             <NavLink to="/watchlist" className="nav-link">Watch List</NavLink>
                         </div>
                     )

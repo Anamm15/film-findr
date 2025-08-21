@@ -51,7 +51,6 @@ const GenreDashboardPage = () => {
       }
    };
 
-
    return (
       <div className="grid p-4 md:p-6">
          {/* Kolom kiri untuk manajemen genre tidak berubah */}

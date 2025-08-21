@@ -9,6 +9,13 @@ export const getAllUser = async () => {
     return response;
 };
 
+export const getUserByUsername = async (username) => {
+    const response = await axios.get(`${BASE_URL}?username=${username}`, {
+        withCredentials: true,
+    });
+    return response;
+};
+
 export const getUserById = async (id) => {
     const response = await axios.get(`${BASE_URL}/${id}`, {
         withCredentials: true,

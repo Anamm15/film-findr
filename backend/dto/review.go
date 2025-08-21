@@ -90,4 +90,9 @@ type (
 		Label time.Time `json:"label" gorm:"column:weekly"`
 		Value int64     `json:"value" gorm:"column:total_review"`
 	}
+
+	RatingListAndCountResponse struct {
+		Rating int `json:"rating"`
+		Count  int `json:"count"`
+	}
 )

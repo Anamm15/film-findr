@@ -13,7 +13,7 @@ func UserRoute(server *gin.Engine, userController controller.UserController, jwt
 	user := server.Group("/api/v1/users")
 	{
 		user.GET("/", userController.GetAllUser)
-		user.GET("/:id", userController.GetUserById)
+		user.GET("", userController.GetUserByUsername)
 		user.GET("/me", middleware.Authenticate(jwtService), userController.Me)
 		user.POST("/", userController.RegisterUser)
 		user.POST("/login", userController.LoginUser)

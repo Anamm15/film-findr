@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getReviewByUserId } from "../../service/review";
-import { getUserById } from "../../service/user";
+import { getUserByUsername } from "../../service/user";
 import { AuthContext } from "../../contexts/authContext";
 import { getUserFilmByUserId } from "../../service/userFilm";
 import ReviewLayout from "../../layouts/ReviewLayout";
@@ -10,7 +10,7 @@ import Akun from "./components/Akun";
 
 const ProfilePage = () => {
    const params = useParams();
-   const routeId = params.id;
+   const usernameParams = params.username;
    const { user: currentUser } = useContext(AuthContext);
 
    const [user, setUser] = useState(null);
@@ -19,45 +19,45 @@ const ProfilePage = () => {
    const [watchlistPage, setWatchlistPage] = useState(1);
    const [reviewPage, setReviewPage] = useState(1);
 
-   const finalId = routeId || currentUser?.id;
+   const finalUsername = usernameParams || currentUser?.username;
 
    useEffect(() => {
-   const fetchUser = async () => {
-      if (!finalId) return;
-      try {
-         const response = await getUserById(finalId);
-         setUser(response.data.data);
-      } catch (error) {
-         console.error("Error fetching user:", error);
-      }
-   };
+      const fetchUser = async () => {
+         if (!finalUsername) return;
+         try {
+            const response = await getUserByUsername(finalUsername);
+            setUser(response.data.data);
+         } catch (error) {
+            console.error("Error fetching user:", error);
+         }
+      };
 
-   fetchUser();
-   }, [finalId, routeId, currentUser]);
+      fetchUser();
+   }, [finalUsername, usernameParams, currentUser]);
 
    useEffect(() => {
-   const fetchReview = async () => {
-      if (!finalId) return;
-      try {
-         const response = await getReviewByUserId(finalId, reviewPage);
-         setReview(response.data.data);
-      } catch (error) {
-         console.error("Error fetching review:", error);
-      }
-   };
+      const fetchReview = async () => {
+         if (!finalUsername && !user) return;
+         try {
+            const response = await getReviewByUserId(user.id, reviewPage);
+            setReview(response.data.data);
+         } catch (error) {
+            console.error("Error fetching review:", error);
+         }
+      };
 
-   fetchReview();
-   }, [finalId, reviewPage]);
+      fetchReview();
+   }, [finalUsername, reviewPage, user]);
 
    useEffect(() => {
       const fetchWatchlists = async () => {
-         if (!finalId) return;
+         if (!finalUsername && !user) return;
          try {
-            const response = await getUserFilmByUserId(finalId, watchlistPage);
+            const response = await getUserFilmByUserId(user.id, watchlistPage);
             if (response.status === 200) {
                setWatchlists(response.data.data);
                console.log(response.data.data);
-               
+
             }
          } catch (error) {
             console.error("Error fetching watchlists:", error);
@@ -65,7 +65,7 @@ const ProfilePage = () => {
       };
 
       fetchWatchlists();
-   }, [finalId, watchlistPage]);
+   }, [finalUsername, watchlistPage, user]);
 
    return (
       <>

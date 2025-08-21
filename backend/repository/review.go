@@ -19,6 +19,7 @@ type ReviewRepository interface {
 	DeleteReview(ctx context.Context, id int) error
 	CountReviews(ctx context.Context) (int64, error)
 	GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyReview, error)
+	GetListRatingAndCount(ctx context.Context) ([]dto.RatingListAndCountResponse, error)
 }
 
 type reviewRepository struct {
@@ -161,5 +162,18 @@ func (r *reviewRepository) GetWeeklyReviews(ctx context.Context) ([]dto.WeeklyRe
 		return nil, err
 	}
 
+	return results, nil
+}
+
+func (r *reviewRepository) GetListRatingAndCount(ctx context.Context) ([]dto.RatingListAndCountResponse, error) {
+	var results []dto.RatingListAndCountResponse
+	err := r.db.WithContext(ctx).
+		Table("reviews AS r").
+		Select("r.rating, COUNT(r.id) AS count").
+		Group("r.rating").
+		Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
 	return results, nil
 }

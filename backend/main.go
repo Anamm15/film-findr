@@ -55,7 +55,7 @@ func main() {
 		userFilmService  service.UserFilmService  = service.NewUserFilmService(userFilmRepository, filmRepository)
 		reviewService    service.ReviewService    = service.NewReviewService(reviewRepository, reviewReaksiRepository, userFilmRepository, filmRepository)
 		filmService      service.FilmService      = service.NewFilmService(db, cloudinaryCloud, filmRepository, filmGambarRepository, filmGenreRepository, reviewRepository)
-		dashboardService service.DashboardService = service.NewDashboardService(filmRepository, reviewRepository, userRepository, filmService)
+		dashboardService service.DashboardService = service.NewDashboardService(filmRepository, reviewRepository, userRepository, genreRepository, filmService)
 
 		genreController     controller.GenreController     = controller.NewGenreController(genreService)
 		userController      controller.UserController      = controller.NewUserController(userService, jwtService)

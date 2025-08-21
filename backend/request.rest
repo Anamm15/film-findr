@@ -16,7 +16,7 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2
 GET http://localhost:5000/user/getAllUser
 
 ###
-GET http://localhost:5000/user/1
+GET http://localhost:5000/api/v1/users/
 
 ###
 GET http://localhost:5000/film/getAllFilm 
@@ -73,3 +73,8 @@ GET http://localhost:5000/film/getAllFilm
 ###
 GET http://localhost:5000/api/v1/dashboard/
 
+###
+GET http://localhost:5000/api/v1/dashboard/genre
+
+###
+GET http://localhost:5000/api/v1/dashboard/review

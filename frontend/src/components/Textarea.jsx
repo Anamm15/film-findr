@@ -1,11 +1,17 @@
 
 
 const TextArea = (props) => {
-   const { placeholder, value, onChange, label, className } = props;
+   const {
+      placeholder,
+      value,
+      onChange,
+      label,
+      className,
+      defaultValue } = props;
    return (
       <div>
          <label htmlFor={label} className="block text-secondary text-lg mb-2">{label}</label>
-         <textarea 
+         <textarea
             id={label}
             className={`w-full mt-4 p-2 text-lg border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
             type="text"
@@ -13,6 +19,7 @@ const TextArea = (props) => {
             value={value}
             onChange={onChange}
             rows="6"
+            defaultValue={defaultValue}
          ></textarea>
       </div>
    )

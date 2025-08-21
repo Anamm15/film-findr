@@ -1,7 +1,15 @@
 
 
 const Input = (props) => {
-   const { type, placeholder, value, onChange, label, multiple = false, className = '' } = props;
+   const {
+      type,
+      placeholder,
+      value,
+      onChange,
+      label,
+      multiple = false,
+      className = '',
+      defaultValue = '' } = props;
 
    return (
       <div>
@@ -14,6 +22,7 @@ const Input = (props) => {
             value={value}
             onChange={onChange}
             multiple={multiple}
+            defaultValue={defaultValue || ''}
          />
       </div>
    )

@@ -33,4 +33,9 @@ type (
 		FilmID int    `json:"film_id"`
 		Nama   string `json:"nama"`
 	}
+
+	GenreListAndCountResponse struct {
+		Nama  string `json:"nama" gorm:"column:nama"`
+		Count int64  `json:"count" gorm:"column:count"`
+	}
 )

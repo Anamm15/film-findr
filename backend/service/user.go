@@ -16,6 +16,7 @@ import (
 type UserService interface {
 	GetAllUser(ctx context.Context) ([]dto.UserResponse, error)
 	GetUserById(ctx context.Context, id int) (dto.UserResponse, error)
+	GetUserByUsername(ctx context.Context, username string) (dto.UserResponse, error)
 	RegisterUser(ctx context.Context, user dto.UserCreateRequest, photoProfil *multipart.FileHeader) (dto.UserResponse, error)
 	LoginUser(ctx context.Context, req dto.UserLoginRequest) (entity.User, error)
 	UpdateUser(ctx context.Context, user dto.UserUpdateRequest, photoProfil *multipart.FileHeader) error
@@ -56,6 +57,25 @@ func (s *userService) GetAllUser(ctx context.Context) ([]dto.UserResponse, error
 
 func (s *userService) GetUserById(ctx context.Context, id int) (dto.UserResponse, error) {
 	user, err := s.userRepository.GetUserById(ctx, id)
+	if err != nil {
+		return dto.UserResponse{}, dto.ErrGetUserByID
+	}
+
+	if user.ID == 0 {
+		return dto.UserResponse{}, dto.ErrUserNotFound
+	}
+
+	return dto.UserResponse{
+		ID:          user.ID,
+		Username:    user.Username,
+		Nama:        user.Nama,
+		Bio:         user.Bio,
+		PhotoProfil: user.PhotoProfil,
+	}, nil
+}
+
+func (s *userService) GetUserByUsername(ctx context.Context, username string) (dto.UserResponse, error) {
+	user, err := s.userRepository.GetUserByUsername(ctx, username)
 	if err != nil {
 		return dto.UserResponse{}, dto.ErrGetUserByID
 	}

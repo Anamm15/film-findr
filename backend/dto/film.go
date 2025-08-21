@@ -142,4 +142,10 @@ type (
 		Gambar       []FilmGambarResponse `gorm:"column:film_gambar" json:"film_gambar"`
 		Genres       []GenreResponse      `gorm:"column:genres" json:"genres"`
 	}
+
+	FilmWithMostReviews struct {
+		ID           int    `json:"id"`
+		Judul        string `json:"judul"`
+		CountReviews int    `json:"count_reviews"`
+	}
 )

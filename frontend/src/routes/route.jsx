@@ -4,7 +4,7 @@ import LoginPage from "../pages/login/login";
 import RegisterPage from "../pages/register/register";
 import DetailFilmPage from "../pages/detail-film/detailFilm";
 import DashboardPage from "../pages/dashboard/dashboard";
-import ProfilePage from "../pages/profile/profile";
+import ProfilePage from "../pages/profile/Profile";
 import ProtectedRoute from "../utils/protectedRoute";
 import WatchListPage from "../pages/watchlist/watchlist";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -15,6 +15,7 @@ import GenreDashboardPage from "../pages/dashboard/Genre";
 import ContributorDashboardPage from "../pages/dashboard/Contributor";
 import AssignmentDashboardPage from "../pages/dashboard/Assignment";
 import AddFilmPage from "../pages/dashboard/film/AddFilm";
+import UpdateFilmPage from "../pages/dashboard/film/UpdateFilm";
 
 const AppRoutes = () => {
    return (
@@ -23,7 +24,7 @@ const AppRoutes = () => {
          <Route path="/login" element={<LoginPage />} />
          <Route path="/register" element={<RegisterPage />} />
          <Route path="/film/:id" element={<DetailFilmPage />} />
-         <Route path="/profile/:id" element={<ProfilePage />} />
+         <Route path="/profile/:username" element={<ProfilePage />} />
          <Route path="/top-films" element={<TopFilmPage />} />
 
          <Route
@@ -51,6 +52,7 @@ const AppRoutes = () => {
             <Route path="assignments" element={<AssignmentDashboardPage />} />
 
             <Route path="films/new" element={<AddFilmPage />} />
+            <Route path="films/update/:id" element={<UpdateFilmPage />} />
          </Route>
       </Routes>
    );

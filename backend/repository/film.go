@@ -22,6 +22,7 @@ type FilmRepository interface {
 	CountFilm(ctx context.Context) (int64, error)
 	GetTopFilm(ctx context.Context) ([]dto.TopFilmFlat, error)
 	GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat, error)
+	GetFilmWithMostReviews(ctx context.Context) ([]dto.FilmWithMostReviews, error)
 }
 
 type filmRepository struct {
@@ -208,4 +209,23 @@ func (r *filmRepository) GetTrendingFilm(ctx context.Context) ([]dto.TopFilmFlat
 	}
 
 	return trendingFilmFlat, nil
+}
+
+func (r *filmRepository) GetFilmWithMostReviews(ctx context.Context) ([]dto.FilmWithMostReviews, error) {
+	var films []dto.FilmWithMostReviews
+	err := r.db.WithContext(ctx).
+		Raw(`
+		SELECT f.id, f.judul, COUNT(r.id) AS count_reviews
+		FROM films f
+		LEFT JOIN reviews r ON f.id = r.film_id
+		GROUP BY f.id
+		HAVING COUNT(r.id) > 0
+		ORDER BY count_reviews DESC
+		LIMIT 10
+	`).Scan(&films).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return films, nil
 }

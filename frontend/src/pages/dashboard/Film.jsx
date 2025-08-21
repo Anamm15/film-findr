@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getAllFilm } from "../../service/film"
-import FilmCard from "../../components/FilmCard";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import Pagination from "../../components/Pagination";
+import AdminFilmCard from "./film/AdminFilmCard";
+import { deleteFilm } from "../../service/film";
 
 const FilmDashboardPage = () => {
    const [films, setFilms] = useState(null);
@@ -31,11 +32,23 @@ const FilmDashboardPage = () => {
       navigate("/dashboard/films/new");
    }
 
+   const handleUpdateFilm = (id) => {
+      navigate("/dashboard/films/update/" + id);
+   }
+
+   const handleDeleteFilm = async (id) => {
+      try {
+         await deleteFilm(id);
+      } catch (error) {
+         console.error("Error deleting film:", error);
+      }
+   }
+
    return (
       <div className="relative">
          <Button
             type="button"
-            className="fixed bottom-4 right-8 px-16 py-2 rounded-xl"
+            className="fixed bottom-4 right-8 px-12 py-2 rounded-xl"
             onClick={handleButtonAddFilm}
          >
             Add Film
@@ -44,11 +57,16 @@ const FilmDashboardPage = () => {
          <h1 className="text-4xl font-bold mb-4">List Film</h1>
          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {films && films.films?.map((film) => (
-               <FilmCard key={film.id} movie={film} onClick={() => handleClickCard(film.id)} />
+               <AdminFilmCard
+                  key={film.id}
+                  movie={film}
+                  onClick={() => handleClickCard(film.id)}
+                  onUpdate={() => handleUpdateFilm(film.id)}
+                  onDelete={() => handleDeleteFilm(film.id)}
+               />
             ))}
          </div>
 
-         {/* Pagination */}
          <Pagination contents={films} page={page} setPage={setPage} />
       </div>
    )

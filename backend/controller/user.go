@@ -12,7 +12,7 @@ import (
 
 type UserController interface {
 	GetAllUser(ctx *gin.Context)
-	GetUserById(ctx *gin.Context)
+	GetUserByUsername(ctx *gin.Context)
 	Me(ctx *gin.Context)
 	RegisterUser(ctx *gin.Context)
 	LoginUser(ctx *gin.Context)
@@ -48,16 +48,9 @@ func (c *userController) GetAllUser(ctx *gin.Context) {
 	ctx.JSON(dto.STATUS_OK, res)
 }
 
-func (c *userController) GetUserById(ctx *gin.Context) {
-	userIdParam := ctx.Param("id")
-	userId, err := strconv.Atoi(userIdParam)
-	if err != nil {
-		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
-		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
-		return
-	}
-
-	userResponse, err := c.userService.GetUserById(ctx, userId)
+func (c *userController) GetUserByUsername(ctx *gin.Context) {
+	usernameParam := ctx.Query("username")
+	userResponse, err := c.userService.GetUserByUsername(ctx, usernameParam)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_GET_USER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
@@ -164,6 +157,8 @@ func (c *userController) UpdateUser(ctx *gin.Context) {
 	photoProfil, err := ctx.FormFile("photo_profil")
 	if err == nil {
 		err = c.userService.UpdateUser(ctx, user, photoProfil)
+	} else {
+		err = c.userService.UpdateUser(ctx, user, nil)
 	}
 
 	if err != nil {

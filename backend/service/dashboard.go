@@ -9,18 +9,23 @@ import (
 
 type DashboardService interface {
 	GetDashboard(ctx context.Context) (dto.GetDashboardResponse, error)
+	GetGenreDashboard(ctx context.Context) ([]dto.GenreListAndCountResponse, error)
+	GetReviewDashboard(ctx context.Context) (dto.GetReviewDashboardResponse, error)
 }
 
 type dashboardService struct {
 	filmRepository   repository.FilmRepository
 	reviewRepository repository.ReviewRepository
 	userRepository   repository.UserRepository
+	genreRepository  repository.GenreRepository
 	filmService      FilmService
 }
 
-func NewDashboardService(filmRepository repository.FilmRepository,
+func NewDashboardService(
+	filmRepository repository.FilmRepository,
 	reviewRepository repository.ReviewRepository,
 	userRepository repository.UserRepository,
+	genreRepository repository.GenreRepository,
 	filmService FilmService,
 ) DashboardService {
 	return &dashboardService{
@@ -28,6 +33,7 @@ func NewDashboardService(filmRepository repository.FilmRepository,
 		reviewRepository: reviewRepository,
 		userRepository:   userRepository,
 		filmService:      filmService,
+		genreRepository:  genreRepository,
 	}
 }
 
@@ -67,6 +73,35 @@ func (s *dashboardService) GetDashboard(ctx context.Context) (dto.GetDashboardRe
 		TrendingFilms: trendingFilms,
 		WeeklyUsers:   weeklyUsers,
 		WeeklyReviews: weeklyReviews,
+	}
+
+	return results, nil
+}
+
+func (s *dashboardService) GetGenreDashboard(ctx context.Context) ([]dto.GenreListAndCountResponse, error) {
+	genreListAndCount, err := s.genreRepository.GetGenreListAndCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return genreListAndCount, nil
+}
+
+func (s *dashboardService) GetReviewDashboard(ctx context.Context) (dto.GetReviewDashboardResponse, error) {
+	reviewListAndCount, err := s.reviewRepository.GetListRatingAndCount(ctx)
+	if err != nil {
+		return dto.GetReviewDashboardResponse{}, err
+	}
+
+	topFilmWithMostReviews, err := s.filmRepository.GetFilmWithMostReviews(ctx)
+	if err != nil {
+		return dto.GetReviewDashboardResponse{}, err
+	}
+
+	var results dto.GetReviewDashboardResponse
+	results = dto.GetReviewDashboardResponse{
+		RatingDistribution: reviewListAndCount,
+		MostReviewedFilms:  topFilmWithMostReviews,
 	}
 
 	return results, nil
