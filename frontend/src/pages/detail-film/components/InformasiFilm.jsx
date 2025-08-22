@@ -3,7 +3,8 @@
 const InformasiFilm = (props) => {
     const { film } = props;
     return (
-        <div className="bg-white mb-6 space-y-3 text-lg text-secondary">
+        <div className="bg-white mb-6 space-y-3 md:text-lg text-secondary">
+            <h1 className="text-[26px] md:text-3xl font-bold mb-4 text-text">{film.judul}</h1>
             <div className="flex flex-wrap gap-2 mb-2">
                 {film.genres?.map((genre) => (
                     <span

@@ -11,79 +11,78 @@ import InformasiFilm from "./components/InformasiFilm";
 import Gambar from "./components/Gambar";
 
 const DetailFilmPage = () => {
-    const id = useParams().id;
-    const [film, setFilm] = useState(null);
-    const [page, setPage] = useState(1);
-    const [review, setReview] = useState(null);
-    
-    const [films, setFilms] = useState([]);
-    const [isFilmsFetched, setIsFilmsFetched] = useState(false);
+   const id = useParams().id;
+   const [film, setFilm] = useState(null);
+   const [page, setPage] = useState(1);
+   const [review, setReview] = useState(null);
 
-    useEffect(() => {
-        const fetchFilm = async () => {
-            try {
-                const response = await getFilmById(id);
-                setFilm(response.data.data);
-            } catch (error) {
-                console.error("Error fetching film:", error.data.message);
-            }
-        };
+   const [films, setFilms] = useState([]);
+   const [isFilmsFetched, setIsFilmsFetched] = useState(false);
 
-        fetchFilm();
-    }, [id]);
+   useEffect(() => {
+      const fetchFilm = async () => {
+         try {
+            const response = await getFilmById(id);
+            setFilm(response.data.data);
+         } catch (error) {
+            console.error("Error fetching film:", error.data.message);
+         }
+      };
 
-    useEffect(() => {
-        const fetchReview = async () => {
-            try {
-                const response = await getReviewByFilmId(id, page);
-                setReview(response.data.data);
-            } catch (error) {
-                console.error("Error fetching review:", error.data.message);
-            }
-        };
+      fetchFilm();
+   }, [id]);
 
-        fetchReview();
-    }, [id, page]);
+   useEffect(() => {
+      const fetchReview = async () => {
+         try {
+            const response = await getReviewByFilmId(id, page);
+            setReview(response.data.data);
+         } catch (error) {
+            console.error("Error fetching review:", error.data.message);
+         }
+      };
 
-    useEffect(() => {
-        const fetchAllFilms = async () => {
-            try {
-                const response = await getAllFilm();
-                setFilms(response.data.data);
-            } catch (error) {
-                console.error("Error fetching films:", error.data.message);
-            }
-        }
+      fetchReview();
+   }, [id, page]);
 
-        fetchAllFilms();
-        if (!isFilmsFetched) {
-            setIsFilmsFetched(false);
-        }
-    }, [isFilmsFetched]);
-
-  return (
-    <div className="max-w-5xl mx-auto px-4 pb-10 bg-background">
-      {
-        film && (
-          <>
-            <div className="flex gap-6 my-8 shadow-md rounded-xl p-4 relative mt-28">
-              <Gambar film={film} />
-              <div>
-                  <h1 className="text-3xl font-bold mb-4">{film.judul}</h1>
-                  <InformasiFilm film={film} />
-                  <WatchListForm id={id} />
-              </div>
-            </div>
-
-            <Sinopsis sinopsis={film.sinopsis} />
-            <ReviewLayout review={review} setPage={setPage} page={page} />
-            <AddReview id={id} />
-            <RekomendasiFilm films={films.films} />
-          </>
-        )
+   useEffect(() => {
+      const fetchAllFilms = async () => {
+         try {
+            const response = await getAllFilm();
+            setFilms(response.data.data);
+         } catch (error) {
+            console.error("Error fetching films:", error.data.message);
+         }
       }
-    </div>
-  );
+
+      fetchAllFilms();
+      if (!isFilmsFetched) {
+         setIsFilmsFetched(false);
+      }
+   }, [isFilmsFetched]);
+
+   return (
+      <div className="max-w-5xl mx-auto px-4 pb-10 bg-background">
+         {
+            film && (
+               <>
+                  <div className="flex flex-col md:flex-row gap-6 my-8 shadow-md rounded-xl p-4 relative mt-28">
+                     <Gambar film={film} />
+                     <div>
+                        <InformasiFilm film={film} />
+                        <WatchListForm id={id} />
+                     </div>
+                  </div>
+
+                  <Sinopsis sinopsis={film.sinopsis} />
+                  <ReviewLayout review={review} setPage={setPage} page={page} />
+                  <AddReview id={id} />
+                  <RekomendasiFilm films={films.films} />
+               </>
+            )
+         }
+      </div>
+   );
 };
 
 export default DetailFilmPage;

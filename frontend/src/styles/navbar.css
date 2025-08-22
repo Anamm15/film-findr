@@ -36,3 +36,67 @@
 .nav-link.active {
     color: #007BFF; /* Ganti dengan warna primary Anda */
 }
+
+/* Styling dan Animasi untuk Tombol Hamburger */
+.hamburger-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger-line {
+    width: 2rem;
+    height: 3px;
+    background-color: #007BFF; /* Ganti dengan warna primary Anda */
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
+/* Animasi Hamburger menjadi 'X' */
+.hamburger-line.open:nth-child(1) {
+    transform: rotate(45deg);
+}
+
+.hamburger-line.open:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.hamburger-line.open:nth-child(3) {
+    transform: rotate(-45deg);
+}
+
+/* Styling dan Animasi Staggered untuk Item Menu Mobile */
+.mobile-menu-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.mobile-menu-list li {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    color: #007BFF;
+}
+
+/* Saat menu visible, animasikan item li */
+.mobile-menu-list.visible li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Membuat efek staggered dengan transition-delay */
+.mobile-menu-list.visible li:nth-child(1) { transition-delay: 0.2s; }
+.mobile-menu-list.visible li:nth-child(2) { transition-delay: 0.3s; }
+.mobile-menu-list.visible li:nth-child(3) { transition-delay: 0.4s; }
+.mobile-menu-list.visible li:nth-child(4) { transition-delay: 0.5s; }
+/* ...tambahkan jika item lebih banyak */

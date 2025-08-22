@@ -29,10 +29,10 @@ const Detail = (props) => {
 
     return (
         <div className="mt-4 flex flex-col gap-2">
-            <div className="flex gap-2 items-center">
-                <div className="relative max-w-sm text-lg">
+            <div className="flex flex-col md:flex-row gap-2 items-center">
+                <div className="relative max-w-sm text-lg w-full md:w-auto">
                     <select
-                        className="appearance-none px-4 py-1 pr-10 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                        className="appearance-none px-4 py-1 pr-10 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-full md:w-auto"
                         onChange={(e) => setStatus(e.target.value)}
                     >
                         <option value="">Pilih Status</option>
@@ -57,7 +57,7 @@ const Detail = (props) => {
                 </div>
                 <Button
                     type="button"
-                    className="rounded-lg py-[7px]"
+                    className="rounded-lg py-[7px] w-full md:w-auto"
                     onClick={handleUpdate}
                 >
                     Ubah Status

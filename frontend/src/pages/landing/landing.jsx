@@ -49,7 +49,7 @@ const LandingPage = () => {
                                 if (e.key === "Enter") handleSearch();
                             }}
                             placeholder="🔍 Cari film berdasarkan judul..."
-                            className="w-full py-3 pl-5 pr-12 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 bg-white text-gray-700 text-lg"
+                            className="w-full py-3 pl-5 pr-12 rounded-xl border border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 bg-white text-gray-700 md:text-lg"
                         />
                         {searchQuery && (
                             <button
@@ -62,9 +62,10 @@ const LandingPage = () => {
                     </div>
                     <Button
                         onClick={handleSearch}
-                        className="px-6 py-3 flex items-center text-xl rounded-xl bg-gradient-primary text-white font-semibold hover:bg-opacity-90 transition-all shadow"
+                        className="px-2 md:px-6 py-3 flex items-center text-xl rounded-xl bg-gradient-primary text-white font-semibold hover:bg-opacity-90 transition-all shadow"
                     >
-                        <span>🔍</span> Cari
+                        <span>🔍</span>
+                        <span className="hidden md:inline">Cari</span>
                     </Button>
                 </div>
 

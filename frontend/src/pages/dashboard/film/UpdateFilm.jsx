@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createFilm, getFilmById, updateFilm } from "../../../service/film";
+import { getFilmById, updateFilm } from "../../../service/film";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 import TextArea from "../../../components/Textarea";
@@ -13,9 +13,8 @@ const UpdateFilmPage = () => {
    const [sinopsis, setSinopsis] = useState("");
    const [sutradara, setSutradara] = useState("");
    const [tanggalRilis, setTanggalRilis] = useState("");
-   const [durasi, setDurasi] = useState(null);
-   const [totalEpisode, setTotalEpisode] = useState(null);
-   const [imageFiles, setImageFiles] = useState([]);
+   const [durasi, setDurasi] = useState(0);
+   const [totalEpisode, setTotalEpisode] = useState(0);
    const [genres, setGenres] = useState([]);
    const [message, setMessage] = useState("");
    const [colorMessage, setColorMessage] = useState("");
@@ -31,7 +30,7 @@ const UpdateFilmPage = () => {
             setStatus(film.status);
             setSinopsis(film.sinopsis);
             setSutradara(film.sutradara);
-            setTanggalRilis(film.tanggal_rilis);
+            setTanggalRilis(new Date(film.tanggal_rilis).toISOString().split("T")[0]);
             setDurasi(film.durasi);
             setTotalEpisode(film.total_episode);
             setGenres(film.genres);
@@ -49,26 +48,24 @@ const UpdateFilmPage = () => {
    const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-         const formData = new FormData();
-         formData.append("judul", judul);
-         formData.append("status", status);
-         formData.append("sinopsis", sinopsis);
-         formData.append("sutradara", sutradara);
-         formData.append("tanggal_rilis", tanggalRilis);
-         formData.append("durasi", durasi);
-         formData.append("total_episode", totalEpisode);
+         const data = {
+            judul: judul,
+            status: status,
+            sinopsis: sinopsis,
+            sutradara: sutradara,
+            tanggal_rilis: new Date(tanggalRilis).toISOString(),
+            durasi: Number(durasi),
+            total_episode: Number(totalEpisode),
+         }
 
-         // for (let i = 0; i < imageFiles.length; i++) {
-         //    formData.append("images", imageFiles[i]);
-         // }
-
-         const response = await updateFilm(formData);
-         if (response.status === 201) {
+         const response = await updateFilm(id, data);
+         if (response.status === 200) {
             setMessage(response.data.message);
             setColorMessage("text-green-600");
          }
       } catch (error) {
-         setMessage(error.data.message);
+         console.log(error);
+         setMessage(error.response.data.message);
          setColorMessage("text-red-600");
       }
    };
@@ -135,12 +132,6 @@ const UpdateFilmPage = () => {
                   placeholder="Masukkan Durasi"
                   value={durasi}
                   onChange={(e) => setDurasi(e.target.value)}
-               />
-               <Input
-                  type="file"
-                  label="Image"
-                  multiple={true}
-                  onChange={(e) => setImageFiles(e.target.files)}
                />
             </div>
             <div className="mb-4">

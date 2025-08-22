@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Button from "../../../components/Button";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"
@@ -12,12 +12,24 @@ const Akun = (props) => {
    const [bio, setBio] = useState(user?.bio);
    const [message, setMessage] = useState("");
    const [colorMessage, setColorMessage] = useState("");
+   const textareaRef = useRef(null);
 
    useEffect(() => {
       setNama(user?.nama);
       setUsername(user?.username);
       setBio(user?.bio);
    }, [user]);
+
+   function autoResize(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + 20 + "px";
+   }
+
+   useEffect(() => {
+      if (textareaRef.current) {
+         autoResize(textareaRef.current);
+      }
+   }, [bio]);
 
    const onUpdateProfile = () => {
       setIsUpdating(true);
@@ -98,16 +110,21 @@ const Akun = (props) => {
                </div>
             </div>
 
-            <div className="bg-white/70 backdrop-blur-sm p-4 rounded-xl shadow-sm border border-gray-200">
+            <div className="bg-white/70 h-max backdrop-blur-sm p-4 rounded-xl shadow-sm border border-gray-200">
                <h2 className="text-lg font-semibold text-indigo-600">Tentang Saya</h2>
                <textarea
+                  ref={textareaRef}
                   disabled={!isUpdating}
                   value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className={`w-full resize-none border rounded-lg transition-all duration-200 
-            ${isUpdating ? "border-indigo-400 focus:border-indigo-600 p-2" : "border-transparent bg-transparent text-gray-600"}`}
+                  onChange={(e) => {
+                     setBio(e.target.value);
+                     autoResize(e.target);
+                  }}
+                  className={`w-full h-max overflow-y-hidden border rounded-lg transition-all duration-200 resize-none
+                     ${isUpdating ? "border-indigo-400 focus:border-indigo-600 p-2" : "border-transparent bg-transparent text-gray-600"}`}
                />
             </div>
+
 
             <div className="flex flex-col items-end gap-3">
                <AnimatePresence>
@@ -122,12 +139,12 @@ const Akun = (props) => {
                         <Button
                            variant="outline"
                            onClick={() => setIsUpdating(false)}
-                           className="rounded-xl px-5 py-2 shadow-md"
+                           className="rounded-lg px-5 py-2 shadow-md"
                         >
                            Cancel
                         </Button>
                         <Button
-                           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-5 py-2 shadow-md"
+                           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-5 py-2 shadow-md"
                            onClick={handleUpdateProfile}
                         >
                            Save
@@ -141,7 +158,7 @@ const Akun = (props) => {
                         exit={{ opacity: 0, scale: 0.9 }}
                      >
                         <Button
-                           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-5 py-2 shadow-md"
+                           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-5 py-2 shadow-md"
                            onClick={onUpdateProfile}
                         >
                            Edit Profile
