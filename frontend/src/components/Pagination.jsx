@@ -1,5 +1,3 @@
-
-
 const Pagination = (props) => {
    const { contents, page, setPage } = props;
    return (

@@ -1,5 +1,3 @@
-
-
 const Sinopsis = (props) => {
     const { sinopsis } = props;
     return (

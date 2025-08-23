@@ -87,14 +87,13 @@ type (
 	}
 
 	UpdateFilmRequest struct {
-		Judul        string    `json:"judul" validate:"required"`
-		Sinopsis     string    `json:"sinopsis" validate:"required"`
-		Sutradara    string    `json:"sutradara" validate:"required"`
-		Status       string    `json:"status" validate:"required"`
-		Durasi       int       `json:"durasi" validate:"required"`
-		TotalEpisode int       `json:"total_episode" validate:"required"`
-		TanggalRilis time.Time `json:"tanggal_rilis" time_format:"2006-01-02" validate:"required"`
-		Genre        []int     `json:"genres" validate:"required"`
+		Judul        string    `json:"judul"`
+		Sinopsis     string    `json:"sinopsis"`
+		Sutradara    string    `json:"sutradara"`
+		Status       string    `json:"status"`
+		Durasi       int       `json:"durasi"`
+		TotalEpisode int       `json:"total_episode"`
+		TanggalRilis time.Time `json:"tanggal_rilis" time_format:"2006-01-02"`
 	}
 
 	UpdateStatusFilmRequest struct {

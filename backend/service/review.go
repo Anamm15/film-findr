@@ -14,7 +14,7 @@ type ReviewService interface {
 	GetReviewByUserId(ctx context.Context, id int, userId int, page int) (dto.ReviewByUserResponse, error)
 	GetReviewByFilmId(ctx context.Context, filmId int, userId int, page int) (dto.ReviewByFilmResponse, error)
 	UpdateReview(ctx context.Context, reviewId int, review dto.UpdateReviewRequest) error
-	UpdateReaksiReview(ctx context.Context, reaksiReviewId int, review dto.UpdateReaksiReviewRequest) error
+	UpdateReaksiReview(ctx context.Context, reviewId int, userId int, reaksi dto.UpdateReaksiReviewRequest) error
 	DeleteReview(ctx context.Context, id int) error
 }
 
@@ -142,12 +142,11 @@ func (s *reviewService) UpdateReview(ctx context.Context, reviewId int, review d
 	return nil
 }
 
-func (s *reviewService) UpdateReaksiReview(ctx context.Context, reaksiReviewId int, review dto.UpdateReaksiReviewRequest) error {
+func (s *reviewService) UpdateReaksiReview(ctx context.Context, reviewId int, userId int, reaksi dto.UpdateReaksiReviewRequest) error {
 	reaksiReview := entity.ReaksiReview{
-		ID:       reaksiReviewId,
-		Reaksi:   review.Reaksi,
-		UserID:   review.UserID,
-		ReviewID: review.ReviewID,
+		Reaksi:   reaksi.Reaksi,
+		UserID:   userId,
+		ReviewID: reviewId,
 	}
 
 	err := s.reaksiReviewRepository.UpdateOrCreateUserReaksi(ctx, reaksiReview)

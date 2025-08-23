@@ -140,22 +140,23 @@ func (c *reviewController) UpdateReview(ctx *gin.Context) {
 }
 
 func (c *reviewController) UpdateReaksiReview(ctx *gin.Context) {
-	reaksiReviewIdParam := ctx.Param("id")
-	reaksiReviewId, err := strconv.Atoi(reaksiReviewIdParam)
+	userId := ctx.MustGet("user_id").(int)
+	reviewIdParam := ctx.Param("id")
+	reviewId, err := strconv.Atoi(reviewIdParam)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	var review dto.UpdateReaksiReviewRequest
-	if err := ctx.ShouldBindJSON(&review); err != nil {
+	var reaksi dto.UpdateReaksiReviewRequest
+	if err := ctx.ShouldBindJSON(&reaksi); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
 		return
 	}
 
-	err = c.reviewService.UpdateReaksiReview(ctx, reaksiReviewId, review)
+	err = c.reviewService.UpdateReaksiReview(ctx, reviewId, userId, reaksi)
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_REVIEW, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)

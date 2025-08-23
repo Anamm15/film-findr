@@ -7,7 +7,7 @@ export const getUserFilmByUserId = async (id, page) => {
     const response = await axios.get(`${BASE_URL}/user/${id}?page=${page}`, {
         withCredentials: true
     });
-    return response;
+    return response.data;
 };
 
 export const createUserFilm = async (data) => {

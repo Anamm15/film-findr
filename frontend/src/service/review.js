@@ -7,14 +7,14 @@ export const getReviewByUserId = async (id, page) => {
     const response = await axios.get(`${BASE_URL}/user/${id}?page=${page}`, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };
 
 export const getReviewByFilmId = async (id, page) => {
     const response = await axios.get(`${BASE_URL}/film/${id}?page=${page}`, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };
 
 export const createReview = async (data) => {

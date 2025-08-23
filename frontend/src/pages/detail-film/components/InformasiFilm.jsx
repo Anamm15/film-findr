@@ -1,5 +1,3 @@
-
-
 const InformasiFilm = (props) => {
     const { film } = props;
     return (

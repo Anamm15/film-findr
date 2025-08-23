@@ -4,22 +4,22 @@ import { BASE_API_URL } from "../utils/constant";
 const BASE_URL = `${BASE_API_URL}/films`;
 export const getAllFilm = async (page) => {
     const response = await axios.get(`${BASE_URL}/?page=${page}`);
-    return response;
+    return response.data;
 };
 
 export const getFilmById = async (id) => {
     const response = await axios.get(`${BASE_URL}/${id}`);
-    return response;
+    return response.data;
 };
 
 export const getTopFilm = async () => {
     const response = await axios.get(`${BASE_URL}/get-top-film`);
-    return response;
+    return response.data;
 };
 
 export const getTrendingFilm = async () => {
     const response = await axios.get(`${BASE_URL}/get-trending-film`);
-    return response;
+    return response.data;
 };
 
 export const searchFilm = async (keyword) => {

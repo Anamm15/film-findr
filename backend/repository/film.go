@@ -108,7 +108,7 @@ func (r *filmRepository) UpdateFilm(ctx context.Context, filmId int, reqFilm dto
 	}
 
 	err = r.db.WithContext(ctx).Save(&film).Error
-	return entity.Film{}, err
+	return film, err
 }
 
 func (r *filmRepository) DeleteFilm(ctx context.Context, id int) error {
@@ -133,7 +133,8 @@ func (r *filmRepository) CheckStatusFilm(ctx context.Context, id int) (entity.Fi
 func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, offset int) ([]entity.Film, error) {
 	var films []entity.Film
 
-	baseQuery := r.db.WithContext(ctx).Model(&entity.Film{})
+	baseQuery := r.db.WithContext(ctx).Model(&entity.Film{}).
+		Select("id", "judul", "tanggal_rilis", "durasi", "status")
 
 	kw := "%" + req.Keyword + "%"
 	baseQuery = baseQuery.Where("judul ILIKE ? ", kw)
@@ -147,7 +148,6 @@ func (r *filmRepository) SearchFilm(ctx context.Context, req dto.SearchFilmReque
 	// }
 
 	if err := baseQuery.
-		Select("id", "judul", "tanggal_rilis", "durasi", "status").
 		Preload("FilmGambar", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id", "url", "film_id")
 		}).

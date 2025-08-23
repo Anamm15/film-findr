@@ -289,12 +289,13 @@ func (s *filmService) UpdateStatus(ctx context.Context, id int, req dto.UpdateSt
 }
 
 func (s *filmService) SearchFilm(ctx context.Context, req dto.SearchFilmRequest, page int) (dto.GetFilmResponse, error) {
+	offset := (page - 1) * helpers.LIMIT_FILM
 	countFilm, err := s.filmRepository.CountFilm(ctx)
 	if err != nil {
 		return dto.GetFilmResponse{}, err
 	}
 
-	films, err := s.filmRepository.SearchFilm(ctx, req, page)
+	films, err := s.filmRepository.SearchFilm(ctx, req, offset)
 	if err != nil {
 		return dto.GetFilmResponse{}, err
 	}

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 
 	"FilmFindr/dto"
@@ -116,6 +117,7 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_INVALID_PARAMETER, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		fmt.Println(err)
 		return
 	}
 
@@ -123,6 +125,7 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&film); err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_REQUIRED_FIELD, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		fmt.Println(err)
 		return
 	}
 
@@ -130,6 +133,7 @@ func (s *filmController) UpdateFilm(ctx *gin.Context) {
 	if err != nil {
 		res := utils.BuildResponseFailed(dto.MESSAGE_FAILED_UPDATED_FILM, err.Error(), nil)
 		ctx.JSON(dto.STATUS_BAD_REQUEST, res)
+		fmt.Println(err)
 		return
 	}
 

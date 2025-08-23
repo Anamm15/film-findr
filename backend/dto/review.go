@@ -81,9 +81,7 @@ type (
 	}
 
 	UpdateReaksiReviewRequest struct {
-		UserID   int    `json:"user_id" validate:"required"`
-		ReviewID int    `json:"review_id" validate:"required"`
-		Reaksi   string `json:"reaksi" validate:"required"`
+		Reaksi string `json:"reaksi" validate:"required"`
 	}
 
 	WeeklyReview struct {

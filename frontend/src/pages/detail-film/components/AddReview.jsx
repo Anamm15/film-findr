@@ -12,7 +12,6 @@ const AddReview = (props) => {
 
     const handleAddReview = async (e) => {
         e.preventDefault();
-
         try {
             const data = {
                 film_id: Number(id),

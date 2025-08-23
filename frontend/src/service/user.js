@@ -13,7 +13,7 @@ export const getUserByUsername = async (username) => {
     const response = await axios.get(`${BASE_URL}?username=${username}`, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };
 
 export const getUserById = async (id) => {
