@@ -84,7 +84,7 @@ func (r *userFilmRepository) UpdateStatusUserFilm(ctx context.Context, userFilmI
 func (r *userFilmRepository) CheckUserFilm(ctx context.Context, userId int, filmId int) (bool, error) {
 	var userFilm entity.UserFilm
 	if err := r.db.WithContext(ctx).
-		Where("user_id = ? AND film_id = ? AND status <> 'plan to watch'", userId, filmId).
+		Where("user_id = ? AND film_id = ?", userId, filmId).
 		First(&userFilm).Error; err != nil {
 		return false, err
 	}

@@ -7,6 +7,7 @@ import Akun from "./components/Akun";
 import { useFetchUserByUsername } from "../../hooks/user/useFetchUserByUsername";
 import { useFetchReviewByUserId } from "../../hooks/review/useFetchReviewByUserId";
 import { useFetchWatchlist } from "../../hooks/watchlist/useFetchWatchlist";
+import PageLoading from "../../components/PageLoading";
 
 const ProfilePage = () => {
    const params = useParams();
@@ -18,16 +19,16 @@ const ProfilePage = () => {
    const { reviews, loading: reviewLoading, page: reviewPage, setPage: setReviewPage } = useFetchReviewByUserId(user?.id);
    const { watchlists, loading: watchlistLoading, page: watchlistPage, setPage: setWatchlistPage } = useFetchWatchlist(user?.id);
 
-   if (userLoading || reviewLoading || watchlistLoading) {
-      return <div>Loading...</div>;
+   if (userLoading) {
+      return <PageLoading message="Loading user" />;
    }
 
    return (
       <>
          <Akun user={user} review={reviews} watchlists={watchlists} />
-         <Watchlist watchlists={watchlists} watchlistPage={watchlistPage} setWatchlistPage={setWatchlistPage} />
+         <Watchlist watchlists={watchlists} watchlistPage={watchlistPage} setWatchlistPage={setWatchlistPage} loading={watchlistLoading} />
          <div className="mt-12 px-4 max-w-4xl mx-auto">
-            <ReviewLayout review={reviews} setPage={setReviewPage} page={reviewPage} />
+            <ReviewLayout review={reviews} setPage={setReviewPage} page={reviewPage} loading={reviewLoading} />
          </div>
       </>
    );

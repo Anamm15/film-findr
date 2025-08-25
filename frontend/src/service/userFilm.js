@@ -14,12 +14,12 @@ export const createUserFilm = async (data) => {
     const response = await axios.post(`${BASE_URL}/`, data, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };
 
 export const updateUserFilm = async (id, data) => {
     const response = await axios.patch(`${BASE_URL}/${id}/status`, data, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };

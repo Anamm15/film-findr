@@ -17,10 +17,8 @@ const Detail = (props) => {
 
         try {
             const response = await updateUserFilm(watchlist.id, data);
-            if (response.status === 200) {
-                setMessages(response.data.message);
-                setErrorStatus(false);
-            }
+            setMessages(response.message);
+            setErrorStatus(false);
         } catch (error) {
             setMessages(error.response.data.error);
             setErrorStatus(true);

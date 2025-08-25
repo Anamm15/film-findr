@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import FilmCard from "../../../components/FilmCard";
 import Pagination from "../../../components/Pagination";
+import FilmCardSkeleton from "../../../components/FilmCardSkeleton";
 
 const ListFilm = (props) => {
-    const { films, page, setPage } = props;
+    const { films, page, setPage, loading } = props;
     const navigate = useNavigate();
 
     const handleClickCard = (id) => {
@@ -12,10 +13,16 @@ const ListFilm = (props) => {
 
     return (
         <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                {films && films.films?.map((film) => (
-                    <FilmCard key={film.id} movie={film} onClick={() => handleClickCard(film.id)} />
-                ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {
+                    loading ? (
+                        <FilmCardSkeleton count={5} />
+                    ) : (
+                        films && films.films?.map((film) => (
+                            <FilmCard key={film.id} movie={film} onClick={() => handleClickCard(film.id)} />
+                        ))
+                    )
+                }
             </div>
 
             <Pagination contents={films} page={page} setPage={setPage} />

@@ -23,6 +23,7 @@ var (
 	ErrUpdateStatusUserFilm  = errors.New("Failed to update status user film")
 	ErrCheckUserFilm         = errors.New("You must add to your watchlist to review")
 	ErrStatusFilmNotYetAired = errors.New("Film with not yet aired must be plan to watch")
+	ErrUserFilmAlreadyExists = errors.New("User film already exists")
 )
 
 type (

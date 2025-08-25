@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await getMe();
-      setUser(response.data.data);
+      setUser(response.data);
     } catch (error) {
       console.error("Error fetching user:", error);
       setUser(null);

@@ -27,7 +27,7 @@ export const getMe = async () => {
     const response = await axios.get(`${BASE_URL}/me`, {
         withCredentials: true,
     });
-    return response;
+    return response.data;
 };
 
 export const registerUser = async (data) => {

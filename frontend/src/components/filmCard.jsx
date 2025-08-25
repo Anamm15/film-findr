@@ -1,5 +1,3 @@
-import React from "react";
-
 const FilmCard = ({ movie, onClick, children = null }) => {
    const {
       film_gambar,

@@ -17,10 +17,8 @@ const WatchListForm = (props) => {
                 status: watchListStatus
             }
             const response = await createUserFilm(data)
-            if (response.status === 201) {
-                setMessage(response.data.message);
-                setColorMessage("text-green-600");
-            }
+            setMessage(response.message);
+            setColorMessage("text-green-600");
         } catch (error) {
             setMessage(error.response.data.error);
             setColorMessage("text-red-600");

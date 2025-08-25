@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createReview } from "../../../service/review";
 import Button from "../../../components/Button";
 import TextArea from "../../../components/Textarea";
+import { INIT_RATING_REVIEW } from "../../../utils/constant";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const AddReview = (props) => {
-    const { id } = props;
+    const { id, setReviews } = props;
     const [message, setMessage] = useState("");
-    const [rating, setRating] = useState(1);
+    const [rating, setRating] = useState(INIT_RATING_REVIEW);
     const [newReview, setNewReview] = useState("");
     const [colorMessage, setColorMessage] = useState("");
+    const { user } = useContext(AuthContext);
 
     const handleAddReview = async (e) => {
         e.preventDefault();
@@ -24,6 +27,15 @@ const AddReview = (props) => {
             setMessage(response.data.message);
             setColorMessage("text-green-600");
             setNewReview("");
+            setReviews((prevReviews) => ({
+                ...prevReviews,
+                reviews: [...prevReviews.reviews, {
+                    id: response.data.id,
+                    komentar: response.data.komentar,
+                    rating: response.data.rating,
+                    user: user
+                }]
+            }));
         } catch (error) {
             setMessage(error.response.data.error);
             setColorMessage("text-red-600");

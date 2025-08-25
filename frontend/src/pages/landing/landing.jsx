@@ -22,10 +22,6 @@ const LandingPage = () => {
       }
    };
 
-   if (loading) {
-      return <div>Loading...</div>;
-   }
-
    return (
       <>
          <div className="p-4 xl:max-w-[1280px] mx-auto mt-28">
@@ -61,7 +57,7 @@ const LandingPage = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4 text-text">Daftar Film</h1>
             {
-               films && <ListFilm films={films} page={page} setPage={setPage} />
+               films && <ListFilm films={films} page={page} setPage={setPage} loading={loading} />
             }
          </div>
       </>

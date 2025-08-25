@@ -9,15 +9,16 @@ import Gambar from "./components/Gambar";
 import { useFetchFilm } from "../../hooks/film/useFetchFilm";
 import { useFetchFilms } from "../../hooks/film/UseFetchFilms";
 import { useFetchReviewByFilmId } from "../../hooks/review/useFetchReviewByFilmId";
+import PageLoading from "../../components/PageLoading";
 
 const DetailFilmPage = () => {
    const { id } = useParams();
    const { film, page, setPage, loading: loadingFilms } = useFetchFilm(id);
-   const { reviews, loading: loadingReviews } = useFetchReviewByFilmId(id, page);
+   const { reviews, setReviews, loading: loadingReviews } = useFetchReviewByFilmId(id, page);
    const { films } = useFetchFilms();
 
-   if (loadingFilms || loadingReviews) {
-      return <div>Loading...</div>;
+   if (loadingFilms) {
+      return <PageLoading message="Loading film..." />;
    }
 
    return (
@@ -34,8 +35,8 @@ const DetailFilmPage = () => {
                   </div>
 
                   <Sinopsis sinopsis={film.sinopsis} />
-                  <ReviewLayout review={reviews} setPage={setPage} page={page} />
-                  <AddReview id={id} />
+                  <ReviewLayout review={reviews} setReviews={setReviews} setPage={setPage} page={page} loading={loadingReviews} />
+                  <AddReview id={id} setReviews={setReviews} />
                   {
                      films && <RekomendasiFilm films={films.films} />
                   }

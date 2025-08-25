@@ -23,5 +23,5 @@ export function useFetchReviewByFilmId(id) {
       fetchReviews();
    }, [id, page]);
 
-   return { reviews, page, setPage, loading };
+   return { reviews, setReviews, page, setPage, loading };
 }
