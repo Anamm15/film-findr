@@ -98,10 +98,6 @@ func (s *userFilmService) CreateUserFilm(ctx context.Context, userFilmReq dto.Us
 	}
 
 	isUserFilmExist, err := s.userFilmRepository.CheckUserFilm(ctx, userFilm.UserID, userFilm.FilmID)
-	if err != nil {
-		return entity.UserFilm{}, dto.ErrCheckUserFilm
-	}
-
 	if isUserFilmExist {
 		return entity.UserFilm{}, dto.ErrUserFilmAlreadyExists
 	}

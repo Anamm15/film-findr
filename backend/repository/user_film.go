@@ -89,9 +89,5 @@ func (r *userFilmRepository) CheckUserFilm(ctx context.Context, userId int, film
 		return false, err
 	}
 
-	if userFilm.ID == 0 {
-		return false, nil
-	}
-
-	return true, nil
+	return userFilm.ID != 0, nil
 }
